@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>View Activity</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#4d5963;background:#dce8f1}
+.page-head{background:#fff;border-top:5px solid #2e006b;border-bottom:1px solid #c9d3da;padding:16px 20px 17px}
+.page-title{font-size:20px;color:#666;margin-bottom:9px}.crumbs{color:#6c7881}.crumbs span{margin:0 7px;color:#aaa}
+.wrap{margin:22px 28px}.card{background:#fff;border:1px solid #cbd4da;box-shadow:0 1px 2px rgba(0,0,0,.14);margin-bottom:16px}
+.card-head{padding:11px 14px;background:#f5f5f5;border-bottom:1px solid #d9dfe4;font-weight:700;color:#5d6871}
+.card-body{padding:14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px}.span2{grid-column:span 2}
+.field label{display:block;font-weight:700;color:#59656e;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;border:1px solid #c7c7c7;background:#fff;color:#555;padding:7px 9px;border-radius:2px}
+.field input,.field select{height:34px}.field textarea{min-height:82px;resize:vertical}
+.readonly{background:#f4f6f7!important;color:#777!important}
+.btn{height:34px;border:1px solid #d4dbe0;background:#fff;color:#59656e;padding:0 14px;border-radius:2px;cursor:pointer}
+.btn.primary{background:#1e73be;border-color:#1e73be;color:#fff;font-weight:700}.btn.warn{background:#f5b041;border-color:#f5b041;color:#fff}
+.btn.small{height:29px;padding:0 9px;font-size:11px}.actions{display:flex;justify-content:flex-end;gap:8px}
+.note{font-size:10px;color:#8b949b;margin-top:5px;line-height:1.4}
+.status-chip{display:inline-block;padding:4px 8px;border-radius:2px;border:1px solid;font-size:11px;font-weight:700}
+.close{color:#3c763d;background:#f0f8f0;border-color:#b7d6b8}
+.attach-table{width:100%;border-collapse:collapse;margin-top:4px}.attach-table th,.attach-table td{border:1px solid #e0e5e9;padding:8px;text-align:left;vertical-align:middle}
+.attach-table th{background:#f5f5f5;color:#626e77}
+.exec-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px}.exec-box{border:1px solid #dfe6eb;background:#fbfcfd;padding:11px}
+.exec-title{font-weight:700;color:#59656e;margin-bottom:8px}.exec-line{display:grid;grid-template-columns:115px 1fr;gap:6px 10px;margin-bottom:6px}
+.exec-line .label{color:#8a949c}.exec-line .value{font-weight:600;color:#53606a}
+.map-link{color:#2b72b8;text-decoration:none;font-weight:700}.map-link:hover{text-decoration:underline}
+.evidence{display:flex;gap:10px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid #e7ecef}
+.thumb{width:86px;height:66px;border:1px solid #bdcbd6;background:linear-gradient(135deg,#dcebf5,#84aecf);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:700}
+.thumb-meta{font-size:10px;color:#65727c}.thumb-meta b{display:block;color:#53606a;margin-bottom:3px}
+.opp-actions{display:flex;gap:7px;margin-top:10px}
+.followup-note{background:#f7fafc;border:1px solid #d7e3eb;padding:10px 12px;line-height:1.5;color:#61717e;margin-bottom:16px}.modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;align-items:center;justify-content:center;padding:20px}.modal-wrap.show{display:flex}.modal{width:680px;max-width:96vw;max-height:90vh;background:#fff;border:1px solid #cbd4da;box-shadow:0 6px 20px rgba(0,0,0,.25);display:flex;flex-direction:column}.modal-head{padding:12px 14px;border-bottom:1px solid #ddd;background:#f5f5f5;display:flex;justify-content:space-between;align-items:center;font-weight:700}.modal-body{padding:14px;overflow:auto}.modal-actions{padding:10px 14px;border-top:1px solid #ddd;display:flex;justify-content:flex-end;gap:8px}.close-x{border:0;background:none;font-size:18px;color:#777}.relation-summary{display:grid;grid-template-columns:150px 1fr;gap:7px 12px}.relation-summary .label{font-weight:700;color:#69757e}
+@media(max-width:800px){.wrap{margin:12px}.grid,.exec-grid{grid-template-columns:1fr}.span2{grid-column:auto}.attach-table{min-width:680px}.attach-scroll{overflow:auto}}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div class="page-title">View Activity</div>
+  <div class="crumbs">Beranda <span>/</span> Transaction <span>/</span> Activity <span>/</span> View</div>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <div class="card-head">Informasi Activity <span style="float:right"><span class="status-chip close">Close</span></span></div>
+    <div class="card-body">
+      <div class="grid">
+        <div class="field"><label>No. Activity</label><input class="readonly" value="A-51008" disabled></div>
+        <div class="field"><label>Tipe Activity</label><input class="readonly" value="Scheduled Visit" disabled></div>
+
+        <div class="field span2"><label>Customer</label><input class="readonly" value="C000311 - PT Cahaya Interlining Perkasa" disabled></div>
+
+        <div class="field"><label>Kontak</label><input class="readonly" value="Pak Surya" disabled></div>
+        <div class="field"><label>Subject</label><input class="readonly" value="Quotation Discussion" disabled></div>
+
+        <div class="field"><label>Tanggal</label><input class="readonly" value="15 Sep 2026" disabled></div>
+        <div class="field"><label>Status</label><input class="readonly" value="Close" disabled></div>
+
+        <div class="field"><label>Start Time</label><input class="readonly" value="14:00" disabled></div>
+        <div class="field"><label>End Time</label><input class="readonly" value="15:00" disabled></div>
+
+        <div class="field span2"><label>Address</label><input class="readonly" value="DOMISILI - Jl. Kebon Jeruk 8, Jakarta" disabled></div>
+
+        <div class="field span2"><label>Keterangan</label><textarea class="readonly" disabled>Follow up quotation dan pembahasan harga.</textarea></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Relasi Komersial</div>
+    <div class="card-body">
+      <div class="grid">
+        <div class="field span2"><label>Opportunity</label><input class="readonly" value="OPP-02977 - Expansion 2026" disabled></div>
+        <div class="field"><label>Opportunity Line</label><input class="readonly" value="Line 4" disabled></div>
+        <div class="field"><label>Stage</label><input class="readonly" value="Quotation" disabled></div>
+        <div class="field"><label>Related Document Type</label><input class="readonly" value="Sales Order" disabled></div>
+        <div class="field"><label>Related Document No.</label><input class="readonly" value="SO-2600456" disabled></div>
+      </div>
+      <div class="opp-actions">
+        <button class="btn" onclick="alert('Mockup: View Opportunity')">View Opportunity</button>
+        <button class="btn warn" onclick="alert('Mockup: Edit Opportunity jika user punya authorization')">Edit Opportunity</button>
+        <button class="btn" onclick="alert('Mockup: Open Sales Order SO-2600456')">View Sales Order</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Execution</div>
+    <div class="card-body">
+      <div class="exec-grid">
+        <div class="exec-box">
+          <div class="exec-title">Check In</div>
+          <div class="exec-line"><div class="label">Waktu</div><div class="value">15 Sep 2026 · 14:06</div></div>
+          <div class="exec-line"><div class="label">Latitude</div><div class="value">-6.224410</div></div>
+          <div class="exec-line"><div class="label">Longitude</div><div class="value">106.829330</div></div>
+          <div class="exec-line"><div class="label">Accuracy</div><div class="value">±14 m</div></div>
+          <div class="exec-line"><div class="label">Lokasi</div><div class="value"><a class="map-link" href="https://www.google.com/maps?q=-6.224410,106.829330" target="_blank">Open in Maps</a></div></div>
+
+          <div class="evidence">
+            <div class="thumb">Bukti Foto</div>
+            <div class="thumb-meta">
+              <b>CI_A-51008_20260915_140600.jpg</b>
+              Bukti Foto Check In<br>
+              <button class="btn small" style="margin-top:6px" onclick="alert('Mockup: Download Bukti Foto')">Download</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="exec-box">
+          <div class="exec-title">Check Out</div>
+          <div class="exec-line"><div class="label">Waktu</div><div class="value">15 Sep 2026 · 15:11</div></div>
+          <div class="exec-line"><div class="label">Latitude</div><div class="value">-6.224401</div></div>
+          <div class="exec-line"><div class="label">Longitude</div><div class="value">106.829341</div></div>
+          <div class="exec-line"><div class="label">Accuracy</div><div class="value">±16 m</div></div>
+          <div class="exec-line"><div class="label">Lokasi</div><div class="value"><a class="map-link" href="https://www.google.com/maps?q=-6.224401,106.829341" target="_blank">Open in Maps</a></div></div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:14px">
+        <label>Hasil</label>
+        <textarea class="readonly" disabled>Customer meminta revisi harga dan MOQ. Follow up quotation dijadwalkan kembali minggu depan.</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">Lampiran</div>
+    <div class="card-body attach-scroll">
+      <table class="attach-table">
+        <thead>
+          <tr><th style="width:55px">No.</th><th>Nama File</th><th>Keterangan</th><th style="width:115px">Aksi</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>CI_A-51008_20260915_140600.jpg</td>
+            <td>Bukti Foto Check In</td>
+            <td><button class="btn small" onclick="alert('Mockup: Download Bukti Foto')">Download</button></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Quotation_Revisi.pdf</td>
+            <td>Dokumen kunjungan</td>
+            <td><button class="btn small" onclick="alert('Mockup: Download Quotation')">Download</button></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Product_Specification.xlsx</td>
+            <td>Attachment</td>
+            <td><button class="btn small" onclick="alert('Mockup: Download Product Specification')">Download</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="followup-note"><b>Activity sudah Close.</b> Data planning dan execution tetap read-only. Hasil kunjungan, relasi Opportunity / dokumen SAP, serta tambahan Lampiran masih dapat diperbarui melalui Update Follow-up.</div>
+  <div class="actions">
+    <button class="btn" onclick="location.href='PATRIOT_Activity_List_v7_related_document.html'">Back</button>
+    <button class="btn primary" type="button" onclick="openFollowup()">Update Follow-up</button>
+  </div>
+</div>
+
+<div class="modal-wrap" id="followupModal">
+  <div class="modal">
+    <div class="modal-head"><span>Update Follow-up</span><button class="close-x" onclick="closeFollowup()">×</button></div>
+    <div class="modal-body">
+      <div class="note" style="margin:0 0 12px">Planning dan data Check In / Check Out tetap dikunci. Area ini hanya untuk memperbarui hasil dan relasi komersial setelah kunjungan.</div>
+      <div class="grid">
+        <div class="field span2"><label>Hasil *</label><textarea id="fuResult">Customer setuju order dan Sales Order sudah dibuat setelah kunjungan.</textarea></div>
+        <div class="field span2"><label>Opportunity</label><select><option>OPP-02977 - Expansion 2026</option><option>Tidak ada</option><option>OPP-00028 - Penambahan Produk Feed</option></select></div>
+        <div class="field"><label>Opportunity Line</label><select><option>Line 4</option><option>-</option></select></div>
+        <div class="field"><label>Stage</label><input class="readonly" value="Quotation" disabled></div>
+        <div class="field"><label>Related Document Type</label><select><option>Sales Order</option><option>Sales Quotation</option><option>Tidak ada</option></select></div>
+        <div class="field"><label>Related Document No.</label><div class="cfl"><input value="SO-2600456" readonly><button type="button">...</button></div></div>
+        <div class="field span2"><label>Tambah Lampiran</label><input type="file" multiple><div class="note">Existing Attachment tidak dapat dihapus.</div></div>
+      </div>
+    </div>
+    <div class="modal-actions"><button class="btn" onclick="closeFollowup()">Cancel</button><button class="btn primary" onclick="saveFollowup()">Save</button></div>
+  </div>
+</div>
+<script>
+function openFollowup(){document.getElementById('followupModal').classList.add('show')}
+function closeFollowup(){document.getElementById('followupModal').classList.remove('show')}
+function saveFollowup(){closeFollowup();alert('Mockup: Follow-up Activity diperbarui. Planning dan execution tetap tidak berubah.')}
+</script>
+
+</body>
+</html>

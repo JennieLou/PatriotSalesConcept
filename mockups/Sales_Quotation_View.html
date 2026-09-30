@@ -1,0 +1,68 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lihat Sales Quotation</title><style>
+*{box-sizing:border-box}
+:root{
+ --nav:#17196d;--nav2:#263142;--bg:#dce8f1;--panel:#fff;--line:#cbd4da;--line2:#e2e7eb;
+ --text:#4d5963;--muted:#8b949b;--blue:#3f6df6;--blue2:#1e73be;--green:#3f8b62;--red:#db5b53;
+}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:var(--text);background:var(--bg)}
+button,input,select,textarea{font:inherit}
+.hidden{display:none!important}
+.topbar{height:54px;background:var(--nav);color:#fff;display:flex;align-items:center;padding:0 18px;gap:14px}
+.brand{font-weight:700;font-size:14px}.topbar .spacer{flex:1}.logout{font-weight:700}
+.page-head{background:#fff;border-bottom:1px solid #c8d2d9;padding:17px 24px}.page-title{font-size:20px;color:#6a7075;margin-bottom:9px}.crumbs{color:#6b7881}.crumbs span{margin:0 7px;color:#aaa}
+.wrap{margin:22px 32px}.box,.card{background:#fff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.14)}
+.box{padding:14px;margin-bottom:18px}.card{margin-bottom:16px}.card-head{padding:11px 14px;background:#f5f5f5;border-bottom:1px solid #d9dfe4;font-weight:700}.card-body{padding:14px}
+.btn{border:1px solid #d6dbe0;background:#fff;color:#59656e;padding:8px 13px;cursor:pointer;border-radius:2px;white-space:nowrap}
+.btn-primary{background:var(--blue2);border-color:var(--blue2);color:#fff;font-weight:700}.btn-green{background:var(--green);border-color:var(--green);color:#fff;font-weight:700}.btn-blue{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}.btn-red{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}.btn-sm{padding:5px 9px;font-size:11px}
+.top-actions,.actions,.quick-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.top-actions{justify-content:space-between}.actions{justify-content:flex-end;margin-top:14px}
+.filters{display:grid;grid-template-columns:1.2fr 1.2fr 1fr auto;gap:16px;align-items:end}
+.field label{display:block;margin-bottom:6px;font-weight:700}.field input,.field select,.field textarea{width:100%;border:1px solid #c7c7c7;background:#fff;color:#555;padding:7px 9px;border-radius:2px}.field input,.field select{height:34px}.field textarea{min-height:78px;resize:vertical}
+.readonly{background:#f2f4f5!important;color:#777!important}.cfl{display:flex}.cfl input{border-radius:2px 0 0 2px}.cfl button{width:36px;border:1px solid #c7c7c7;border-left:0;background:#f6f6f6}
+.date-range{display:grid;grid-template-columns:1fr 1fr;gap:6px}.helper{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.4}
+.table-tools{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.left-tools{display:flex;align-items:center;flex-wrap:wrap}.entries,.search{display:flex;align-items:center;gap:8px}.entries{margin-right:4px}.entries select{width:68px;height:30px}.search input{width:220px;height:30px}
+.tools{display:flex}.tools .btn{border-radius:0;margin-left:-1px}.tools .btn:first-child{margin-left:0;border-radius:2px 0 0 2px}.tools .btn:last-child{border-radius:0 2px 2px 0}
+.table-wrap{overflow:auto;border:1px solid #e0e0e0}.data-table{width:100%;min-width:1050px;border-collapse:separate;border-spacing:0}.data-table th{background:#f5f5f5;color:#666;padding:10px 8px;text-align:left;border-right:1px solid #dfdfdf;border-bottom:1px solid #dfdfdf;white-space:nowrap}.data-table td{padding:9px 8px;border-right:1px solid #e7e7e7;border-bottom:1px solid #e7e7e7;vertical-align:top;background:#fff}.data-table th:last-child,.data-table td:last-child{border-right:none}.action-col{position:sticky;right:0;background:#fff!important;box-shadow:-2px 0 4px rgba(0,0,0,.05)}thead .action-col{background:#f5f5f5!important}.row-actions{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 2px 2px}.pagination{display:flex}.pagination button{border:1px solid #d7d7d7;background:#fff;padding:6px 10px}.pagination button+button{margin-left:-1px}.pagination .active{background:#f4f4f4}
+.stepbar{background:var(--nav2);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:20}.step{padding:9px 18px;border-radius:8px;background:#445166;color:#fff;font-weight:700;cursor:pointer}.step.active{background:#4a6df4}.step.done{background:#42835f}.stepbar .spacer{flex:1}.docdate{background:#202a3a;border:1px solid #435066;color:#fff;padding:8px 12px}
+.summarybar{background:#3c4658;color:#fff;padding:10px 14px;display:flex;align-items:center;font-weight:700;font-size:15px}.summarybar .spacer{flex:1}.summarybar .amount{font-size:22px}
+.entry-body{background:#fff;min-height:calc(100vh - 150px)}.entry-section{padding:14px}.section-title{font-size:15px;font-weight:700;margin:8px 0 10px}.section-subtitle{font-size:12px;font-weight:700;margin:12px 0 8px}
+.item-search{display:flex;gap:0}.item-search input{flex:1;height:38px;border:1px solid #c7c7c7;padding:8px}.item-search button{width:125px;border-radius:0 4px 4px 0}
+.item-table{width:100%;border-collapse:collapse;margin-top:6px}.item-table th,.item-table td{border-bottom:1px solid #e2e6e9;padding:9px 7px;text-align:left;vertical-align:middle}.item-table th{font-size:12px}.item-table input{height:32px;border:1px solid #c7c7c7;padding:6px 8px;width:100%}.qtybox{display:flex;align-items:center;gap:5px}.qtybox button{width:34px;height:34px;border:0;color:#fff;font-size:16px}.qtybox .minus{background:#d95d55}.qtybox .plus{background:#51aa80}.qtybox input{width:72px;text-align:center}
+.mobile-item-card{display:none;border:1px solid #dce2e6;background:#fff;margin-bottom:10px;padding:10px}.mobile-item-top{display:flex;justify-content:space-between;gap:8px}.mobile-item-title{font-weight:700}.mobile-item-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.lookup-modal{display:none;position:fixed;inset:0;background:rgba(45,54,66,.72);z-index:80;align-items:center;justify-content:center;padding:20px}.lookup-modal.show{display:flex}.modal{width:980px;max-width:96vw;max-height:90vh;background:#fff;padding:16px;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.modal-title{font-size:20px;font-weight:700}.modal-search{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px}.modal-search input{height:34px;border:1px solid #c7c7c7;padding:7px 9px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px 18px}.span2{grid-column:span 2}.span3{grid-column:span 3}
+.confirm-grid{display:grid;grid-template-columns:180px 1fr;gap:8px 16px;align-items:center}.confirm-grid .label{font-weight:700}.confirm-grid .value{text-align:right;background:#f3f5f6;padding:8px 10px}.confirm-grid textarea{grid-column:2;width:100%;min-height:80px;border:1px solid #c7c7c7}
+@media(max-width:900px){.wrap{margin:12px}.filters,.grid2,.grid3{grid-template-columns:1fr}.span2,.span3{grid-column:auto}.table-tools{flex-direction:column;align-items:flex-start}.stepbar{gap:8px;flex-wrap:wrap}.step{padding:8px 12px}.docdate{order:4;width:100%}.item-search button{width:105px}}
+@media(max-width:650px){
+ .topbar{height:48px}.wrap{margin:8px}.page-head{padding:14px 12px}.box{padding:10px}.filters{gap:10px}
+ .table-wrap{border:0}.data-table{min-width:0}.data-table thead{display:none}.data-table tbody tr{display:block;border:1px solid #dce2e6;margin-bottom:10px;background:#fff;padding:8px}.data-table tbody td{display:grid;grid-template-columns:110px 1fr;border:0;border-bottom:1px solid #eef1f3;padding:6px 4px}.data-table tbody td:last-child{border-bottom:0}.data-table tbody td:before{content:attr(data-label);font-weight:700;color:#6a747d}.action-col{position:static!important;box-shadow:none!important}.row-actions{flex-direction:row}
+ .desktop-item-table{display:none}.mobile-item-card{display:block}.item-search{flex-direction:column;gap:7px}.item-search button{width:100%;border-radius:2px}.summarybar{font-size:13px}.summarybar .amount{font-size:18px}
+ .stepbar{position:static}.step{font-size:11px}.confirm-grid{grid-template-columns:1fr}.confirm-grid .value{text-align:right}.confirm-grid textarea{grid-column:auto}
+}
+</style></head><body>
+<div class="topbar"><div class="brand">iReap Biz</div><div class="spacer"></div><div class="logout">Logout</div></div>
+<div class="page-head"><div class="page-title">Lihat Sales Quotation</div><div class="crumbs">Beranda <span>/</span> Transaksi <span>/</span> Sales Quotation <span>/</span> Lihat</div></div>
+<div class="wrap">
+ <div class="card"><div class="card-head">Informasi Dokumen</div><div class="card-body"><div class="grid3">
+  <div class="field"><label>No. Dokumen</label><input class="readonly" value="26005271" disabled></div><div class="field"><label>Tanggal Dokumen</label><input class="readonly" value="16/09/2026" disabled></div><div class="field"><label>Status</label><input class="readonly" value="Close" disabled></div>
+ </div></div></div>
+ <div class="card"><div class="card-head">Customer</div><div class="card-body"><div class="grid2">
+  <div class="field"><label>Kode Customer</label><input class="readonly" value="CWS00189" disabled></div><div class="field"><label>Nama Customer</label><input class="readonly" value="CAHAYA INTERLINING PERKASA" disabled></div>
+  <div class="field"><label>Contact Person</label><input class="readonly" value="Pak Surya" disabled></div><div class="field"><label>Ship To</label><input class="readonly" value="DOMISILI" disabled></div>
+  <div class="field span2"><label>Address</label><textarea class="readonly" disabled>Jl. Kebon Jeruk 8, Jakarta</textarea></div>
+  <div class="field"><label>Shipping Type</label><input class="readonly" value="INCLUDE FREIGHT" disabled></div><div class="field"><label>Payment Terms</label><input class="readonly" value="30 Days" disabled></div>
+  <div class="field"><label>Tax Group</label><input class="readonly" value="PPN Keluaran 11% General" disabled></div>
+ </div></div></div>
+ <div class="card"><div class="card-head">Item</div><div class="card-body"><div class="table-wrap"><table class="data-table" style="min-width:800px"><thead><tr><th>No.</th><th>Item</th><th>Deskripsi</th><th>Quantity</th><th>Price</th><th>Total</th></tr></thead><tbody>
+  <tr><td data-label="No.">1</td><td data-label="Item">3000000001</td><td data-label="Deskripsi">KAIN CXO 065 GSM PP 003 PW</td><td data-label="Quantity">20</td><td data-label="Price">126,00</td><td data-label="Total">2.520,00</td></tr>
+  <tr><td data-label="No.">2</td><td data-label="Item">3000000006</td><td data-label="Deskripsi">KAIN LMN 065 GSM PP 005 MN</td><td data-label="Quantity">18</td><td data-label="Price">132,00</td><td data-label="Total">2.376,00</td></tr>
+ </tbody></table></div></div></div>
+ <div class="card"><div class="card-head">Ringkasan</div><div class="card-body"><div class="confirm-grid">
+   <div class="label">Sub Total</div><div class="value">4.896,00</div>
+   <div class="label">Diskon</div><div class="value">0,00 %</div>
+   <div class="label">Pajak</div><div class="value">538,56</div>
+   <div class="label">Grand Total</div><div class="value" style="font-weight:700">5.434,56</div>
+   <div class="label">Keterangan</div><div class="value" style="text-align:left">Penawaran harga September 2026</div>
+ </div></div></div>
+ <div class="actions"><button class="btn" onclick="location.href='PATRIOT_Sales_Quotation_List_v1.html'">Kembali</button><button class="btn btn-primary">Print</button></div>
+</div></body></html>

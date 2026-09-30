@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Target - SAP Business One Mockup</title>
+<style>
+:root{
+  --sap-blue:#294e72;
+  --sap-blue-dark:#1f3f5f;
+  --sap-border:#b7c1ca;
+  --sap-line:#cfd5da;
+  --sap-disabled:#e7edf1;
+  --sap-yellow:#f5b400;
+  --text:#1f2933;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-width:1320px;
+  min-height:790px;
+  font-family:Tahoma,"Segoe UI",Arial,sans-serif;
+  font-size:13px;
+  color:var(--text);
+  background:#d7dde2;
+}
+body{padding:14px}
+.sap-window{
+  width:100%;
+  min-height:790px;
+  background:#f7f8f9;
+  border:1px solid #6f8496;
+  box-shadow:0 3px 14px rgba(0,0,0,.22);
+  display:flex;
+  flex-direction:column;
+}
+.titlebar{
+  height:34px;
+  background:linear-gradient(#365f84,#294e72);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 11px 0 14px;
+  font-size:15px;
+  user-select:none;
+}
+.window-controls{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  font-size:18px;
+}
+.content{
+  padding:20px 24px 16px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.header-grid{
+  display:grid;
+  grid-template-columns:minmax(690px,1fr) 400px;
+  gap:38px;
+  align-items:start;
+}
+.form-grid{
+  display:grid;
+  grid-template-columns:150px minmax(300px,460px);
+  row-gap:8px;
+  align-items:center;
+}
+.right-form{
+  grid-template-columns:90px 280px;
+  justify-self:end;
+  width:400px;
+}
+label{white-space:nowrap}
+input,select,textarea,button{
+  font-family:inherit;
+  font-size:13px;
+}
+input,select,textarea{
+  border:1px solid var(--sap-border);
+  background:#fff;
+  color:#17212b;
+  min-height:25px;
+  padding:3px 7px;
+  outline:none;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#5d8fb8;
+  box-shadow:0 0 0 1px #b7d0e3 inset;
+}
+.disabled{
+  background:var(--sap-disabled)!important;
+  color:#334455;
+}
+.field-row{
+  display:flex;
+  gap:4px;
+  min-width:0;
+}
+.field-row>input,.field-row>select{
+  flex:1;
+  min-width:0;
+}
+.cfl{
+  width:31px;
+  min-width:31px;
+  height:25px;
+  padding:0;
+  border:1px solid #6e8799;
+  background:var(--sap-blue);
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+}
+.cfl:hover:not(:disabled){background:var(--sap-blue-dark)}
+.cfl:disabled{
+  background:#c8d0d6;
+  color:#7b858c;
+  cursor:not-allowed;
+}
+.period-row{
+  display:grid;
+  grid-template-columns:1fr 28px 1fr;
+  gap:7px;
+  align-items:center;
+}
+.period-sep{text-align:center;color:#5c6973}
+.main-panel{
+  border:1px solid #c5cbd0;
+  background:#fff;
+  flex:1;
+  min-height:390px;
+  display:flex;
+  flex-direction:column;
+}
+.panel-caption{
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 13px;
+  border-bottom:1px solid #aeb8c0;
+  background:#f5f7f8;
+  font-weight:600;
+  color:#263945;
+}
+.caption-right{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  font-weight:400;
+}
+.matrix-panel{
+  padding:12px 13px 12px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+.table-wrap{
+  border:1px solid #aeb8c0;
+  flex:1;
+  min-height:290px;
+  overflow:auto;
+  background:#fff;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+th,td{
+  border-right:1px solid var(--sap-line);
+  border-bottom:1px solid var(--sap-line);
+  height:27px;
+  padding:3px 6px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+th{
+  background:linear-gradient(#edf1f4,#dce4ea);
+  font-weight:600;
+  text-align:left;
+}
+td.rowno,th.rowno{
+  width:42px;
+  text-align:center;
+  background:#edf1f4;
+}
+.sales-employee{width:260px}
+.target-qty{width:170px}
+.target-value{width:210px}
+.remarks-col{width:320px}
+td input{
+  border:0;
+  width:100%;
+  height:22px;
+  min-height:22px;
+  padding:1px 3px;
+  background:transparent;
+}
+td input:focus{
+  border:1px solid #5d8fb8;
+  box-shadow:none;
+  background:#fff;
+}
+
+td select{
+  border:0;
+  width:100%;
+  height:22px;
+  min-height:22px;
+  padding:1px 3px;
+  background:#fff;
+}
+td select:focus{
+  border:1px solid #5d8fb8;
+  box-shadow:none;
+}
+
+.cell-cfl{
+  display:grid;
+  grid-template-columns:1fr 26px;
+  gap:2px;
+}
+.cell-cfl button{
+  height:22px;
+  padding:0;
+  border:1px solid #7f96a8;
+  background:#e6edf2;
+  cursor:pointer;
+}
+.cell-cfl button:hover:not(:disabled){background:#d7e3ec}
+.readonly-cell{
+  background:var(--sap-disabled)!important;
+  color:#334455;
+}
+.total-row td{
+  background:#f0f4f7;
+  font-weight:700;
+}
+.doc-footer{
+  display:grid;
+  grid-template-columns:minmax(620px,1fr) 420px;
+  gap:34px;
+  align-items:start;
+}
+.remarks-footer{
+  display:grid;
+  grid-template-columns:140px minmax(420px,650px);
+  align-items:start;
+}
+textarea{
+  height:70px;
+  resize:none;
+}
+.totals-box{
+  display:grid;
+  grid-template-columns:155px 210px;
+  row-gap:8px;
+  column-gap:10px;
+  justify-content:end;
+  align-items:center;
+  padding-top:2px;
+}
+.total-label{
+  text-align:right;
+  font-weight:600;
+  white-space:nowrap;
+}
+.total-input{
+  text-align:right;
+  font-weight:600;
+}
+.num-input{
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+.bottom-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.left-actions,.right-actions{
+  display:flex;
+  gap:9px;
+}
+.sap-btn{
+  min-width:96px;
+  height:31px;
+  padding:0 17px;
+  border:1px solid #778b9a;
+  background:linear-gradient(#3e6484,#294e72);
+  color:#fff;
+  cursor:pointer;
+  position:relative;
+}
+.sap-btn.primary:before{
+  content:"";
+  position:absolute;
+  left:-1px;
+  top:-1px;
+  bottom:-1px;
+  width:5px;
+  background:var(--sap-yellow);
+}
+.sap-btn:hover:not(:disabled){
+  background:linear-gradient(#496f8f,#244764);
+}
+.sap-btn.secondary{
+  background:linear-gradient(#657d91,#476176);
+}
+.sap-btn:disabled{
+  background:#c7cdd2;
+  border-color:#aeb5ba;
+  color:#70777c;
+  cursor:not-allowed;
+  opacity:.78;
+}
+.sap-btn:disabled:before{display:none}
+.status-message{
+  min-height:18px;
+  color:#3b586f;
+}
+.status-message.error{color:#ad2727}
+.status-message.success{color:#217044}
+
+/* Modal */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(20,32,42,.28);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:50;
+}
+.modal-backdrop.show{display:flex}
+.modal{
+  width:700px;
+  max-width:calc(100vw - 50px);
+  background:#f7f8f9;
+  border:1px solid #698096;
+  box-shadow:0 10px 30px rgba(0,0,0,.32);
+}
+.modal-title{
+  height:32px;
+  background:linear-gradient(#365f84,#294e72);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 11px 0 13px;
+  font-size:14px;
+}
+.modal-close{
+  border:0;
+  background:transparent;
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+}
+.modal-body{padding:16px}
+.search-row{
+  display:flex;
+  gap:8px;
+  margin-bottom:10px;
+}
+.search-row input{flex:1}
+.picker-wrap{
+  border:1px solid #aeb8c0;
+  max-height:300px;
+  overflow:auto;
+  background:#fff;
+}
+.picker-table tr{cursor:pointer}
+.picker-table tbody tr:hover{background:#dce9f2}
+.picker-table tbody tr.selected{background:#cfe2f1}
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  padding:12px 16px 16px;
+}
+</style>
+</head>
+<body>
+<div class="sap-window">
+  <div class="titlebar">
+    <span>Sales Target</span>
+    <div class="window-controls"><span>─</span><span>□</span><span>×</span></div>
+  </div>
+
+  <div class="content">
+    <section class="header-grid">
+      <div class="form-grid">
+        <label>Target Setup</label>
+        <div class="field-row">
+          <input id="setupCode" value="TGT-PAKAN" readonly>
+          <button class="cfl" id="setupBtn">...</button>
+        </div>
+
+        <label>Setup Name</label>
+        <input id="setupName" class="disabled" value="Target Pakan" readonly>
+
+        <label>Target Assignment</label>
+        <input id="assignment" class="disabled" value="Sales Employee" readonly>
+
+        <label>Target UOM</label>
+        <input id="targetUom" class="disabled" value="TON" readonly>
+
+        <label>Period</label>
+        <div class="period-row">
+          <input id="dateFrom" type="date" value="2026-06-01">
+          <div class="period-sep">to</div>
+          <input id="dateTo" type="date" value="2026-06-07">
+        </div>
+      </div>
+
+      <div class="form-grid right-form">
+        <label>No.</label>
+        <div class="field-row">
+          <select id="series" style="max-width:110px"><option>26 ST</option></select>
+          <input id="docNum" class="disabled" value="ST26000001" readonly>
+        </div>
+
+        <label>Status</label>
+        <input id="status" class="disabled" value="Open" readonly>
+      </div>
+    </section>
+
+    <section class="main-panel">
+      <div class="panel-caption">
+        <span>Sales Target Detail</span>
+      </div>
+
+      <div class="matrix-panel">
+        <div class="table-wrap">
+          <table id="targetTable">
+            <thead id="targetHead"></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-footer">
+      <div class="remarks-footer">
+        <label>Remarks</label>
+        <textarea id="headerRemarks">Weekly sales target - June 2026.</textarea>
+      </div>
+
+      <div class="totals-box">
+        <div class="total-label">Total Target Qty</div>
+        <input id="totalQty" class="disabled total-input" value="0" readonly>
+        <div class="total-label">Total Target Value</div>
+        <input id="totalValue" class="disabled total-input" value="0" readonly>
+      </div>
+    </section>
+
+    <div class="bottom-bar">
+      <div class="left-actions">
+        <button class="sap-btn primary" id="updateBtn">Update</button>
+        <button class="sap-btn secondary" id="cancelBtn">Cancel</button>
+      </div>
+      <div class="right-actions"></div>
+    </div>
+
+    <div id="message" class="status-message"></div>
+  </div>
+</div>
+
+<!-- Setup CFL -->
+<div class="modal-backdrop" id="setupModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span>Choose Sales Target Setup</span>
+      <button class="modal-close" id="setupClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="search-row"><input id="setupSearch" placeholder="Search..."></div>
+      <div class="picker-wrap">
+        <table class="picker-table">
+          <thead>
+            <tr>
+              <th style="width:130px">Setup Code</th>
+              <th>Setup Name</th>
+              <th style="width:140px">Assignment</th>
+              <th style="width:90px">UOM</th>
+            </tr>
+          </thead>
+          <tbody id="setupBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="sap-btn primary" id="setupSelect">Select</button>
+      <button class="sap-btn secondary" id="setupCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(()=>{
+const el=id=>document.getElementById(id);
+const tbody=document.querySelector("#targetTable tbody");
+
+const setups=[
+  {code:"TGT-PAKAN",name:"Target Pakan",assignment:"Sales Employee",uom:"TON"},
+  {code:"TGT-PAKAN-ALL",name:"Target Pakan All",assignment:"All",uom:"TON"}
+];
+
+const salesEmployees=[
+  {code:"S001",name:"Budi"},
+  {code:"S002",name:"Lukman"},
+  {code:"S003",name:"Samsul"},
+  {code:"S004",name:"Indra"},
+  {code:"S005",name:"Amik"},
+  {code:"S006",name:"Irhas"},
+  {code:"S007",name:"Eko"},
+  {code:"S008",name:"Gito"}
+];
+
+let currentSetup={...setups[0]};
+let rows=[
+  {salesCode:"S001",salesName:"Budi",qty:45,value:275000000,remarks:""},
+  {salesCode:"S002",salesName:"Lukman",qty:40,value:245000000,remarks:""},
+  {salesCode:"S003",salesName:"Samsul",qty:35,value:210000000,remarks:""}
+];
+
+let setupFiltered=[...setups],setupSelected=null;
+let salesFiltered=[...salesEmployees],salesSelected=null,salesTargetRow=null;
+
+function esc(v){
+  return String(v??"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
+function money(v){
+  return Number(v||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function parseNumber(v){
+  return Number(String(v??"").replace(/,/g,""))||0;
+}
+function formatNumber(v,decimals=2){
+  const n=Number(v||0);
+  const hasDecimal=Math.abs(n-Math.round(n))>1e-9;
+  return n.toLocaleString("en-US",{
+    minimumFractionDigits:hasDecimal?Math.min(decimals,3):0,
+    maximumFractionDigits:decimals
+  });
+}
+function msg(t,c=""){
+  el("message").textContent=t;
+  el("message").className="status-message"+(c?" "+c:"");
+}
+
+function render(){
+  el("setupCode").value=currentSetup.code;
+  el("setupName").value=currentSetup.name;
+  el("assignment").value=currentSetup.assignment;
+  el("targetUom").value=currentSetup.uom;
+
+  const perSales=currentSetup.assignment==="Sales Employee";
+
+  el("targetHead").innerHTML=perSales
+    ? `<tr>
+        <th class="rowno">#</th>
+        <th class="sales-employee">Sales Employee</th>
+        <th class="target-qty">Target Qty</th>
+        <th class="target-value">Target Value</th>
+        <th class="remarks-col">Remarks</th>
+      </tr>`
+    : `<tr>
+        <th class="rowno">#</th>
+        <th class="target-qty">Target Qty</th>
+        <th class="target-value">Target Value</th>
+        <th class="remarks-col">Remarks</th>
+      </tr>`;
+
+  tbody.innerHTML="";
+
+  if(perSales){
+    rows.forEach((r,i)=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td class="rowno">${i+1}</td>
+        <td>
+          <select data-i="${i}" data-f="salesCode">
+            ${salesEmployees.map(s=>`<option value="${esc(s.code)}" ${s.code===r.salesCode?"selected":""}>${esc(s.name)}</option>`).join("")}
+          </select>
+        </td>
+        <td><input class="num-input" data-i="${i}" data-f="qty" value="${formatNumber(r.qty,3)}"></td>
+        <td><input class="num-input" data-i="${i}" data-f="value" value="${formatNumber(r.value,2)}"></td>
+        <td><input data-i="${i}" data-f="remarks" value="${esc(r.remarks)}"></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    const blank=rows.length;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td class="rowno">${blank+1}</td>
+      <td>
+        <select id="newSalesCode">
+          <option value=""></option>
+          ${salesEmployees.filter(s=>!rows.some(r=>r.salesCode===s.code)).map(s=>`<option value="${esc(s.code)}">${esc(s.name)}</option>`).join("")}
+        </select>
+      </td>
+      <td><input id="newQty" class="num-input"></td>
+      <td><input id="newValue" class="num-input"></td>
+      <td><input id="newRemarks"></td>
+    `;
+    tbody.appendChild(tr);
+
+    for(let i=rows.length+1;i<9;i++){
+      const f=document.createElement("tr");
+      f.innerHTML=`<td class="rowno">${i+1}</td><td></td><td></td><td></td><td></td>`;
+      tbody.appendChild(f);
+    }
+
+    tbody.querySelectorAll("[data-i][data-f]").forEach(inp=>{
+      const handler=()=>{
+        const r=rows[+inp.dataset.i];
+        const f=inp.dataset.f;
+        if(f==="salesCode"){
+          const s=salesEmployees.find(x=>x.code===inp.value);
+          const duplicate=rows.some((x,idx)=>idx!==+inp.dataset.i && x.salesCode===inp.value);
+          if(duplicate){
+            msg("Sales Employee already exists in this target document.","error");
+            render();
+            return;
+          }
+          r.salesCode=inp.value;
+          r.salesName=s?s.name:"";
+        }else if(f==="qty"||f==="value"){
+          r[f]=parseNumber(inp.value);
+          inp.value=formatNumber(r[f],f==="qty"?3:2);
+        }else{
+          r[f]=inp.value;
+        }
+        updateSummary();
+      };
+      inp.addEventListener(inp.tagName==="SELECT"?"change":"change",handler);
+    });
+
+    ["newSalesCode","newQty","newValue","newRemarks"].forEach(id=>{
+      const n=el(id); if(n) n.onchange=tryCommitNewRow;
+    });
+
+  }else{
+    if(!rows.length || rows.length>1 || rows[0].salesCode){
+      rows=[{salesCode:"",salesName:"",qty:500,value:3000000000,remarks:""}];
+    }
+    const r=rows[0];
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td class="rowno">1</td>
+      <td><input id="allQty" class="num-input" value="${formatNumber(r.qty,3)}"></td>
+      <td><input id="allValue" class="num-input" value="${formatNumber(r.value,2)}"></td>
+      <td><input id="allRemarks" value="${esc(r.remarks)}"></td>
+    `;
+    tbody.appendChild(tr);
+    for(let i=1;i<8;i++){
+      const f=document.createElement("tr");
+      f.innerHTML=`<td class="rowno">${i+1}</td><td></td><td></td><td></td>`;
+      tbody.appendChild(f);
+    }
+    el("allQty").onchange=()=>{rows[0].qty=parseNumber(allQty.value);allQty.value=formatNumber(rows[0].qty,3);updateSummary()};
+    el("allValue").onchange=()=>{rows[0].value=parseNumber(allValue.value);allValue.value=formatNumber(rows[0].value,2);updateSummary()};
+    el("allRemarks").oninput=()=>rows[0].remarks=allRemarks.value;
+  }
+
+  updateSummary();
+}
+
+function updateSummary(){
+  const valid=rows.filter(r=>currentSetup.assignment==="All" || r.salesCode);
+  const qty=valid.reduce((a,r)=>a+Number(r.qty||0),0);
+  const value=valid.reduce((a,r)=>a+Number(r.value||0),0);
+  el("totalQty").value=formatNumber(qty,3);
+  el("totalValue").value=money(value);
+}
+
+function tryCommitNewRow(){
+  if(!el("newSalesCode")?.value) return;
+  const qty=parseNumber(el("newQty").value);
+  const val=parseNumber(el("newValue").value);
+  if(qty<=0 && val<=0) return;
+  const s=salesEmployees.find(x=>x.code===el("newSalesCode").value);
+  rows.push({
+    salesCode:el("newSalesCode").value,
+    salesName:s?s.name:"",
+    qty,
+    value:val,
+    remarks:el("newRemarks").value
+  });
+  render();
+}
+
+/* setup picker */
+function renderSetups(){
+  setupBody.innerHTML=setupFiltered.map((s,i)=>`
+    <tr data-i="${i}">
+      <td>${esc(s.code)}</td><td>${esc(s.name)}</td><td>${esc(s.assignment)}</td><td>${esc(s.uom)}</td>
+    </tr>`).join("");
+  [...setupBody.querySelectorAll("tr")].forEach((tr,i)=>{
+    tr.onclick=()=>{
+      [...setupBody.querySelectorAll("tr")].forEach(x=>x.classList.remove("selected"));
+      tr.classList.add("selected"); setupSelected=setupFiltered[i];
+    };
+    tr.ondblclick=()=>{setupSelected=setupFiltered[i];selectSetup()};
+  });
+}
+function selectSetup(){
+  if(!setupSelected)return;
+  const oldAssignment=currentSetup.assignment;
+  currentSetup={...setupSelected};
+  if(oldAssignment!==currentSetup.assignment){
+    rows=currentSetup.assignment==="All"
+      ? [{salesCode:"",salesName:"",qty:500,value:3000000000,remarks:""}]
+      : [
+        {salesCode:"S001",salesName:"Budi",qty:45,value:275000000,remarks:""},
+        {salesCode:"S002",salesName:"Lukman",qty:40,value:245000000,remarks:""},
+        {salesCode:"S003",salesName:"Samsul",qty:35,value:210000000,remarks:""}
+      ];
+  }
+  setupModal.classList.remove("show");render();msg("");
+}
+setupBtn.onclick=()=>{
+  setupFiltered=[...setups];setupSelected=null;setupSearch.value="";renderSetups();setupModal.classList.add("show");
+};
+setupSearch.oninput=()=>{
+  const q=setupSearch.value.toLowerCase().trim();
+  setupFiltered=setups.filter(x=>!q||`${x.code} ${x.name} ${x.assignment}`.toLowerCase().includes(q));
+  setupSelected=null;renderSetups();
+};
+setupSelect.onclick=selectSetup;
+setupClose.onclick=setupCancel.onclick=()=>setupModal.classList.remove("show");
+
+function validate(){
+  if(!dateFrom.value||!dateTo.value)return "Period From and Period To are required.";
+  if(dateFrom.value>dateTo.value)return "Period From cannot be later than Period To.";
+  const valid=rows.filter(r=>currentSetup.assignment==="All"||r.salesCode);
+  if(!valid.length)return "At least one target line is required.";
+  for(let i=0;i<valid.length;i++){
+    const r=valid[i];
+    if(Number(r.qty||0)<=0 && Number(r.value||0)<=0)
+      return `Target Qty or Target Value is required on line ${i+1}.`;
+  }
+  return "";
+}
+
+updateBtn.onclick=()=>{
+  const e=validate();if(e){msg(e,"error");return}
+  msg("Sales Target updated successfully.","success");
+};
+
+
+
+
+
+cancelBtn.onclick=()=>msg("");
+
+render();
+})();
+</script>
+</body>
+</html>

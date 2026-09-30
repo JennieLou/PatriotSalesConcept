@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manajemen Activity - Daftar Activity</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#4b4b4b;background:#dce8f1}
+.page-head{background:#fff;border-top:5px solid #2e006b;border-bottom:1px solid #c9d3da;padding:16px 20px 17px}
+.page-title{font-size:20px;color:#666;margin-bottom:10px}.crumbs{color:#6c7881}.crumbs span{margin:0 7px;color:#aaa}
+.section-box{margin:26px 28px 0;background:#fff;border:1px solid #cbd4da;box-shadow:0 1px 2px rgba(0,0,0,.14);padding:14px}
+.section-box.main{margin-top:20px;padding:14px 18px}
+.btn{border:1px solid #d6dbe0;background:#fff;color:#59656e;padding:8px 14px;cursor:pointer;font-size:12px;border-radius:2px;line-height:1.2;white-space:nowrap}
+.btn-blue{background:#1e73be;border-color:#1e73be;color:#fff;font-weight:600}.btn-filter{background:#1e73be;border-color:#1e73be;color:#fff;font-weight:600}
+.btn-view{background:#15c4c8;border-color:#15c4c8;color:#fff;width:72px;font-weight:600;padding:7px 8px}.btn-edit{background:#f5b041;border-color:#f5b041;color:#fff;width:72px;font-weight:600;padding:7px 8px}
+.btn-warning{background:#f0ad4e;border-color:#f0ad4e;color:#fff;font-weight:600}.btn-soft-warning{background:#fff8e8;border-color:#e2c27e;color:#8b671d;font-weight:600}
+.top-actions,.general-tools,.quick-row,.bulk-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.top-actions{justify-content:space-between}
+.general-tools{margin-left:auto}
+.filters{display:grid;grid-template-columns:1.15fr 1.2fr 1fr 1fr auto;gap:18px;align-items:end;margin-bottom:14px}
+.field label{display:block;margin-bottom:7px;font-weight:600;color:#555}
+input,select{width:100%;height:32px;border:1px solid #c7c7c7;padding:7px 9px;font:inherit;color:#555;background:#fff;border-radius:2px}
+.date-range{display:grid;grid-template-columns:1fr 1fr;gap:6px}.cfl{display:flex}.cfl input{border-radius:2px 0 0 2px}.cfl button{width:34px;border:1px solid #c7c7c7;border-left:0;background:#f6f6f6;color:#666}
+.quick-row{margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #ececec}.quick-label{font-weight:600;color:#666}.quick-row .filter-main{margin-left:auto;width:120px}
+.bulk-bar{display:none;padding:9px 10px;margin-bottom:10px;background:#f7f9fb;border:1px solid #d9e1e7}.bulk-bar.show{display:flex}.bulk-count{font-weight:600;color:#59656e;margin-right:auto}
+.table-tools{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px}.table-tools-left{display:flex;align-items:center;gap:0;flex-wrap:wrap}.entries-box,.search-box{display:flex;align-items:center;gap:8px;color:#666}.entries-box{margin-right:4px}.entries-box select{width:70px}.search-box input{width:220px;height:28px}.table-general-tools{display:flex;align-items:center;gap:0}.table-general-tools .btn{border-radius:0;margin-left:-1px;padding:8px 12px}.table-general-tools .btn:first-child{border-radius:2px 0 0 2px;margin-left:0}.table-general-tools .btn:last-child{border-radius:0 2px 2px 0}
+.table-outer{overflow-x:auto;border:1px solid #e0e0e0;position:relative}
+table{width:100%;min-width:1320px;border-collapse:separate;border-spacing:0}
+thead th{background:#f5f5f5;color:#666;text-align:left;padding:11px 8px;border-right:1px solid #dfdfdf;border-bottom:1px solid #dfdfdf;font-weight:700;white-space:nowrap;position:relative}
+tbody td{padding:10px 8px;border-right:1px solid #e6e6e6;border-bottom:1px solid #e6e6e6;vertical-align:top;background:#fff}
+thead th:last-child,tbody td:last-child{border-right:none}.col-hidden{display:none!important}
+.action-col{position:sticky!important;right:0;z-index:3;background:#f5f5f5!important;box-shadow:-2px 0 4px rgba(0,0,0,.05)}
+tbody .action-col{z-index:2;background:#fff!important}
+.actions{display:flex;flex-direction:column;gap:4px;align-items:flex-start}.actions .btn{padding:6px 10px}
+.status{display:inline-block;min-width:64px;text-align:center;padding:4px 7px;border-radius:2px;font-size:11px;font-weight:600;border:1px solid}
+.status.open{color:#337ab7;background:#f1f7fc;border-color:#acd0eb}.status.ongoing{color:#457649;background:#edf8ef;border-color:#aed3b3}.status.tentative{color:#8a651b;background:#fff8e7;border-color:#e4cb8f}.status.inactive{color:#777;background:#f5f5f5;border-color:#ccc}.status.close{color:#3c763d;background:#f0f8f0;border-color:#b7d6b8}
+.flag{display:inline-block;padding:3px 6px;font-size:10px;border:1px solid #e1c475;background:#fff8e7;color:#89651d;white-space:nowrap}.flag.empty{border:0;background:transparent;color:#aaa}
+.type-tag{display:inline-block;padding:3px 6px;border:1px solid #cbd7e0;background:#f8fbfd;color:#5d6e7b;font-size:10px}.muted{color:#888}.nowrap{white-space:nowrap}
+.bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 2px 2px;color:#666}.pagination{display:flex}.pagination button{border:1px solid #d7d7d7;background:#fff;color:#666;padding:6px 10px;font-size:12px}.pagination button+button{margin-left:-1px}.pagination .active{background:#f4f4f4}
+.modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;align-items:center;justify-content:center;padding:20px}.modal-wrap.show{display:flex}.modal{width:560px;max-width:96vw;max-height:90vh;background:#fff;border:1px solid #cbd4da;box-shadow:0 6px 20px rgba(0,0,0,.25);display:flex;flex-direction:column}.modal-head{padding:12px 14px;border-bottom:1px solid #ddd;background:#f5f5f5;display:flex;justify-content:space-between;align-items:center;font-weight:700}.modal-body{padding:14px;overflow:auto}.modal-actions{padding:10px 14px;border-top:1px solid #ddd;display:flex;justify-content:flex-end;gap:8px}.close-x{border:0;background:none;font-size:18px;color:#777}
+.customer-list,.column-list{display:grid;gap:6px}.column-list{grid-template-columns:1fr 1fr;column-gap:14px}.column-item{min-height:34px}.customer-item{border:1px solid #ddd;padding:9px 10px;cursor:pointer}.customer-item:hover{background:#f5faff}.customer-code{font-weight:700;color:#52799c}.customer-name{margin-top:2px}.column-item{display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid #eee}.column-item input{width:auto;height:auto}
+.confirm-box{font-size:13px;line-height:1.5;color:#555}.confirm-count{font-size:26px;color:#d58512;font-weight:700;margin:8px 0}
+.toast{position:fixed;right:20px;bottom:20px;display:none;background:#3d444b;color:#fff;padding:10px 14px;box-shadow:0 3px 10px rgba(0,0,0,.25);z-index:80}.toast.show{display:block}
+@media(max-width:1150px){.filters{grid-template-columns:1fr 1fr}.filters .filter-btn-wrap{grid-column:span 2}.general-tools{width:100%;margin-left:0}}
+@media(max-width:900px){.section-box{margin:12px 12px 0}.filters{grid-template-columns:1fr}.filters .filter-btn-wrap{grid-column:auto}.table-tools,.top-actions{flex-direction:column;align-items:flex-start}.table-tools-left{width:100%;gap:8px}.table-general-tools{flex-wrap:wrap}.table-general-tools .btn{margin-left:0;border-radius:2px}.bottom-bar{flex-direction:column;align-items:flex-start;gap:12px}.bulk-count{width:100%}.quick-row .filter-main{margin-left:0}.column-list{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div class="page-title">Manajemen Activity</div>
+  <div class="crumbs">Beranda <span>/</span> Transaction <span>/</span> Activity <span>/</span> Daftar Activity</div>
+</div>
+
+<div class="section-box">
+  <div class="top-actions">
+    <button class="btn btn-blue" onclick="showToast('Add Activity Baru — screen Add/Edit akan dibuat terpisah.')">+ Add Activity Baru</button>
+  </div>
+</div>
+
+<div class="section-box main">
+  <div class="filters">
+    <div class="field">
+      <label>Tanggal Activity:</label>
+      <div class="date-range"><input type="date" id="dateFrom"><input type="date" id="dateTo"></div>
+    </div>
+    <div class="field">
+      <label>Customer:</label>
+      <div class="cfl"><input id="customerDisplay" readonly placeholder="Semua Customer"><button type="button" onclick="openCustomerCFL()">...</button></div>
+      <input type="hidden" id="customerCodeFilter">
+    </div>
+    <div class="field">
+      <label>Status:</label>
+      <select id="statusFilter"><option value="">Semua</option><option>Open</option><option>Tentative</option><option>Ongoing</option><option>Inactive</option><option>Close</option></select>
+    </div>
+    <div class="field">
+      <label>Tipe Activity:</label>
+      <select id="typeFilter"><option value="">Semua</option><option>Scheduled Visit</option><option>Ad-hoc Visit</option></select>
+    </div>
+    <div class="filter-btn-wrap"><button class="btn btn-filter" style="width:120px" onclick="filterRows()">⚗ Filter</button></div>
+  </div>
+
+  <div class="quick-row">
+    <span class="quick-label">Filter Cepat:</span>
+    <button class="btn" onclick="setQuick('today')">Hari Ini</button>
+    <button class="btn" onclick="setQuick('open')">Open</button>
+    <button class="btn" onclick="setQuick('tentative')">Tentative</button>
+    <button class="btn btn-soft-warning" onclick="applyPastOpenPreset()">Activity Lewat Masih Open</button>
+  </div>
+
+  <div class="bulk-bar" id="bulkBar">
+    <div class="bulk-count"><span id="selectedCount">0</span> Activity dipilih</div>
+    <button class="btn btn-warning" onclick="requestBulkInactive()">Set Inactive</button>
+    <button class="btn" onclick="clearSelection()">Batal Pilih</button>
+  </div>
+
+  <div class="table-tools">
+    <div class="table-tools-left">
+      <div class="entries-box"><span>Tampilkan</span><select><option>10</option><option>25</option><option>50</option></select><span>data</span></div>
+      <div class="table-general-tools">
+        <button class="btn" onclick="openColumnSettings()">Atur Kolom</button>
+        <button class="btn" onclick="resetColumns()">Reset Kolom</button>
+        <button class="btn" onclick="clearAllFilters()">Hapus Filter</button>
+        <button class="btn" onclick="copyVisibleTable()">Copy</button>
+      </div>
+    </div>
+    <div class="search-box"><span>Cari:</span><input id="keyword" oninput="filterRows()" placeholder="No. Activity / Customer / Subject"></div>
+  </div>
+
+  <div class="table-outer">
+    <table id="activityTable">
+      <thead>
+        <tr>
+          <th data-col="select" style="width:38px"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)"></th>
+          <th data-col="activityNo" style="width:105px">No. Activity</th>
+          <th data-col="date" style="width:105px">Tanggal</th>
+          <th data-col="start" style="width:90px">Mulai</th>
+          <th data-col="end" style="width:90px">Selesai</th>
+          <th data-col="customerCode" class="col-hidden" style="width:110px">Kode Customer</th>
+          <th data-col="customer" style="width:210px">Customer</th>
+          <th data-col="contact" style="width:145px">Kontak</th>
+          <th data-col="subject" style="width:150px">Subject</th>
+          <th data-col="type" style="width:120px">Tipe Activity</th>
+          <th data-col="opportunity" style="width:120px">Opportunity</th>
+          <th data-col="opportunityLine" class="col-hidden" style="width:95px">Opportunity Line</th>
+          <th data-col="stage" style="width:110px">Stage</th>
+          <th data-col="status" style="width:90px">Status</th>
+          <th data-col="flag" style="width:105px">Flag</th>
+          <th data-col="checkIn" class="col-hidden" style="width:145px">Check In</th>
+          <th data-col="ciLat" class="col-hidden" style="width:110px">CI Latitude</th>
+          <th data-col="ciLong" class="col-hidden" style="width:110px">CI Longitude</th>
+          <th data-col="ciAcc" class="col-hidden" style="width:90px">CI Accuracy</th>
+          <th data-col="checkOut" class="col-hidden" style="width:145px">Check Out</th>
+          <th data-col="coLat" class="col-hidden" style="width:110px">CO Latitude</th>
+          <th data-col="coLong" class="col-hidden" style="width:110px">CO Longitude</th>
+          <th data-col="coAcc" class="col-hidden" style="width:90px">CO Accuracy</th>
+          <th data-col="remarks" class="col-hidden" style="width:220px">Remarks</th>
+          <th data-col="visitResult" class="col-hidden" style="width:220px">Visit Result / Notes</th>
+          <th data-col="action" class="action-col" style="width:95px">Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="activityBody"></tbody>
+    </table>
+  </div>
+
+  <div class="bottom-bar">
+    <div id="showingText"></div>
+    <div class="pagination"><button>&lt; Prev</button><button class="active">1</button><button>2</button><button>3</button><button>Next &gt;</button></div>
+  </div>
+</div>
+
+<div class="modal-wrap" id="customerModal">
+  <div class="modal">
+    <div class="modal-head"><span>Pilih Customer</span><button class="close-x" onclick="closeModal('customerModal')">×</button></div>
+    <div class="modal-body">
+      <div style="margin-bottom:10px"><input id="customerSearch" placeholder="Cari kode / nama Customer" oninput="renderCustomerCFL()"></div>
+      <div class="customer-list" id="customerList"></div>
+    </div>
+    <div class="modal-actions"><button class="btn" onclick="clearCustomer()">Hapus Pilihan</button><button class="btn" onclick="closeModal('customerModal')">Tutup</button></div>
+  </div>
+</div>
+
+<div class="modal-wrap" id="columnModal">
+  <div class="modal">
+    <div class="modal-head"><span>Atur Kolom</span><button class="close-x" onclick="closeModal('columnModal')">×</button></div>
+    <div class="modal-body">
+      <div style="margin-bottom:10px;color:#777;font-size:11px">Centang kolom yang ingin ditampilkan pada daftar Activity.</div>
+      <div class="column-list" id="columnList"></div>
+    </div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('columnModal')">Batal</button><button class="btn btn-blue" onclick="applyColumnSettings()">Terapkan</button></div>
+  </div>
+</div>
+
+<div class="modal-wrap" id="inactiveModal">
+  <div class="modal" style="width:430px">
+    <div class="modal-head"><span>Konfirmasi Set Inactive</span><button class="close-x" onclick="closeModal('inactiveModal')">×</button></div>
+    <div class="modal-body confirm-box">
+      Activity yang dipilih akan diubah menjadi <b>Inactive</b>.
+      <div class="confirm-count"><span id="inactiveCount">0</span> Activity</div>
+      Yakin ingin melanjutkan?
+    </div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('inactiveModal')">Batal</button><button class="btn btn-warning" onclick="bulkInactive()">Ya, Set Inactive</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TODAY='2026-09-17';
+const customers=[
+  {code:'C000145',name:'PT Sumber Makmur'},
+  {code:'C000210',name:'PT Maju Bersama'},
+  {code:'L000032',name:'CV Berkah Jaya'},
+  {code:'C000311',name:'PT Cahaya Interlining Perkasa'},
+  {code:'C000515',name:'PT Sentosa Abadi'}
+];
+
+let rows=[
+  {no:'A-51021',date:'2026-09-16',start:'09:00',end:'10:00',customerCode:'C000145',customer:'PT Sumber Makmur',contact:'Pak Hendra',subject:'Follow Up',type:'Scheduled Visit',opportunity:'OPP-00028',opportunityLine:'3',stage:'Quotation',status:'Open',checkIn:'',ciLat:'',ciLong:'',ciAcc:'',checkOut:'',coLat:'',coLong:'',coAcc:'',remarks:'Follow up pricing',visitResult:'',relatedDocType:'',relatedDocNo:''},
+  {no:'A-51035',date:'2026-09-17',start:'13:30',end:'14:30',customerCode:'C000210',customer:'PT Maju Bersama',contact:'Bu Anita',subject:'Product Presentation',type:'Scheduled Visit',opportunity:'OPP-00031',opportunityLine:'1',stage:'Introduction',status:'Open',checkIn:'',ciLat:'',ciLong:'',ciAcc:'',checkOut:'',coLat:'',coLong:'',coAcc:'',remarks:'Customer requested afternoon',visitResult:'',relatedDocType:'',relatedDocNo:''},
+  {no:'A-51050',date:'2026-09-17',start:'16:30',end:'17:30',customerCode:'C000515',customer:'PT Sentosa Abadi',contact:'Pak Dedi',subject:'Negotiation',type:'Scheduled Visit',opportunity:'',opportunityLine:'',stage:'',status:'Open',checkIn:'',ciLat:'',ciLong:'',ciAcc:'',checkOut:'',coLat:'',coLong:'',coAcc:'',remarks:'',visitResult:'',relatedDocType:'',relatedDocNo:''},
+  {no:'A-51042',date:'2026-09-17',start:'15:30',end:'16:30',customerCode:'L000032',customer:'CV Berkah Jaya',contact:'Ibu Melati',subject:'Initial Visit',type:'Ad-hoc Visit',opportunity:'',opportunityLine:'',stage:'',status:'Tentative',checkIn:'',ciLat:'',ciLong:'',ciAcc:'',checkOut:'',coLat:'',coLong:'',coAcc:'',remarks:'',visitResult:'',relatedDocType:'',relatedDocNo:''},
+  {no:'A-51060',date:'2026-09-18',start:'14:00',end:'15:00',customerCode:'C000145',customer:'PT Sumber Makmur',contact:'Bu Rina',subject:'Quotation Discussion',type:'Scheduled Visit',opportunity:'OPP-00028',opportunityLine:'2',stage:'Quotation',status:'Open',checkIn:'',ciLat:'',ciLong:'',ciAcc:'',checkOut:'',coLat:'',coLong:'',coAcc:'',remarks:'Rescheduled from 16 Sep',visitResult:'',relatedDocType:'',relatedDocNo:''},
+  {no:'A-51008',date:'2026-09-15',start:'14:00',end:'15:00',customerCode:'C000311',customer:'PT Cahaya Interlining Perkasa',contact:'Pak Surya',subject:'Quotation Discussion',type:'Scheduled Visit',opportunity:'OPP-02977',opportunityLine:'4',stage:'Quotation',status:'Close',checkIn:'15 Sep 2026 14:06',ciLat:'-6.224410',ciLong:'106.829330',ciAcc:'14 m',checkOut:'15 Sep 2026 15:11',coLat:'-6.224401',coLong:'106.829341',coAcc:'16 m',remarks:'',visitResult:'Customer minta revisi harga dan MOQ.',relatedDocType:'Sales Quotation',relatedDocNo:'SQ-2600318'},
+  {no:'A-50988',date:'2026-09-12',start:'11:00',end:'12:00',customerCode:'C000515',customer:'PT Sentosa Abadi',contact:'Pak Dedi',subject:'Relationship Visit',type:'Ad-hoc Visit',opportunity:'',opportunityLine:'',stage:'',status:'Open',checkIn:'',ciLat:'',ciLong:'',ciAcc:'',checkOut:'',coLat:'',coLong:'',coAcc:'',remarks:'',visitResult:'',relatedDocType:'Sales Order',relatedDocNo:'SO-2600456'},
+  {no:'A-50955',date:'2026-09-10',start:'09:30',end:'10:30',customerCode:'C000210',customer:'PT Maju Bersama',contact:'Bu Anita',subject:'Follow Up',type:'Scheduled Visit',opportunity:'OPP-00031',opportunityLine:'1',stage:'Introduction',status:'Inactive',checkIn:'',ciLat:'',ciLong:'',ciAcc:'',checkOut:'',coLat:'',coLong:'',coAcc:'',remarks:'Visit cancelled',visitResult:'',relatedDocType:'',relatedDocNo:''}
+];
+
+const defaultVisible=['select','activityNo','date','start','end','customer','contact','subject','type','opportunity','stage','status','flag','action'];
+
+const allColumns=[
+  {key:'activityNo',label:'No. Activity'},
+  {key:'date',label:'Tanggal'},
+  {key:'start',label:'Mulai'},
+  {key:'end',label:'Selesai'},
+  {key:'customerCode',label:'Kode Customer'},
+  {key:'customer',label:'Customer'},
+  {key:'contact',label:'Kontak'},
+  {key:'subject',label:'Subject'},
+  {key:'type',label:'Tipe Activity'},
+  {key:'opportunity',label:'Opportunity'},
+  {key:'opportunityLine',label:'Opportunity Line'},
+  {key:'stage',label:'Stage'},
+  {key:'relatedDocType',label:'Related Document Type'},
+  {key:'relatedDocNo',label:'Related Document No.'},
+  {key:'status',label:'Status'},
+  {key:'flag',label:'Flag'},
+  {key:'checkIn',label:'Check In'},
+  {key:'ciLat',label:'CI Latitude'},
+  {key:'ciLong',label:'CI Longitude'},
+  {key:'ciAcc',label:'CI Accuracy'},
+  {key:'checkOut',label:'Check Out'},
+  {key:'coLat',label:'CO Latitude'},
+  {key:'coLong',label:'CO Longitude'},
+  {key:'coAcc',label:'CO Accuracy'},
+  {key:'remarks',label:'Remarks'},
+  {key:'visitResult',label:'Visit Result / Notes'},
+  {key:'action',label:'Aksi',locked:true}
+];
+
+let visibleCols=new Set(defaultVisible);
+let filteredRows=[...rows];
+
+function fmtDate(s){const [y,m,d]=s.split('-');const mon=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][+m-1];return `${+d} ${mon} ${y}`}
+function isPastOpen(r){return r.status==='Open'&&r.date<TODAY}
+function flagText(r){return isPastOpen(r)?'Jadwal Lewat':''}
+function statusHTML(s){return `<span class="status ${s.toLowerCase()}">${s}</span>`}
+function typeHTML(t){return `<span class="type-tag">${t}</span>`}
+function cell(v){return v||'<span class="muted">-</span>'}
+
+function renderTable(){
+  const body=document.getElementById('activityBody');
+  body.innerHTML=filteredRows.map(r=>{
+    const isOngoing = r.status==='Open' && !!r.checkIn && !r.checkOut;
+    const displayStatus = isOngoing ? 'Ongoing' : r.status;
+    const canEdit = (r.status==='Open' || r.status==='Tentative') && !r.checkIn;
+    const disabled = (r.status==='Close' || r.status==='Inactive' || isOngoing) ? 'disabled' : '';
+    return `<tr data-no="${r.no}">
+      <td data-col="select"><input class="row-check" type="checkbox" ${disabled} onchange="updateBulkBar()"></td>
+      <td data-col="activityNo">${r.no}</td>
+      <td data-col="date" class="nowrap">${fmtDate(r.date)}</td>
+      <td data-col="start">${r.start}</td>
+      <td data-col="end">${r.end}</td>
+      <td data-col="customerCode">${r.customerCode}</td>
+      <td data-col="customer">${r.customer}</td>
+      <td data-col="contact">${r.contact}</td>
+      <td data-col="subject">${r.subject}</td>
+      <td data-col="type">${typeHTML(r.type)}</td>
+      <td data-col="opportunity">${cell(r.opportunity)}</td>
+      <td data-col="opportunityLine">${cell(r.opportunityLine)}</td>
+      <td data-col="stage">${cell(r.stage)}</td>
+      <td data-col="relatedDocType">${cell(r.relatedDocType)}</td>
+      <td data-col="relatedDocNo">${cell(r.relatedDocNo)}</td>
+      <td data-col="status">${statusHTML(displayStatus)}</td>
+      <td data-col="flag">${flagText(r)?`<span class="flag">${flagText(r)}</span>`:'<span class="flag empty">-</span>'}</td>
+      <td data-col="checkIn">${cell(r.checkIn)}</td>
+      <td data-col="ciLat">${cell(r.ciLat)}</td>
+      <td data-col="ciLong">${cell(r.ciLong)}</td>
+      <td data-col="ciAcc">${cell(r.ciAcc)}</td>
+      <td data-col="checkOut">${cell(r.checkOut)}</td>
+      <td data-col="coLat">${cell(r.coLat)}</td>
+      <td data-col="coLong">${cell(r.coLong)}</td>
+      <td data-col="coAcc">${cell(r.coAcc)}</td>
+      <td data-col="remarks">${cell(r.remarks)}</td>
+      <td data-col="visitResult">${cell(r.visitResult)}</td>
+      <td data-col="action" class="action-col"><div class="actions"><button class="btn btn-view" onclick="showToast('View ${r.no}')">◉ View</button>${canEdit?`<button class="btn btn-edit" onclick="showToast('Edit ${r.no}')">✎ Edit</button>`:''}${(isOngoing||r.status==='Close')?`<button class="btn btn-edit" style="width:108px" onclick="showToast('Update Follow-up ${r.no}')">✎ Follow-up</button>`:''}</div></td>
+    </tr>`;
+  }).join('');
+  applyVisibleColumns();
+  document.getElementById('showingText').textContent=filteredRows.length?`Menampilkan 1 sampai ${filteredRows.length} dari ${filteredRows.length} data`:'Menampilkan 0 sampai 0 dari 0 data';
+  document.getElementById('selectAll').checked=false;
+  updateBulkBar();
+}
+
+function applyVisibleColumns(){
+  document.querySelectorAll('[data-col]').forEach(el=>{
+    const col=el.dataset.col;
+    el.classList.toggle('col-hidden',!visibleCols.has(col));
+  });
+}
+function filterRows(){
+  const kw=document.getElementById('keyword').value.toLowerCase().trim();
+  const from=document.getElementById('dateFrom').value,to=document.getElementById('dateTo').value;
+  const cust=document.getElementById('customerCodeFilter').value,status=document.getElementById('statusFilter').value,type=document.getElementById('typeFilter').value;
+  filteredRows=rows.filter(r=>{
+    const derivedStatus=(r.status==='Open'&&r.checkIn&&!r.checkOut)?'Ongoing':r.status;
+    const statusMatch=!status || (status==='Open' ? (r.status==='Open' && !r.checkIn) : derivedStatus===status);
+    return (!kw||Object.values(r).join(' ').toLowerCase().includes(kw))&&(!from||r.date>=from)&&(!to||r.date<=to)&&(!cust||r.customerCode===cust)&&statusMatch&&(!type||r.type===type);
+  });
+  renderTable();
+}
+function clearAllFilters(){
+  ['dateFrom','dateTo','statusFilter','typeFilter','keyword','customerCodeFilter','customerDisplay'].forEach(id=>document.getElementById(id).value='');
+  filteredRows=[...rows];renderTable();showToast('Filter dihapus.');
+}
+function setQuick(kind){
+  clearAllFilters();
+  if(kind==='today'){document.getElementById('dateFrom').value=TODAY;document.getElementById('dateTo').value=TODAY}
+  if(kind==='open')document.getElementById('statusFilter').value='Open';
+  if(kind==='tentative')document.getElementById('statusFilter').value='Tentative';
+  filterRows();
+}
+function applyPastOpenPreset(){
+  clearAllFilters();
+  document.getElementById('statusFilter').value='Open';
+  document.getElementById('dateTo').value='2026-09-16';
+  filterRows();
+}
+function toggleSelectAll(cb){document.querySelectorAll('.row-check:not(:disabled)').forEach(x=>x.checked=cb.checked);updateBulkBar()}
+function updateBulkBar(){const n=document.querySelectorAll('.row-check:checked').length;document.getElementById('selectedCount').textContent=n;document.getElementById('bulkBar').classList.toggle('show',n>0)}
+function clearSelection(){document.querySelectorAll('.row-check').forEach(x=>x.checked=false);document.getElementById('selectAll').checked=false;updateBulkBar()}
+function requestBulkInactive(){const n=document.querySelectorAll('.row-check:checked').length;if(!n)return;document.getElementById('inactiveCount').textContent=n;openModal('inactiveModal')}
+function bulkInactive(){
+  const selected=[...document.querySelectorAll('.row-check:checked')].map(x=>x.closest('tr').dataset.no);
+  rows.forEach(r=>{
+    const isOngoing=r.status==='Open'&&r.checkIn&&!r.checkOut;
+    if(selected.includes(r.no)&&!['Close','Inactive'].includes(r.status)&&!isOngoing)r.status='Inactive';
+  });
+  closeModal('inactiveModal');clearSelection();filterRows();showToast(`${selected.length} Activity berhasil diubah menjadi Inactive.`);
+}
+
+function openCustomerCFL(){document.getElementById('customerSearch').value='';renderCustomerCFL();openModal('customerModal')}
+function renderCustomerCFL(){
+  const q=document.getElementById('customerSearch').value.toLowerCase().trim();
+  document.getElementById('customerList').innerHTML=customers.filter(c=>!q||`${c.code} ${c.name}`.toLowerCase().includes(q)).map(c=>`<div class="customer-item" onclick="chooseCustomer('${c.code}')"><div class="customer-code">${c.code}</div><div class="customer-name">${c.name}</div></div>`).join('');
+}
+function chooseCustomer(code){const c=customers.find(x=>x.code===code);document.getElementById('customerCodeFilter').value=c.code;document.getElementById('customerDisplay').value=`${c.code} - ${c.name}`;closeModal('customerModal')}
+function clearCustomer(){document.getElementById('customerCodeFilter').value='';document.getElementById('customerDisplay').value='';closeModal('customerModal')}
+
+function openColumnSettings(){
+  document.getElementById('columnList').innerHTML=allColumns.map(col=>`
+    <label class="column-item">
+      <input type="checkbox"
+             data-column-choice="${col.key}"
+             ${visibleCols.has(col.key)?'checked':''}
+             ${col.locked?'checked disabled':''}>
+      <span>${col.label}</span>
+      ${col.locked?'<span style="margin-left:auto;color:#999;font-size:10px">Tetap tampil</span>':''}
+    </label>`).join('');
+  openModal('columnModal');
+}
+function applyColumnSettings(){
+  allColumns.forEach(col=>{
+    if(col.locked){
+      visibleCols.add(col.key);
+      return;
+    }
+    const cb=document.querySelector(`[data-column-choice="${col.key}"]`);
+    if(cb && cb.checked) visibleCols.add(col.key);
+    else visibleCols.delete(col.key);
+  });
+
+  // Utility checkbox column stays visible.
+  visibleCols.add('select');
+  applyVisibleColumns();
+  closeModal('columnModal');
+}
+function resetColumns(){
+  visibleCols=new Set(defaultVisible);
+  applyVisibleColumns();
+  showToast('Kolom dikembalikan ke default.');
+}
+
+function visibleColumnKeys(){
+  return [...document.querySelectorAll('#activityTable thead th[data-col]')].filter(th=>!th.classList.contains('col-hidden')&&th.dataset.col!=='select'&&th.dataset.col!=='action').map(th=>th.dataset.col);
+}
+function headerLabel(key){return document.querySelector(`#activityTable thead th[data-col="${key}"]`)?.innerText.trim()||key}
+function rowValue(r,key){
+  const displayStatus=(r.status==='Open'&&r.checkIn&&!r.checkOut)?'Ongoing':r.status;
+  const map={activityNo:r.no,date:fmtDate(r.date),start:r.start,end:r.end,customerCode:r.customerCode,customer:r.customer,contact:r.contact,subject:r.subject,type:r.type,opportunity:r.opportunity,opportunityLine:r.opportunityLine,stage:r.stage,status:displayStatus,flag:flagText(r),checkIn:r.checkIn,ciLat:r.ciLat,ciLong:r.ciLong,ciAcc:r.ciAcc,checkOut:r.checkOut,coLat:r.coLat,coLong:r.coLong,coAcc:r.coAcc,remarks:r.remarks,visitResult:r.visitResult};
+  return map[key]||'';
+}
+async function copyVisibleTable(){
+  const keys=visibleColumnKeys();
+  const text=[keys.map(headerLabel).join('\t'),...filteredRows.map(r=>keys.map(k=>rowValue(r,k)).join('\t'))].join('\n');
+  try{await navigator.clipboard.writeText(text);showToast('Data yang tampil berhasil di-copy.')}catch(e){showToast('Copy tidak tersedia pada browser ini.')}
+}
+
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+document.querySelectorAll('.modal-wrap').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeModal(m.id)}));
+let toastTimer;function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2800)}
+
+const params=new URLSearchParams(location.search);
+if(params.get('preset')==='past-open')setTimeout(applyPastOpenPreset,0);
+else renderTable();
+</script>
+</body>
+</html>

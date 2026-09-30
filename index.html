@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PATRIOT – Sales Process Concept</title>
+<style>
+:root{
+  --ink:#17324a; --muted:#6b7e91; --navy:#173f72; --blue:#2a78b5;
+  --bg:#f5f8fb; --card:#ffffff; --line:#d9e3ec;
+  --web:#eef7ff; --web-b:#a9cee9; --web-i:#2678b8;
+  --sap:#eff8f2; --sap-b:#badcc4; --sap-i:#36805a;
+  --addon:#f5f1ff; --addon-b:#d1c4ee; --addon-i:#7053aa;
+  --neutral:#f8fafc; --neutral-b:#ccd8e2;
+  --shadow:0 14px 32px rgba(26,54,80,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+body{overflow:hidden}
+button,a{font:inherit}
+.app{height:100vh;display:grid;grid-template-rows:auto 1fr}
+.header{background:#fff;border-bottom:1px solid var(--line);padding:16px 24px 12px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.brand h1{margin:0;font-size:24px;line-height:1.1;color:var(--navy);letter-spacing:-.25px}
+.brand p{margin:5px 0 0;color:var(--muted);font-size:12px}
+.header-right{display:flex;align-items:center;gap:18px}
+.legend{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.legend span{display:flex;align-items:center;gap:6px;font-size:10px;color:#52687b}
+.legend i{width:9px;height:9px;border-radius:3px;border:1px solid}
+.legend .web{background:var(--web);border-color:var(--web-b)}
+.legend .sap{background:var(--sap);border-color:var(--sap-b)}
+.legend .addon{background:var(--addon);border-color:var(--addon-b)}
+.tabs{display:flex;gap:6px;margin-left:8px}
+.tab{border:1px solid var(--line);background:#fff;color:#4f667b;padding:8px 12px;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;transition:.15s}
+.tab:hover{border-color:#9ab7cd;background:#f8fbfd}
+.tab.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.main{min-height:0;padding:18px 22px 22px;position:relative}
+.canvas{height:100%;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:16px 18px 18px;overflow:hidden;position:relative}
+.canvas-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.canvas-title b{font-size:12px;color:var(--navy);letter-spacing:.02em}
+.canvas-title span{font-size:10px;color:#8092a3}
+.flow{height:calc(100% - 30px);position:relative;display:grid;grid-template-columns:1fr 1fr 1.04fr 1.05fr 1.15fr 1.02fr 1.02fr;grid-template-rows:1fr 1fr 1fr 1fr;gap:10px 14px;align-items:stretch}
+.zone{position:relative;border:1px dashed #d7e2eb;border-radius:14px;background:#fbfdff;padding:28px 10px 10px;transition:.2s}
+.zone-label{position:absolute;left:12px;top:9px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#8497a9}
+.zone.active-zone{border-color:#9fc3df;background:#f8fcff}
+.node{position:relative;border:1px solid var(--neutral-b);background:var(--neutral);border-radius:13px;min-height:72px;padding:11px 12px;display:flex;align-items:center;gap:10px;z-index:5;transition:.18s;box-shadow:0 3px 9px rgba(26,54,80,.035)}
+.node.clickable{cursor:pointer}
+.node.clickable:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(26,54,80,.10);border-color:#9ab5ca}
+.node.web{background:var(--web);border-color:var(--web-b)}
+.node.sap{background:var(--sap);border-color:var(--sap-b)}
+.node.addon{background:var(--addon);border-color:var(--addon-b)}
+.node .ico{width:36px;height:36px;border-radius:10px;background:#fff;display:grid;place-items:center;flex:0 0 auto;border:1px solid rgba(0,0,0,.055)}
+.node svg{width:19px;height:19px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.node.web svg{stroke:var(--web-i)} .node.sap svg{stroke:var(--sap-i)} .node.addon svg{stroke:var(--addon-i)} .node.neutral svg{stroke:#557187}
+.node-text{min-width:0}
+.node-title{font-size:12px;font-weight:800;color:#24445f;line-height:1.15}
+.node-sub{font-size:9.5px;color:#6d8295;margin-top:4px;line-height:1.25}
+.open-indicator{position:absolute;right:8px;top:8px;width:18px;height:18px;border-radius:6px;background:rgba(255,255,255,.86);display:grid;place-items:center;border:1px solid rgba(30,72,106,.12)}
+.open-indicator svg{width:10px;height:10px;stroke:#54738d;stroke-width:2}
+.node.route{box-shadow:0 0 0 2px rgba(42,120,181,.18),0 9px 18px rgba(42,120,181,.08);transform:translateY(-1px)}
+.node.soft{opacity:.52}
+
+#leadZone{grid-column:1/3;grid-row:1/2}
+#customerZone{grid-column:1/3;grid-row:2/3}
+#visitZone{grid-column:3/5;grid-row:1/3}
+#commercialZone{grid-column:5/8;grid-row:1/3}
+#targetZone{grid-column:1/8;grid-row:3/5}
+
+.two{height:100%;display:grid;grid-template-columns:1fr 34px 1fr;align-items:center;gap:5px}
+.visit-grid{height:100%;display:grid;grid-template-columns:1fr 28px 1fr 28px 1.2fr;align-items:center;gap:5px}
+.commercial-grid{height:100%;display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr 36px 1fr;grid-template-rows:1fr 1fr;align-items:center;gap:6px 4px}
+.target-grid{height:100%;display:grid;grid-template-columns:1fr 34px 1fr 74px 1fr 34px 1.25fr;align-items:center;gap:7px}
+.arr{font-size:20px;font-weight:700;text-align:center;color:#7990a4}
+.merge{font-size:22px;text-align:center;color:#7990a4}
+.branch-label{font-size:8.5px;color:#7a8da0;text-align:center;line-height:1.25}
+
+/* commercial branch placements */
+#commercialResult{grid-column:1;grid-row:1/3}
+#quotation{grid-column:3;grid-row:1}
+#directSO{grid-column:5;grid-row:1/3}
+#delivery{grid-column:7;grid-row:1}
+#arInvoice{grid-column:7;grid-row:2}
+#resultToQuote{grid-column:2;grid-row:1}
+#resultToSO{grid-column:2/5;grid-row:2;display:flex;align-items:center;justify-content:center;color:#7990a4;font-size:10px}
+#quoteToSO{grid-column:4;grid-row:1}
+#soToDelivery{grid-column:6;grid-row:1}
+#deliveryToAR{grid-column:7;grid-row:1/3;pointer-events:none;position:relative;z-index:1}
+#deliveryToAR:after{content:"↓";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#7990a4;font-size:19px;font-weight:700}
+
+/* target */
+.actual-stack{display:flex;gap:5px;align-items:center;justify-content:center;flex-wrap:wrap}
+.actual-pill{font-size:9px;font-weight:700;background:#fff;border:1px solid #c9d6e0;border-radius:999px;padding:4px 8px;color:#526a7f}
+
+.drawer-backdrop{position:fixed;inset:0;background:rgba(14,35,54,.18);opacity:0;pointer-events:none;transition:.2s;z-index:40}
+.drawer-backdrop.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;right:0;top:0;height:100vh;width:390px;max-width:92vw;background:#fff;border-left:1px solid var(--line);box-shadow:-16px 0 40px rgba(13,39,63,.16);transform:translateX(100%);transition:.22s;z-index:50;display:grid;grid-template-rows:auto 1fr}
+.drawer.show{transform:translateX(0)}
+.drawer-head{padding:18px 18px 14px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start}
+.drawer-icon{width:42px;height:42px;border-radius:12px;background:#f3f7fa;display:grid;place-items:center;flex:0 0 auto}
+.drawer-icon svg{width:21px;height:21px;fill:none;stroke:#2c6e9f;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.drawer-title{font-size:16px;font-weight:800;color:var(--navy);margin-top:1px}
+.drawer-sub{font-size:10px;color:#7a8d9f;margin-top:3px}
+.close{margin-left:auto;border:0;background:#f3f6f8;color:#5f7487;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:18px;line-height:1}
+.drawer-body{padding:16px 18px;overflow:auto}
+.drawer-desc{font-size:12px;line-height:1.55;color:#4b6276;margin-bottom:16px}
+.action-title{font-size:9px;text-transform:uppercase;letter-spacing:.09em;color:#8a9aab;font-weight:800;margin:14px 0 7px}
+.link-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;text-decoration:none;color:#254b69;border:1px solid #d5e1ea;background:#fff;border-radius:10px;padding:10px 11px;margin-bottom:7px;font-size:11px;font-weight:700;transition:.15s}
+.link-btn:hover{border-color:#9dbbd1;background:#f8fbfd;transform:translateX(2px)}
+.link-btn span:last-child{font-size:13px;color:#6b8397}
+
+@media(max-width:1150px){
+  body{overflow:auto}.app{height:auto;min-height:100vh}.main{min-height:980px}.flow{min-width:1080px}.canvas{overflow:auto}.header{align-items:flex-start}.header-right{flex-direction:column;align-items:flex-end;gap:9px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="i-user-plus" viewBox="0 0 24 24"><path d="M15 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><path d="M3 21h18M6 21V5h12v16M9 9h2M13 9h2M9 13h2M13 13h2M10 21v-4h4v4"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M16.5 7.5 21 3M17.5 3H21v3.5"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 18 3.5 20.5V6L9 3.5l6 2.5L20.5 3v14.5L15 20l-6-2Z"/><path d="M9 3.5V18M15 6v14"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5M8 10h8M8 14h8M8 18h5"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="m8 15 2 2 5-5"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5h8v2M3 12h18M10 12v2h4v-2"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5M9 12h6M9 16h6"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l2.4 10.3a2 2 0 0 0 2 1.5h7.7a2 2 0 0 0 1.9-1.4L21 8H7"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3h12v18l-2-1.3L14 21l-2-1.3L10 21l-2-1.3L6 21z"/><path d="M9 8h6M9 12h6M9 16h4"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h3M11 12h9M4 18h8M16 18h4"/><circle cx="16" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="14" cy="18" r="2"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></symbol>
+</defs></svg>
+
+<div class="app">
+  <header class="header">
+    <div class="brand">
+      <h1>PATRIOT – Sales Process Concept</h1>
+      <p>Lead, sales visit, commercial result, transaction, and sales target.</p>
+    </div>
+    <div class="header-right">
+      <div class="legend">
+        <span><i class="web"></i>iReapBiz</span>
+        <span><i class="sap"></i>SAP</span>
+        <span><i class="addon"></i>SAP AddOn</span>
+      </div>
+      <div class="tabs">
+        <button class="tab active" data-route="overview">Overview</button>
+        <button class="tab" data-route="lead">Lead Baru</button>
+        <button class="tab" data-route="customer">Customer Existing</button>
+        <button class="tab" data-route="target">Sales Target</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="canvas">
+      <div class="canvas-title"><b>Sales Journey</b><span>Click object untuk membuka detail screen</span></div>
+
+      <div class="flow">
+        <div class="zone" id="leadZone">
+          <div class="zone-label">Lead Baru</div>
+          <div class="two">
+            <div class="node web clickable" data-key="lead" data-route-node="lead">
+              <div class="ico"><svg><use href="#i-user-plus"/></svg></div>
+              <div class="node-text"><div class="node-title">Lead Baru</div><div class="node-sub">Data calon customer</div></div>
+              <span class="open-indicator"><svg><use href="#i-external"/></svg></span>
+            </div>
+            <div class="arr">→</div>
+            <div class="node web clickable" data-key="opportunity" data-route-node="lead">
+              <div class="ico"><svg><use href="#i-target"/></svg></div>
+              <div class="node-text"><div class="node-title">Opportunity</div><div class="node-sub">Potensi & stage follow-up</div></div>
+              <span class="open-indicator"><svg><use href="#i-external"/></svg></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="zone" id="customerZone">
+          <div class="zone-label">Customer Existing</div>
+          <div class="two" style="grid-template-columns:1fr">
+            <div class="node sap clickable" data-key="customer" data-route-node="customer">
+              <div class="ico"><svg><use href="#i-building"/></svg></div>
+              <div class="node-text"><div class="node-title">Customer Existing</div><div class="node-sub">Direct visit & follow-up</div></div>
+              <span class="open-indicator"><svg><use href="#i-external"/></svg></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="zone" id="visitZone">
+          <div class="zone-label">Visit & Follow-up</div>
+          <div class="visit-grid">
+            <div class="node addon clickable" data-key="visit" data-route-node="lead customer">
+              <div class="ico"><svg><use href="#i-map"/></svg></div>
+              <div class="node-text"><div class="node-title">Visit & Follow-up</div><div class="node-sub">Planning atau ad-hoc visit</div></div>
+              <span class="open-indicator"><svg><use href="#i-external"/></svg></span>
+            </div>
+            <div class="arr">→</div>
+            <div class="node sap clickable" data-key="activity" data-route-node="lead customer">
+              <div class="ico"><svg><use href="#i-clipboard"/></svg></div>
+              <div class="node-text"><div class="node-title">SAP Activity</div><div class="node-sub">Visit record & relationship</div></div>
+              <span class="open-indicator"><svg><use href="#i-external"/></svg></span>
+            </div>
+            <div class="arr">⇄</div>
+            <div class="node web clickable" data-key="planner" data-route-node="lead customer" style="min-height:90px">
+              <div class="ico" style="width:42px;height:42px"><svg style="width:22px;height:22px"><use href="#i-calendar"/></svg></div>
+              <div class="node-text"><div class="node-title" style="font-size:13px">Sales Visit Planner</div><div class="node-sub">Agenda • CI/CO • GPS • Photo • Result</div></div>
+              <span class="open-indicator"><svg><use href="#i-external"/></svg></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="zone" id="commercialZone">
+          <div class="zone-label">Commercial Result</div>
+          <div class="commercial-grid">
+            <div class="node neutral clickable" id="commercialResult" data-key="commercial" data-route-node="lead customer">
+              <div class="ico"><svg><use href="#i-briefcase"/></svg></div>
+              <div class="node-text"><div class="node-title">Commercial Result</div><div class="node-sub">Outcome dari visit / follow-up</div></div>
+            </div>
+            <div class="arr" id="resultToQuote">→</div>
+            <div class="node web clickable" id="quotation" data-key="quotation" data-route-node="lead customer">
+              <div class="ico"><svg><use href="#i-file"/></svg></div>
+              <div class="node-text"><div class="node-title">Sales Quotation</div><div class="node-sub">Optional sebelum order</div></div>
+              <span class="open-indicator"><svg><use href="#i-external"/></svg></span>
+            </div>
+            <div class="arr" id="quoteToSO">→</div>
+            <div class="node sap" id="directSO" data-route-node="lead customer target">
+              <div class="ico"><svg><use href="#i-cart"/></svg></div>
+              <div class="node-text"><div class="node-title">Sales Order</div><div class="node-sub">SAP transaction</div></div>
+            </div>
+            <div class="arr" id="soToDelivery">→</div>
+            <div class="node sap" id="delivery" data-route-node="lead customer target">
+              <div class="ico"><svg><use href="#i-truck"/></svg></div>
+              <div class="node-text"><div class="node-title">Delivery</div></div>
+            </div>
+            <div id="resultToSO">└──────── Direct Sales Order ────────→</div>
+            <div class="node sap" id="arInvoice" data-route-node="lead customer target">
+              <div class="ico"><svg><use href="#i-receipt"/></svg></div>
+              <div class="node-text"><div class="node-title">A/R Invoice</div></div>
+            </div>
+            <div id="deliveryToAR"></div>
+          </div>
+        </div>
+
+        <div class="zone" id="targetZone">
+          <div class="zone-label">Sales Target & Performance</div>
+          <div class="target-grid">
+            <div class="node addon clickable" data-key="targetSetup" data-route-node="target">
+              <div class="ico"><svg><use href="#i-sliders"/></svg></div>
+              <div class="node-text"><div class="node-title">Sales Target Setup</div><div class="node-sub">Mapping, assignment & UOM</div></div>
+              <span class="open-indicator"><svg><use href="#i-external"/></svg></span>
+            </div>
+            <div class="arr">→</div>
+            <div class="node addon clickable" data-key="targetDoc" data-route-node="target">
+              <div class="ico"><svg><use href="#i-target"/></svg></div>
+              <div class="node-text"><div class="node-title">Sales Target Document</div><div class="node-sub">Period • Qty • Value</div></div>
+              <span class="open-indicator"><svg><use href="#i-external"/></svg></span>
+            </div>
+            <div class="merge">＋</div>
+            <div class="node sap" data-route-node="target">
+              <div class="ico"><svg><use href="#i-chart"/></svg></div>
+              <div class="node-text"><div class="node-title">Actual Sales</div><div class="node-sub"><span class="actual-stack"><span class="actual-pill">SO</span><span class="actual-pill">DO</span><span class="actual-pill">AR</span></span></div></div>
+            </div>
+            <div class="arr">→</div>
+            <div class="node neutral" data-route-node="target">
+              <div class="ico"><svg><use href="#i-chart"/></svg></div>
+              <div class="node-text"><div class="node-title">Future Sales Reporting</div><div class="node-sub">Target vs Actual & performance</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="drawer-backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-icon" id="drawerIcon"><svg><use href="#i-file"/></svg></div>
+    <div><div class="drawer-title" id="drawerTitle"></div><div class="drawer-sub" id="drawerSub"></div></div>
+    <button class="close" id="closeDrawer">×</button>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-desc" id="drawerDesc"></div>
+    <div id="drawerLinks"></div>
+  </div>
+</aside>
+
+<script>
+const objects={
+  lead:{title:'Lead Baru',sub:'iReapBiz',icon:'i-user-plus',desc:'Lead menyimpan data calon customer sebelum menjadi Customer SAP. Data dapat dilengkapi, dilihat, diperbarui, dan dicetak dalam format formulir.',links:[['Add Lead','mockups/Lead_Add.html'],['Lead List','mockups/Lead_List.html'],['View Lead','mockups/Lead_View.html'],['Edit Lead','mockups/Lead_Edit.html'],['Print Lead Form','mockups/Lead_Print.html']]},
+  opportunity:{title:'Opportunity',sub:'iReapBiz',icon:'i-target',desc:'Opportunity mencatat potensi penjualan atas Lead dan menjadi konteks untuk stage serta follow-up Sales.',links:[['Opportunity List','mockups/Opportunity_List.html'],['Add Opportunity','mockups/Opportunity_Add.html'],['View Opportunity','mockups/Opportunity_View.html'],['Edit Opportunity','mockups/Opportunity_Edit.html']]},
+  customer:{title:'Customer Existing',sub:'SAP',icon:'i-building',desc:'Customer existing dapat langsung masuk ke proses visit dan follow-up tanpa perlu membuat Opportunity pada flow utama.',links:[]},
+  visit:{title:'Visit & Follow-up',sub:'SAP AddOn / iReapBiz',icon:'i-map',desc:'Visit dapat direncanakan melalui Sales Visit Schedule. Untuk kebutuhan spontan, Sales juga dapat membuat Ad-Hoc Activity dari iReapBiz.',links:[['Sales Visit Schedule','mockups/Sales_Visit_Schedule.html'],['Add Ad-Hoc Activity','mockups/Activity_Add.html']]},
+  activity:{title:'SAP Activity',sub:'SAP / iReapBiz',icon:'i-clipboard',desc:'Activity menjadi record kunjungan dan titik penghubung ke Opportunity maupun dokumen komersial hasil follow-up.',links:[['Activity List','mockups/Activity_List.html'],['Add Activity','mockups/Activity_Add.html'],['View Activity','mockups/Activity_View.html'],['Edit Activity','mockups/Activity_Edit.html']]},
+  planner:{title:'Sales Visit Planner',sub:'iReapBiz',icon:'i-calendar',desc:'Workspace harian Sales untuk melihat agenda, calendar/timeline, melakukan Check In/Check Out, menyimpan GPS dan foto, serta mencatat hasil kunjungan.',links:[['Open Sales Visit Planner','mockups/Sales_Visit_Planner.html']]},
+  commercial:{title:'Commercial Result',sub:'Business Process',icon:'i-briefcase',desc:'Hasil follow-up dapat berlanjut melalui Sales Quotation terlebih dahulu atau langsung menjadi Sales Order.',links:[]},
+  quotation:{title:'Sales Quotation',sub:'iReapBiz',icon:'i-file',desc:'Sales Quotation dapat dibuat untuk Lead maupun Customer dan tidak diwajibkan berasal dari Opportunity.',links:[['Sales Quotation List','mockups/Sales_Quotation_List.html'],['Add Sales Quotation','mockups/Sales_Quotation_Add.html'],['View Sales Quotation','mockups/Sales_Quotation_View.html']]},
+  targetSetup:{title:'Sales Target Setup',sub:'SAP AddOn',icon:'i-sliders',desc:'Setup menentukan assignment target, target UOM, conversion factor, dan mapping Item Group yang menjadi dasar perhitungan target.',links:[['Open Sales Target Setup','mockups/Sales_Target_Setup.html']]},
+  targetDoc:{title:'Sales Target Document',sub:'SAP AddOn',icon:'i-target',desc:'Target Document mencatat periode serta Target Qty dan Target Value sesuai setup yang dipilih.',links:[['Open Sales Target Document','mockups/Sales_Target_Document.html']]}
+};
+
+const drawer=document.getElementById('drawer');
+const backdrop=document.getElementById('backdrop');
+function openDrawer(key){
+  const d=objects[key]; if(!d) return;
+  document.getElementById('drawerTitle').textContent=d.title;
+  document.getElementById('drawerSub').textContent=d.sub;
+  document.getElementById('drawerDesc').textContent=d.desc;
+  document.getElementById('drawerIcon').innerHTML=`<svg><use href="#${d.icon}"/></svg>`;
+  const links=document.getElementById('drawerLinks');
+  links.innerHTML='';
+  if(d.links.length){
+    links.innerHTML='<div class="action-title">Screens</div>'+d.links.map(([label,href])=>`<a class="link-btn" href="${href}" target="_blank"><span>${label}</span><span>↗</span></a>`).join('');
+  }
+  drawer.classList.add('show'); backdrop.classList.add('show');
+}
+function closeDrawer(){drawer.classList.remove('show');backdrop.classList.remove('show')}
+document.querySelectorAll('.clickable[data-key]').forEach(n=>n.addEventListener('click',()=>openDrawer(n.dataset.key)));
+document.getElementById('closeDrawer').addEventListener('click',closeDrawer);
+backdrop.addEventListener('click',closeDrawer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+
+const tabs=[...document.querySelectorAll('.tab')];
+const nodes=[...document.querySelectorAll('[data-route-node]')];
+const zones=[...document.querySelectorAll('.zone')];
+function setRoute(route){
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.route===route));
+  nodes.forEach(n=>{n.classList.remove('route','soft'); if(route==='overview')return; const routes=(n.dataset.routeNode||'').split(/\s+/); if(routes.includes(route))n.classList.add('route'); else n.classList.add('soft')});
+  zones.forEach(z=>z.classList.remove('active-zone'));
+  if(route==='lead'){document.getElementById('leadZone').classList.add('active-zone');document.getElementById('visitZone').classList.add('active-zone');document.getElementById('commercialZone').classList.add('active-zone')}
+  if(route==='customer'){document.getElementById('customerZone').classList.add('active-zone');document.getElementById('visitZone').classList.add('active-zone');document.getElementById('commercialZone').classList.add('active-zone')}
+  if(route==='target'){document.getElementById('targetZone').classList.add('active-zone');document.getElementById('commercialZone').classList.add('active-zone')}
+}
+tabs.forEach(t=>t.addEventListener('click',()=>setRoute(t.dataset.route)));
+setRoute('overview');
+</script>
+</body>
+</html>

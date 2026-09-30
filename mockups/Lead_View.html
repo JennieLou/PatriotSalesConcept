@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Lead - L0000123</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12px;
+    color:#4b4b4b;
+    background:#dce8f1;
+  }
+  .page-head{
+    background:#fff;
+    border-bottom:1px solid #c9d3da;
+    padding:16px 20px 17px;
+  }
+  .page-title{font-size:20px;color:#666;margin-bottom:10px}
+  .crumbs{color:#6c7881}
+  .crumbs span{margin:0 7px;color:#aaa}
+
+  .workarea{
+    margin:26px 28px;
+    background:#fff;
+    border:1px solid #cbd4da;
+    box-shadow:0 1px 2px rgba(0,0,0,.14);
+    padding:14px 16px 20px;
+  }
+
+  .toolbar{display:flex;margin-bottom:18px}
+  .btn{
+    border:1px solid #d4dbe0;
+    background:#fff;
+    color:#59656e;
+    padding:7px 12px;
+    cursor:pointer;
+    font-size:12px;
+    border-radius:2px;
+  }
+  .toolbar .btn{border-radius:0}
+  .toolbar .btn:first-child{border-radius:3px 0 0 3px}
+  .toolbar .btn:last-child{border-radius:0 3px 3px 0;margin-left:-1px}
+  .btn-primary{background:#337ab7;border-color:#2e6da4;color:#fff;font-weight:600}
+  .btn-danger{background:#ff3d68;border-color:#ff3d68;color:#fff}
+  .btn-soft{background:#fff;border-color:#cfd7dd;color:#5e6a73}
+
+  .panel{
+    border:1px solid #ddd;
+    border-radius:3px;
+    background:#fff;
+    margin-bottom:16px;
+  }
+  .panel-title{
+    background:#f5f5f5;
+    border-bottom:1px solid #ddd;
+    padding:10px 13px;
+    font-weight:700;
+    color:#333;
+  }
+  .panel-body{padding:14px}
+
+  .grid-2,.grid-3,.grid-4,.grid-5,.grid-6{
+    display:grid;
+    gap:13px 20px;
+    align-items:start;
+  }
+  .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .grid-6{grid-template-columns:repeat(6,minmax(0,1fr))}
+
+  .field{min-width:0}
+  .field label{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:5px;
+    color:#555;
+    height:18px;
+    line-height:18px;
+    white-space:nowrap;
+  }
+  .label-text{font-weight:600}
+  .label-tools{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+  }
+  .mini-check{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    height:18px;
+    margin:0;
+    font-weight:400;
+    color:#666;
+    font-size:11px;
+    white-space:nowrap;
+  }
+  .mini-check input{width:auto;height:auto;margin:0}
+  .req{color:#d9534f}
+
+  input,select,textarea{
+    width:100%;
+    border:1px solid #ccc;
+    padding:7px 9px;
+    font:inherit;
+    height:31px;
+    background:#fff;
+    color:#555;
+    border-radius:2px;
+  }
+  textarea{height:64px;resize:vertical}
+  input[readonly],textarea[readonly]{background:#f7f7f7;color:#999}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:#66afe9}
+
+  .type-box{
+    min-height:31px;
+    border:1px solid #e0e0e0;
+    background:#fafafa;
+    display:flex;
+    align-items:center;
+    padding:5px 10px;
+    flex-wrap:wrap;
+    border-radius:2px;
+  }
+  .check-inline{
+    display:inline-flex;
+    align-items:center;
+    margin-right:18px;
+    font-weight:400!important;
+    cursor:pointer;
+  }
+  .check-inline input{width:auto;height:auto;margin:0 6px 0 0}
+
+  .tabs{
+    display:flex;
+    padding-left:8px;
+    border-bottom:1px solid #ddd;
+    margin-top:2px;
+    overflow-x:auto;
+  }
+  .tab-btn{
+    border:1px solid #ddd;
+    border-bottom:none;
+    background:#f7f7f7;
+    color:#555;
+    padding:9px 18px;
+    margin-right:3px;
+    cursor:pointer;
+    border-radius:3px 3px 0 0;
+    position:relative;
+    top:1px;
+    white-space:nowrap;
+  }
+  .tab-btn.active{
+    background:#fff;
+    color:#337ab7;
+    font-weight:700;
+    padding-bottom:10px;
+  }
+  .tab-wrap{
+    border:1px solid #ddd;
+    border-top:none;
+    padding:14px;
+    min-height:500px;
+  }
+  .tab-pane{display:none}
+  .tab-pane.active{display:block}
+
+  .subpanel{border:1px solid #e1e1e1;margin-bottom:14px}
+  .subhead{
+    background:#fafafa;
+    border-bottom:1px solid #e1e1e1;
+    padding:8px 11px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+  }
+  .subhead small{margin-left:auto;color:#999;font-weight:400}
+  .subbody{padding:12px 13px}
+
+  .line-actions{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:10px;
+    gap:7px;
+  }
+  .small-btn{
+    padding:6px 11px;
+    border:1px solid #cfd7dd;
+    background:#fff;
+    color:#4f5d67;
+    cursor:pointer;
+    font-size:12px;
+    border-radius:2px;
+  }
+  .small-btn.primary{
+    background:#337ab7;
+    border-color:#2e6da4;
+    color:#fff;
+    font-weight:600;
+  }
+  .small-btn.danger{
+    background:#ff3d68;
+    border-color:#ff3d68;
+    color:#fff;
+  }
+
+  .detail-box{
+    border:1px solid #e5e5e5;
+    border-radius:3px;
+    background:#fff;
+    margin-top:14px;
+    overflow:hidden;
+  }
+  .detail-title{
+    background:#f5f5f5;
+    border-bottom:1px solid #e5e5e5;
+    padding:10px 12px;
+    font-weight:700;
+    color:#555;
+  }
+  .detail-inner{padding:12px 12px 14px}
+  table.ireap-detail{
+    width:100%;
+    border-collapse:collapse;
+  }
+  table.ireap-detail th{
+    font-weight:700;
+    color:#666;
+    text-align:left;
+    padding:9px 8px;
+    border-bottom:1px solid #e8e8e8;
+    background:#fff;
+  }
+  table.ireap-detail td{
+    padding:10px 8px;
+    border-bottom:1px solid #eee;
+    vertical-align:top;
+    color:#555;
+  }
+  table.ireap-detail tr:last-child td{border-bottom:none}
+  .action-cell{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  .action-cell .small-btn{padding:4px 9px}
+  .edit-row{background:#fafafa}
+  .empty-row{text-align:center;color:#999;padding:18px}
+  .file-name{
+    max-width:420px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .qty-uom{
+    display:grid;
+    grid-template-columns:1.4fr .8fr;
+    gap:8px;
+  }
+  .hidden{display:none!important}
+
+  @media(max-width:1280px){
+    .grid-6{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-5{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media(max-width:900px){
+    .grid-2,.grid-3,.grid-4,.grid-5,.grid-6{grid-template-columns:1fr}
+    .workarea{margin:12px}
+    .field label{flex-direction:column;align-items:flex-start;white-space:normal}
+  }
+
+  body.view-mode input,
+  body.view-mode select,
+  body.view-mode textarea{
+    background:#f7f7f7;
+    color:#555;
+    border-color:#ddd;
+    pointer-events:none;
+  }
+  body.view-mode input[type="checkbox"]{pointer-events:none;}
+  body.view-mode .editor-area,
+  body.view-mode .line-actions{display:none!important;}
+
+</style>
+</head>
+<body class="view-mode">
+
+<div class="page-head">
+  <div class="page-title">Manajemen Lead</div>
+  <div class="crumbs">Beranda <span>/</span> Master Data <span>/</span> Lead <span>/</span> View Lead</div>
+</div>
+
+<div class="workarea">
+  <div class="toolbar">
+    <button class="btn">← Kembali</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Informasi Umum</div>
+    <div class="panel-body">
+      <div class="grid-5">
+        <div class="field">
+          <label><span class="label-text">Kode BP</span></label>
+          <input id="bpCode" value="Otomatis dari SAP" readonly>
+        </div>
+        <div class="field">
+          <label><span class="label-text">Nama BP <span class="req">*</span></span></label>
+          <input id="bpName" placeholder="Masukkan Nama BP">
+        </div>
+        <div class="field">
+          <label><span class="label-text">Grup BP <span class="req">*</span></span></label>
+          <select id="bpGroup"><option>Pilih</option><option>Retail</option><option>Farm</option><option>Distributor</option></select>
+        </div>
+        <div class="field">
+          <label><span class="label-text">Jenis Usaha</span></label>
+          <select id="industry"><option>Pilih</option><option>Poultry Shop</option><option>Peternakan</option><option>Kemitraan</option><option>General Trading</option></select>
+        </div>
+        <div class="field">
+          <label><span class="label-text">No. Telp</span></label>
+          <input id="bpPhone" placeholder="Masukkan No. Telp">
+        </div>
+      </div>
+
+      <div class="grid-5" style="margin-top:13px">
+        <div class="field">
+          <label><span class="label-text">No. KTP</span></label>
+          <input id="bpKtp" placeholder="Masukkan No. KTP">
+        </div>
+        <div class="field">
+          <label><span class="label-text">No. NPWP</span></label>
+          <input id="bpNpwp" placeholder="Masukkan No. NPWP">
+        </div>
+        <div class="field">
+          <label><span class="label-text">No. NIB</span></label>
+          <input id="bpNib" placeholder="Masukkan No. NIB">
+        </div>
+        <div class="field">
+          <label><span class="label-text">Lama Beroperasi</span></label>
+          <div class="qty-uom">
+            <input id="operatingLength" type="number" min="0" placeholder="0">
+            <select id="operatingUnit"><option>Tahun</option><option>Bulan</option></select>
+          </div>
+        </div>
+        <div class="field">
+          <label><span class="label-text">Sales</span></label>
+          <select id="sales"><option>Pilih Sales</option><option>Sales A</option><option>Sales B</option></select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="address">Alamat</button>
+    <button class="tab-btn" data-tab="contact">Kontak</button>
+    <button class="tab-btn" data-tab="salespay">Penjualan & Termin</button>
+    <button class="tab-btn" data-tab="bank">Bank</button>
+    <button class="tab-btn" data-tab="attachment">Lampiran</button>
+  </div>
+
+  <div class="tab-wrap">
+
+    <div class="tab-pane active" id="address">
+      <div class="subpanel">
+        <div class="subhead">
+          Alamat
+          <small>Data alamat tersimpan.</small>
+        </div>
+        <div class="subbody">
+          <div class="editor-area">
+          <div class="grid-3">
+            <div class="field">
+              <label><span class="label-text">ID Alamat <span class="req">*</span></span></label>
+              <select id="addressId">
+                <option value="">Pilih</option>
+                <option>NPWP/USAHA</option>
+                <option>KTP</option>
+                <option>DOMISILI</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><span class="label-text">Status Alamat</span></label>
+              <select id="addressStatus"><option value="">Pilih</option><option>Sewa</option><option>Milik Pribadi</option></select>
+            </div>
+            <div class="field">
+              <label><span class="label-text">Tipe</span></label>
+              <div class="type-box">
+                <label class="check-inline"><input id="billTo" type="checkbox" checked> Bill To</label>
+                <label class="check-inline"><input id="shipTo" type="checkbox" checked> Ship To</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:13px">
+            <label><span class="label-text">Jalan <span class="req">*</span></span></label>
+            <textarea id="street" placeholder="Masukkan Jalan"></textarea>
+          </div>
+
+          <div class="grid-5" style="margin-top:13px">
+            <div class="field"><label><span class="label-text">Kecamatan</span></label><input id="county" placeholder="Masukkan Kecamatan"></div>
+            <div class="field"><label><span class="label-text">Kota / Kabupaten</span></label><input id="city" placeholder="Masukkan Kota / Kabupaten"></div>
+            <div class="field">
+              <label><span class="label-text">Provinsi</span></label>
+              <select id="state"><option value="">Pilih Provinsi</option><option>DKI Jakarta</option><option>Banten</option><option>Jawa Barat</option><option>Jawa Tengah</option><option>Jawa Timur</option><option>DI Yogyakarta</option><option>Sumatera Utara</option><option>Sumatera Selatan</option><option>Lampung</option><option>Bali</option></select>
+            </div>
+            <div class="field"><label><span class="label-text">Kode Pos</span></label><input id="postalCode" placeholder="Masukkan Kode Pos"></div>
+            <div class="field"><label><span class="label-text">Negara</span></label><select id="country"><option selected>Indonesia</option><option>Singapore</option><option>Malaysia</option><option>Other</option></select></div>
+          </div>
+
+          <div class="line-actions"><button class="small-btn primary" onclick="saveAddress()">Simpan Baris</button></div>
+          </div>
+
+          <div class="detail-box">
+            <div class="detail-title">Detail</div>
+            <div class="detail-inner">
+              <table class="ireap-detail">
+                <thead><tr>
+                  <th style="width:12%">ID Alamat</th><th style="width:10%">Status</th><th style="width:9%">Tipe</th><th>Jalan</th><th style="width:10%">Kecamatan</th><th style="width:11%">Kota/Kabupaten</th><th style="width:10%">Provinsi</th><th style="width:8%">Kode Pos</th><th style="width:9%">Negara</th><th style="width:12%">Aksi</th>
+                </tr></thead>
+                <tbody id="addressTableBody"><tr><td colspan="10" class="empty-row">Belum ada alamat.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="contact">
+      <div class="subpanel">
+        <div class="subhead">Kontak<small>Data alamat tersimpan.</small></div>
+        <div class="subbody">
+          <div class="editor-area">
+          <div class="grid-3">
+            <div class="field">
+              <label><span class="label-text">Nama Lengkap <span class="req">*</span></span><span class="label-tools"><label class="mini-check"><input id="useBpNameContact" type="checkbox"> Gunakan Nama BP</label></span></label>
+              <input id="contactName" placeholder="Masukkan Nama Lengkap">
+            </div>
+            <div class="field"><label><span class="label-text">Posisi</span></label><input id="contactPosition" placeholder="Masukkan Posisi"></div>
+            <div class="field"><label><span class="label-text">No. Telp</span></label><input id="contactPhone" placeholder="Masukkan No. Telp"></div>
+          </div>
+
+          <div class="field" style="margin-top:13px">
+            <label><span class="label-text">Alamat</span><span class="label-tools"><label class="mini-check"><input id="useSavedAddress" type="checkbox" onchange="toggleSavedAddress()"> Gunakan Data Tab Alamat</label></span></label>
+            <select id="savedAddressSelect" class="hidden" style="margin-bottom:8px;max-width:360px" onchange="fillContactAddressFromSaved()"><option value="">Pilih alamat tersimpan</option></select>
+            <textarea id="contactAddress" placeholder="Masukkan Alamat Kontak"></textarea>
+          </div>
+
+          <div class="line-actions"><button class="small-btn primary" onclick="saveContact()">Simpan Baris</button></div>
+          </div>
+
+          <div class="detail-box">
+            <div class="detail-title">Detail</div>
+            <div class="detail-inner">
+              <table class="ireap-detail">
+                <thead><tr><th style="width:22%">Nama Lengkap</th><th style="width:18%">Posisi</th><th>Alamat</th><th style="width:18%">No. Telp</th><th style="width:14%">Aksi</th></tr></thead>
+                <tbody id="contactTableBody"><tr><td colspan="5" class="empty-row">Belum ada kontak.</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="salespay">
+      <div class="subpanel">
+        <div class="subhead">Penjualan</div>
+        <div class="subbody">
+          <div class="grid-2">
+            <div class="field">
+              <label><span class="label-text">Potensi Pembelian</span></label>
+              <div class="qty-uom"><input id="purchasePotentialQty" type="number" min="0" step="0.01" placeholder="Jumlah"><select id="purchasePotentialUom"><option>Ton</option><option>Kg</option><option>Bag</option></select></div>
+            </div>
+            <div class="field"><label><span class="label-text">Periode Potensi</span></label><select id="purchasePotentialPeriod"><option>Per Minggu</option><option>Per Bulan</option></select></div>
+          </div>
+
+          <div class="grid-2" style="margin-top:13px">
+            <div class="field">
+              <label><span class="label-text">Perkiraan Nilai Transaksi</span></label>
+              <select id="transactionEstimate"><option>Pilih Nilai</option><option>Rp 0 s/d Rp 100.000.000</option><option>&gt; Rp 100.000.000 s/d Rp 500.000.000</option><option>&gt; Rp 500.000.000 s/d Rp 1.000.000.000</option><option>&gt; Rp 1.000.000.000</option></select>
+            </div>
+            <div class="field"><label><span class="label-text">Periode Nilai</span></label><select id="transactionPeriod"><option>Per Minggu</option><option>Per Bulan</option><option>Per Tahun</option></select></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subpanel">
+        <div class="subhead">Termin</div>
+        <div class="subbody">
+          <div class="grid-4">
+            <div class="field"><label><span class="label-text">Termin Pembayaran</span></label><select id="paymentTerm"><option>Pilih Termin</option><option>Cash</option><option>7 Hari</option><option>14 Hari</option><option>30 Hari</option></select></div>
+            <div class="field"><label><span class="label-text">Credit Limit</span></label><input id="creditLimit" type="number" min="0" placeholder="0"></div>
+            <div class="field"><label><span class="label-text">Price List</span></label><select id="priceList"><option>Pilih Price List</option><option>Base Price</option><option>Retail Price</option><option>Special Price</option></select></div>
+            <div class="field"><label><span class="label-text">Objek Jaminan</span></label><input id="collateral" placeholder="Masukkan Objek Jaminan"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="bank">
+      <div class="subpanel">
+        <div class="subhead">
+          Bank
+          <small>Data bank tersimpan.</small>
+        </div>
+        <div class="subbody">
+          <div class="editor-area">
+          <div class="grid-3">
+            <div class="field">
+              <label><span class="label-text">Bank</span></label>
+              <select id="bankName">
+                <option value="">Pilih Bank</option>
+                <option>BCA</option>
+                <option>BRI</option>
+                <option>Mandiri</option>
+                <option>BNI</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><span class="label-text">No. Akun</span></label>
+              <input id="bankNo" placeholder="Masukkan No. Akun">
+            </div>
+            <div class="field">
+              <label>
+                <span class="label-text">Nama Akun</span>
+                <span class="label-tools">
+                  <label class="mini-check"><input id="reuseBpForBank" type="checkbox"> Gunakan Nama BP</label>
+                </span>
+              </label>
+              <input id="bankAccountName" placeholder="Masukkan Nama Akun">
+            </div>
+          </div>
+
+          <div class="line-actions">
+            <button class="small-btn primary" onclick="saveBank()">Simpan Baris</button>
+          </div>
+          </div>
+
+          <div class="detail-box">
+            <div class="detail-title">Detail</div>
+            <div class="detail-inner">
+              <table class="ireap-detail">
+                <thead>
+                  <tr>
+                    <th style="width:20%">Bank</th>
+                    <th style="width:25%">No. Akun</th>
+                    <th>Nama Akun</th>
+                    <th style="width:14%">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="bankTableBody">
+                  <tr><td colspan="4" class="empty-row">Belum ada data bank.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="attachment">
+      <div class="subpanel">
+        <div class="subhead">
+          Lampiran
+          <small>Dokumen tersimpan</small>
+        </div>
+        <div class="subbody">
+          <div class="editor-area">
+          <div class="grid-3">
+            <div class="field">
+              <label><span class="label-text">Jenis Dokumen</span></label>
+              <select id="docType">
+                <option value="">Pilih Jenis Dokumen</option>
+                <option>KTP</option>
+                <option>NPWP</option>
+                <option>NIB</option>
+                <option>SIUP</option>
+                <option>BPKB</option>
+                <option>Sertifikat</option>
+                <option>Foto Rumah</option>
+                <option>Foto Tempat Usaha</option>
+                <option>Foto Pemilik</option>
+                <option>Form Pendaftaran Ditandatangani</option>
+                <option>Lainnya</option>
+              </select>
+            </div>
+            <div class="field" style="grid-column:span 2">
+              <label><span class="label-text">File</span></label>
+              <input id="docFile" type="file">
+            </div>
+          </div>
+
+          <div class="line-actions">
+            <button class="small-btn primary" onclick="saveAttachment()">Simpan Baris</button>
+          </div>
+          </div>
+
+          <div class="detail-box">
+            <div class="detail-title">Detail</div>
+            <div class="detail-inner">
+              <table class="ireap-detail">
+                <thead>
+                  <tr>
+                    <th style="width:18%">Jenis Dokumen</th>
+                    <th>Nama File</th>
+                    <th style="width:26%">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="attachmentTableBody">
+                  <tr><td colspan="3" class="empty-row">Belum ada lampiran.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let addresses = [];
+  let contacts = [];
+  let banks = [];
+  let attachments = [];
+  let editingAddressRow = null;
+  let editingContactRow = null;
+  let editingBankRow = null;
+
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(x=>x.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  function saveAddress(){
+    const id=document.getElementById('addressId').value;
+    const status=document.getElementById('addressStatus').value;
+    const street=document.getElementById('street').value.trim();
+    const county=document.getElementById('county').value.trim();
+    const city=document.getElementById('city').value.trim();
+    const state=document.getElementById('state').value;
+    const postal=document.getElementById('postalCode').value.trim();
+    const country=document.getElementById('country').value;
+    const bill=document.getElementById('billTo').checked;
+    const ship=document.getElementById('shipTo').checked;
+
+    if(!id || !street){ alert('ID Alamat dan Jalan wajib diisi.'); return; }
+    if(!bill && !ship){ alert('Pilih minimal Bill To atau Ship To.'); return; }
+
+    const base={id,status,street,county,city,state,postal,country};
+    if(bill) addresses.push({...base,type:'Bill To'});
+    if(ship) addresses.push({...base,type:'Ship To'});
+    renderAddresses();
+    refreshSavedAddressDropdown();
+    clearAddressEditor();
+  }
+
+  function renderAddresses(){
+    const tbody=document.getElementById('addressTableBody');
+    tbody.innerHTML='';
+    if(!addresses.length){ tbody.innerHTML='<tr><td colspan="10" class="empty-row">Belum ada alamat.</td></tr>'; return; }
+
+    addresses.forEach((a,i)=>{
+      if(editingAddressRow===i){
+        const tr=document.createElement('tr');
+        tr.className='edit-row';
+        tr.innerHTML=`
+          <td><select id="ar_id_${i}"><option ${a.id==='NPWP/USAHA'?'selected':''}>NPWP/USAHA</option><option ${a.id==='KTP'?'selected':''}>KTP</option><option ${a.id==='DOMISILI'?'selected':''}>DOMISILI</option></select></td>
+          <td><select id="ar_status_${i}"><option value="" ${!a.status?'selected':''}>Pilih</option><option ${a.status==='Sewa'?'selected':''}>Sewa</option><option ${a.status==='Milik Pribadi'?'selected':''}>Milik Pribadi</option></select></td>
+          <td><select id="ar_type_${i}"><option ${a.type==='Bill To'?'selected':''}>Bill To</option><option ${a.type==='Ship To'?'selected':''}>Ship To</option></select></td>
+          <td><textarea id="ar_street_${i}">${esc(a.street)}</textarea></td>
+          <td><input id="ar_county_${i}" value="${escAttr(a.county||'')}"></td>
+          <td><input id="ar_city_${i}" value="${escAttr(a.city||'')}"></td>
+          <td><select id="ar_state_${i}">${stateOptions(a.state)}</select></td>
+          <td><input id="ar_postal_${i}" value="${escAttr(a.postal||'')}"></td>
+          <td><select id="ar_country_${i}"><option ${a.country==='Indonesia'?'selected':''}>Indonesia</option><option ${a.country==='Singapore'?'selected':''}>Singapore</option><option ${a.country==='Malaysia'?'selected':''}>Malaysia</option><option ${a.country==='Other'?'selected':''}>Other</option></select></td>
+          <td><div class="action-cell"><button class="small-btn primary" onclick="updateAddressRow(${i})">Simpan</button><button class="small-btn" onclick="cancelAddressRowEdit()">Batal</button></div></td>`;
+        tbody.appendChild(tr);
+      } else {
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${esc(a.id)}</td><td>${esc(a.status||'-')}</td><td>${esc(a.type)}</td><td>${esc(a.street)}</td><td>${esc(a.county||'-')}</td><td>${esc(a.city||'-')}</td><td>${esc(a.state||'-')}</td><td>${esc(a.postal||'-')}</td><td>${esc(a.country||'-')}</td><td><div class="action-cell"><button class="small-btn btn-soft" onclick="editAddressRow(${i})">Edit</button><button class="small-btn danger" onclick="deleteAddress(${i})">Hapus</button></div></td>`;
+        tbody.appendChild(tr);
+      }
+    });
+  }
+
+  function editAddressRow(i){ editingAddressRow=i; renderAddresses(); }
+  function cancelAddressRowEdit(){ editingAddressRow=null; renderAddresses(); }
+  function updateAddressRow(i){
+    const item={
+      id:document.getElementById(`ar_id_${i}`).value,
+      status:document.getElementById(`ar_status_${i}`).value,
+      type:document.getElementById(`ar_type_${i}`).value,
+      street:document.getElementById(`ar_street_${i}`).value.trim(),
+      county:document.getElementById(`ar_county_${i}`).value.trim(),
+      city:document.getElementById(`ar_city_${i}`).value.trim(),
+      state:document.getElementById(`ar_state_${i}`).value,
+      postal:document.getElementById(`ar_postal_${i}`).value.trim(),
+      country:document.getElementById(`ar_country_${i}`).value
+    };
+    if(!item.id || !item.street){ alert('ID Alamat dan Jalan wajib diisi.'); return; }
+    addresses[i]=item; editingAddressRow=null; renderAddresses(); refreshSavedAddressDropdown();
+  }
+
+  function deleteAddress(i){ addresses.splice(i,1); if(editingAddressRow===i) editingAddressRow=null; renderAddresses(); refreshSavedAddressDropdown(); }
+
+  function clearAddressEditor(){
+    document.getElementById('addressId').value='';
+    document.getElementById('addressStatus').value='';
+    document.getElementById('street').value='';
+    document.getElementById('county').value='';
+    document.getElementById('city').value='';
+    document.getElementById('state').value='';
+    document.getElementById('postalCode').value='';
+    document.getElementById('country').value='Indonesia';
+    document.getElementById('billTo').checked=true;
+    document.getElementById('shipTo').checked=true;
+  }
+
+  function refreshSavedAddressDropdown(){
+    const sel=document.getElementById('savedAddressSelect');
+    sel.innerHTML='<option value="">Pilih alamat tersimpan</option>';
+    addresses.forEach((a,i)=>{ const opt=document.createElement('option'); opt.value=i; opt.textContent=`${a.id} - ${a.type}`; sel.appendChild(opt); });
+  }
+
+  document.getElementById('useBpNameContact').addEventListener('change',function(){
+    document.getElementById('contactName').value=this.checked ? document.getElementById('bpName').value : '';
+  });
+
+  document.getElementById('bpName').addEventListener('input',()=>{
+    if(document.getElementById('useBpNameContact').checked){
+      document.getElementById('contactName').value=document.getElementById('bpName').value;
+    }
+    if(document.getElementById('reuseBpForBank').checked){
+      document.getElementById('bankAccountName').value=document.getElementById('bpName').value;
+    }
+  });
+
+  function toggleSavedAddress(){
+    const checked=document.getElementById('useSavedAddress').checked;
+    document.getElementById('savedAddressSelect').classList.toggle('hidden',!checked);
+    if(!checked) document.getElementById('savedAddressSelect').value='';
+  }
+
+  function fillContactAddressFromSaved(){
+    const idx=document.getElementById('savedAddressSelect').value;
+    if(idx==='') return;
+    const a=addresses[Number(idx)];
+    document.getElementById('contactAddress').value =
+      [a.street,a.county,a.city,a.state,a.postal,a.country].filter(Boolean).join(', ');
+  }
+
+  function saveContact(){
+    const c={
+      name:document.getElementById('contactName').value.trim(),
+      position:document.getElementById('contactPosition').value.trim(),
+      address:document.getElementById('contactAddress').value.trim(),
+      phone:document.getElementById('contactPhone').value.trim()
+    };
+    if(!c.name){ alert('Nama Lengkap wajib diisi.'); return; }
+    contacts.push(c); renderContacts(); clearContactEditor();
+  }
+
+  function renderContacts(){
+    const tbody=document.getElementById('contactTableBody'); tbody.innerHTML='';
+    if(!contacts.length){ tbody.innerHTML='<tr><td colspan="5" class="empty-row">Belum ada kontak.</td></tr>'; return; }
+    contacts.forEach((c,i)=>{
+      if(editingContactRow===i){
+        const tr=document.createElement('tr'); tr.className='edit-row';
+        tr.innerHTML=`<td><input id="cr_name_${i}" value="${escAttr(c.name)}"></td><td><input id="cr_position_${i}" value="${escAttr(c.position||'')}"></td><td><textarea id="cr_address_${i}">${esc(c.address||'')}</textarea></td><td><input id="cr_phone_${i}" value="${escAttr(c.phone||'')}"></td><td><div class="action-cell"><button class="small-btn primary" onclick="updateContactRow(${i})">Simpan</button><button class="small-btn" onclick="cancelContactRowEdit()">Batal</button></div></td>`;
+        tbody.appendChild(tr);
+      } else {
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${esc(c.name)}</td><td>${esc(c.position||'-')}</td><td>${esc(c.address||'-')}</td><td>${esc(c.phone||'-')}</td><td><div class="action-cell"><button class="small-btn btn-soft" onclick="editContactRow(${i})">Edit</button><button class="small-btn danger" onclick="deleteContact(${i})">Hapus</button></div></td>`;
+        tbody.appendChild(tr);
+      }
+    });
+  }
+
+  function editContactRow(i){ editingContactRow=i; renderContacts(); }
+  function cancelContactRowEdit(){ editingContactRow=null; renderContacts(); }
+  function updateContactRow(i){
+    const c={name:document.getElementById(`cr_name_${i}`).value.trim(),position:document.getElementById(`cr_position_${i}`).value.trim(),address:document.getElementById(`cr_address_${i}`).value.trim(),phone:document.getElementById(`cr_phone_${i}`).value.trim()};
+    if(!c.name){ alert('Nama Lengkap wajib diisi.'); return; }
+    contacts[i]=c; editingContactRow=null; renderContacts();
+  }
+  function deleteContact(i){ contacts.splice(i,1); if(editingContactRow===i) editingContactRow=null; renderContacts(); }
+  function clearContactEditor(){
+    document.getElementById('contactName').value='';
+    document.getElementById('contactPosition').value='';
+    document.getElementById('contactAddress').value='';
+    document.getElementById('contactPhone').value='';
+    document.getElementById('useBpNameContact').checked=false;
+    document.getElementById('useSavedAddress').checked=false;
+    document.getElementById('savedAddressSelect').classList.add('hidden');
+    document.getElementById('savedAddressSelect').value='';
+  }
+
+  document.getElementById('reuseBpForBank').addEventListener('change',function(){
+    document.getElementById('bankAccountName').value=this.checked ? document.getElementById('bpName').value : '';
+  });
+
+  function saveBank(){
+    const b={
+      bank:document.getElementById('bankName').value,
+      no:document.getElementById('bankNo').value.trim(),
+      name:document.getElementById('bankAccountName').value.trim()
+    };
+    if(!b.bank || !b.no || !b.name){
+      alert('Bank, No. Akun, dan Nama Akun wajib diisi.');
+      return;
+    }
+    banks.push(b);
+    renderBanks();
+    clearBankEditor();
+  }
+
+  function renderBanks(){
+    const tbody=document.getElementById('bankTableBody');
+    tbody.innerHTML='';
+    if(!banks.length){
+      tbody.innerHTML='<tr><td colspan="4" class="empty-row">Belum ada data bank.</td></tr>';
+      return;
+    }
+
+    banks.forEach((b,i)=>{
+      if(editingBankRow === i){
+        const tr=document.createElement('tr');
+        tr.className='edit-row';
+        tr.innerHTML=`
+          <td>
+            <select id="br_bank_${i}">
+              <option value="">Pilih Bank</option>
+              <option ${b.bank==='BCA'?'selected':''}>BCA</option>
+              <option ${b.bank==='BRI'?'selected':''}>BRI</option>
+              <option ${b.bank==='Mandiri'?'selected':''}>Mandiri</option>
+              <option ${b.bank==='BNI'?'selected':''}>BNI</option>
+            </select>
+          </td>
+          <td><input id="br_no_${i}" value="${escAttr(b.no)}"></td>
+          <td><input id="br_name_${i}" value="${escAttr(b.name)}"></td>
+          <td>
+            <div class="action-cell">
+              <button class="small-btn primary" onclick="updateBankRow(${i})">Simpan</button>
+              <button class="small-btn" onclick="cancelBankRowEdit()">Batal</button>
+            </div>
+          </td>`;
+        tbody.appendChild(tr);
+      } else {
+        const tr=document.createElement('tr');
+        tr.innerHTML=`
+          <td>${esc(b.bank)}</td>
+          <td>${esc(b.no)}</td>
+          <td>${esc(b.name)}</td>
+          <td>
+            <div class="action-cell">
+              <button class="small-btn btn-soft" onclick="editBankRow(${i})">Edit</button>
+              <button class="small-btn danger" onclick="deleteBank(${i})">Hapus</button>
+            </div>
+          </td>`;
+        tbody.appendChild(tr);
+      }
+    });
+  }
+
+  function editBankRow(i){
+    editingBankRow=i;
+    renderBanks();
+  }
+  function cancelBankRowEdit(){
+    editingBankRow=null;
+    renderBanks();
+  }
+  function updateBankRow(i){
+    const b={
+      bank:document.getElementById(`br_bank_${i}`).value,
+      no:document.getElementById(`br_no_${i}`).value.trim(),
+      name:document.getElementById(`br_name_${i}`).value.trim()
+    };
+    if(!b.bank || !b.no || !b.name){
+      alert('Bank, No. Akun, dan Nama Akun wajib diisi.');
+      return;
+    }
+    banks[i]=b;
+    editingBankRow=null;
+    renderBanks();
+  }
+
+  function deleteBank(i){
+    banks.splice(i,1);
+    if(editingBankRow === i) editingBankRow = null;
+    renderBanks();
+  }
+
+  function clearBankEditor(){
+    document.getElementById('bankName').value='';
+    document.getElementById('bankNo').value='';
+    document.getElementById('bankAccountName').value='';
+    document.getElementById('reuseBpForBank').checked=false;
+  }
+
+  function saveAttachment(){
+    const type=document.getElementById('docType').value;
+    const input=document.getElementById('docFile');
+
+    if(!type || !input.files.length){
+      alert('Jenis Dokumen dan File wajib diisi.');
+      return;
+    }
+
+    const file=input.files[0];
+    const url=URL.createObjectURL(file);
+
+    attachments.push({
+      type,
+      originalName:file.name,
+      displayName:type.toUpperCase().replace(/\s+/g,'_')+'_AUTO_'+file.name.replace(/\s+/g,'_'),
+      url
+    });
+
+    renderAttachments();
+    document.getElementById('docType').value='';
+    input.value='';
+  }
+
+  function renderAttachments(){
+    const tbody=document.getElementById('attachmentTableBody');
+    tbody.innerHTML='';
+    if(!attachments.length){
+      tbody.innerHTML='<tr><td colspan="3" class="empty-row">Belum ada lampiran.</td></tr>';
+      return;
+    }
+
+    attachments.forEach((a,i)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td>${esc(a.type)}</td>
+        <td class="file-name">${esc(a.displayName)}</td>
+        <td>
+          <div class="action-cell">
+            <button class="small-btn btn-soft" onclick="downloadAttachment(${i})">Unduh</button>
+            <button class="small-btn danger" onclick="deleteAttachment(${i})">Hapus</button>
+          </div>
+        </td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function downloadAttachment(i){
+    const a=attachments[i];
+    const link=document.createElement('a');
+    link.href=a.url;
+    link.download=a.originalName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
+  function deleteAttachment(i){
+    URL.revokeObjectURL(attachments[i].url);
+    attachments.splice(i,1);
+    renderAttachments();
+  }
+
+  function stateOptions(selected){
+    const states=['','DKI Jakarta','Banten','Jawa Barat','Jawa Tengah','Jawa Timur','DI Yogyakarta','Sumatera Utara','Sumatera Selatan','Lampung','Bali'];
+    return states.map(s=>{
+      const label = s || 'Pilih Provinsi';
+      return `<option value="${escAttr(s)}" ${s===selected?'selected':''}>${label}</option>`;
+    }).join('');
+  }
+
+  function esc(str){
+    return String(str).replace(/[&<>"']/g,m=>({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+    }[m]));
+  }
+  function escAttr(str){
+    return esc(str).replace(/"/g,'&quot;');
+  }
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('bpCode').value = 'L0000123';
+  document.getElementById('bpName').value = 'Toko Maju Jaya';
+  document.getElementById('bpGroup').value = 'Retail';
+  document.getElementById('industry').value = 'Poultry Shop';
+  document.getElementById('bpPhone').value = '0812-1234-5678';
+  document.getElementById('bpKtp').value = '3173XXXXXXXXXXXX';
+  document.getElementById('bpNpwp').value = '12.345.678.9-012.000';
+  document.getElementById('bpNib').value = '1234567890123';
+  document.getElementById('operatingLength').value = '8';
+  document.getElementById('operatingUnit').value = 'Tahun';
+  document.getElementById('sales').value = 'Sales A';
+
+  document.getElementById('purchasePotentialQty').value = '25';
+  document.getElementById('purchasePotentialUom').value = 'Ton';
+  document.getElementById('purchasePotentialPeriod').value = 'Per Bulan';
+  document.getElementById('transactionEstimate').value = '> Rp 100.000.000 s/d Rp 500.000.000';
+  document.getElementById('transactionPeriod').value = 'Per Bulan';
+  document.getElementById('paymentTerm').value = '14 Hari';
+  document.getElementById('creditLimit').value = '250000000';
+  document.getElementById('priceList').value = 'Retail Price';
+  document.getElementById('collateral').value = 'BPKB Kendaraan';
+
+  addresses = [
+    {id:'NPWP/USAHA',status:'Milik Pribadi',type:'Bill To',street:'Jl. Raya Serang KM 12 No. 8',county:'Cikupa',city:'Tangerang',state:'Banten',postal:'15710',country:'Indonesia'},
+    {id:'NPWP/USAHA',status:'Milik Pribadi',type:'Ship To',street:'Jl. Raya Serang KM 12 No. 8',county:'Cikupa',city:'Tangerang',state:'Banten',postal:'15710',country:'Indonesia'},
+    {id:'DOMISILI',status:'Sewa',type:'Bill To',street:'Jl. Melati No. 21',county:'Curug',city:'Tangerang',state:'Banten',postal:'15810',country:'Indonesia'}
+  ];
+  contacts = [
+    {name:'Bambang Hartono',position:'Pemilik',address:'Jl. Melati No. 21, Curug, Tangerang, Banten, 15810, Indonesia',phone:'0812-1234-5678'}
+  ];
+  banks = [
+    {bank:'BCA',no:'1234567890',name:'Bambang Hartono'}
+  ];
+  attachments = [
+    {type:'KTP',originalName:'KTP_Bambang_Hartono.pdf',displayName:'KTP_Bambang_Hartono.pdf',url:'data:text/plain;charset=utf-8,KTP%20Mockup'},
+    {type:'NPWP',originalName:'NPWP_Toko_Maju_Jaya.pdf',displayName:'NPWP_Toko_Maju_Jaya.pdf',url:'data:text/plain;charset=utf-8,NPWP%20Mockup'},
+    {type:'Form Pendaftaran Ditandatangani',originalName:'Form_Pendaftaran_Signed.pdf',displayName:'Form_Pendaftaran_Signed.pdf',url:'data:text/plain;charset=utf-8,Form%20Signed%20Mockup'}
+  ];
+
+  renderAddresses();
+  refreshSavedAddressDropdown();
+  renderContacts();
+  renderBanks();
+  renderAttachments();
+
+  document.querySelectorAll('.panel input, .panel select, #salespay input, #salespay select').forEach(el => {
+    el.disabled = true;
+  });
+
+  ['address','contact','bank'].forEach(tabId => {
+    const table = document.querySelector('#'+tabId+' table');
+    if(!table) return;
+    table.querySelectorAll('tr').forEach(row => {
+      if(row.lastElementChild) row.lastElementChild.style.display = 'none';
+    });
+  });
+
+  document.querySelectorAll('#attachment .danger').forEach(btn => btn.style.display='none');
+});
+</script>
+
+</body>
+</html>

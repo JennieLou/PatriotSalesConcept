@@ -1,0 +1,98 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Edit Activity</title><style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#4d5963;background:#dce8f1}
+.page-head{background:#fff;border-top:5px solid #2e006b;border-bottom:1px solid #c9d3da;padding:16px 20px 17px}
+.page-title{font-size:20px;color:#666;margin-bottom:9px}.crumbs{color:#6c7881}.crumbs span{margin:0 7px;color:#aaa}
+.wrap{margin:22px 28px}.card{background:#fff;border:1px solid #cbd4da;box-shadow:0 1px 2px rgba(0,0,0,.14);margin-bottom:16px}
+.card-head{padding:11px 14px;background:#f5f5f5;border-bottom:1px solid #d9dfe4;font-weight:700;color:#5d6871}
+.card-body{padding:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px}.span2{grid-column:span 2}
+.field label{display:block;font-weight:700;color:#59656e;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;border:1px solid #c7c7c7;background:#fff;color:#555;padding:7px 9px;border-radius:2px}
+.field input,.field select{height:34px}.field textarea{min-height:82px;resize:vertical}
+.readonly{background:#f4f6f7!important;color:#777!important}
+.cfl{display:flex}.cfl input{border-radius:2px 0 0 2px}.cfl button{width:36px;border:1px solid #c7c7c7;border-left:0;background:#f5f5f5}
+.btn{height:34px;border:1px solid #d4dbe0;background:#fff;color:#59656e;padding:0 14px;border-radius:2px;cursor:pointer}
+.btn.primary{background:#1e73be;border-color:#1e73be;color:#fff;font-weight:700}
+.btn.warn{background:#f5b041;border-color:#f5b041;color:#fff}
+.btn.small{height:29px;padding:0 9px;font-size:11px}
+.actions{display:flex;justify-content:flex-end;gap:8px}
+.note{font-size:10px;color:#8b949b;margin-top:5px;line-height:1.4}
+.attach-table{width:100%;border-collapse:collapse;margin-top:4px}
+.attach-table th,.attach-table td{border:1px solid #e0e5e9;padding:8px;text-align:left}
+.attach-table th{background:#f5f5f5;color:#626e77}
+.pending{background:#fffdf6}
+.status-chip{display:inline-block;padding:4px 8px;border-radius:2px;border:1px solid;font-size:11px;font-weight:700}
+.open{color:#337ab7;background:#f1f7fc;border-color:#acd0eb}.tentative{color:#8a651b;background:#fff8e7;border-color:#e4cb8f}
+.close{color:#3c763d;background:#f0f8f0;border-color:#b7d6b8}.inactive{color:#777;background:#f5f5f5;border-color:#ccc}
+@media(max-width:800px){.wrap{margin:12px}.grid{grid-template-columns:1fr}.span2{grid-column:auto}.attach-table{min-width:650px}.attach-scroll{overflow:auto}}
+</style></head><body>
+<div class="page-head"><div class="page-title">Edit Activity</div><div class="crumbs">Beranda <span>/</span> Transaction <span>/</span> Activity <span>/</span> Edit</div></div>
+<div class="wrap">
+<div class="card">
+  <div class="card-head">Informasi Activity</div>
+  <div class="card-body">
+    <div class="grid">
+      <div class="field"><label>No. Activity</label><input class="readonly" value="A-51021" disabled></div>
+      <div class="field"><label>Tipe Activity</label><input class="readonly" value="Scheduled Visit" disabled></div>
+
+      <div class="field span2"><label>Customer</label><input class="readonly" value="C000145 - PT Sumber Makmur" disabled><div class="note">Customer tidak dapat diubah setelah Activity dibuat.</div></div>
+
+      <div class="field"><label>Kontak</label><select><option>Pak Hendra</option><option>Bu Rina</option></select></div>
+      <div class="field"><label>Subject</label><select><option>Follow Up</option><option>Negotiation</option><option>Initial Visit</option></select></div>
+
+      <div class="field"><label>Tanggal</label><input type="date" value="2026-09-18"></div>
+      <div class="field"><label>Status</label><input class="readonly" value="Open" disabled></div>
+
+      <div class="field"><label>Start Time</label><input type="time" value="09:00"></div>
+      <div class="field"><label>End Time</label><input type="time" value="10:00"></div>
+
+      <div class="field span2"><label>Address</label><select><option>DOMISILI - Jl. Raya Bogor No. 18, Jakarta</option><option>NPWP - Jl. Raya Bogor No. 18A, Jakarta</option></select></div>
+
+      <div class="field span2"><label>Keterangan</label><textarea>Bahas revisi harga dan target pembelian bulan depan.</textarea></div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">Relasi Komersial</div>
+  <div class="card-body">
+    <div class="grid">
+      <div class="field span2"><label>Opportunity</label><select><option>OPP-00028 - Penambahan Produk Feed</option><option>Tidak ada</option><option>OPP-00031 - New Layer Project</option></select></div>
+      <div class="field"><label>Opportunity Line</label><select><option>Line 3</option><option>-</option><option>Line 1</option></select></div>
+      <div class="field"><label>Stage</label><input class="readonly" value="Quotation" disabled></div>
+      <div class="field"><label>Related Document Type</label><select><option>Tidak ada</option><option>Sales Quotation</option><option>Sales Order</option></select></div>
+      <div class="field"><label>Related Document No.</label><div class="cfl"><input placeholder="Pilih dokumen SAP" readonly><button type="button">...</button></div></div>
+    </div>
+    <div class="note">Opportunity dan Related Document dapat diperbarui sebagai konteks / hasil komersial Activity. Untuk Activity yang sudah Check In / Close, field planning tetap dikunci dan update dilakukan melalui Update Follow-up.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-head">Lampiran</div>
+  <div class="card-body attach-scroll">
+    <table class="attach-table" id="attTable">
+      <thead><tr><th style="width:55px">No.</th><th>Nama File</th><th>Keterangan</th><th style="width:110px">Aksi</th></tr></thead>
+      <tbody id="existingRows">
+        <tr><td>1</td><td>Quotation_Revisi.pdf</td><td>Existing Attachment</td><td><button class="btn small">Download</button></td></tr>
+        <tr><td>2</td><td>Product_Specification.xlsx</td><td>Existing Attachment</td><td><button class="btn small">Download</button></td></tr>
+      </tbody>
+      <tbody id="pendingRows"></tbody>
+    </table>
+    <div style="margin-top:10px"><input id="newFiles" type="file" multiple></div>
+    <div class="note">Existing Attachment tidak dapat dihapus. File baru dapat di-Remove sebelum Save.</div>
+  </div>
+</div>
+<div class="actions"><button class="btn" onclick="location.href='PATRIOT_Activity_View_v4_related_document.html'">Cancel</button><button class="btn primary">Save</button></div></div>
+<script>
+let pending=[];
+const input=document.getElementById('newFiles');
+const tbody=document.getElementById('pendingRows');
+function renderPending(){
+  if(!pending.length){tbody.innerHTML='<tr><td colspan="4" class="note">Belum ada Lampiran baru.</td></tr>';return;}
+  tbody.innerHTML=pending.map((n,i)=>`<tr class="pending"><td>${i+1}</td><td>${n}</td><td>Belum tersimpan</td><td><button class="btn small" type="button" data-remove="${i}">Remove</button></td></tr>`).join('');
+  tbody.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{pending.splice(+b.dataset.remove,1);renderPending();});
+}
+if(input){input.onchange=e=>{pending.push(...[...e.target.files].map(f=>f.name));input.value='';renderPending();};}
+</script>
+</body></html>

@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Visit Schedule - SAP Business One Mockup v3</title>
+<style>
+:root{
+  --sap-blue:#294e72;
+  --sap-blue-dark:#1f3f5f;
+  --sap-border:#b7c1ca;
+  --sap-line:#cfd5da;
+  --sap-disabled:#e7edf1;
+  --sap-yellow:#f5b400;
+  --text:#1f2933;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-width:1440px;
+  min-height:820px;
+  font-family:Tahoma,"Segoe UI",Arial,sans-serif;
+  font-size:13px;
+  color:var(--text);
+  background:#d7dde2;
+}
+body{padding:14px}
+.sap-window{
+  width:100%;
+  min-height:820px;
+  background:#f7f8f9;
+  border:1px solid #6f8496;
+  box-shadow:0 3px 14px rgba(0,0,0,.22);
+  display:flex;
+  flex-direction:column;
+}
+.titlebar{
+  height:34px;
+  background:linear-gradient(#365f84,#294e72);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 11px 0 14px;
+  font-size:15px;
+  user-select:none;
+}
+.window-controls{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  font-size:18px;
+}
+.content{
+  padding:20px 24px 16px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.header-grid{
+  display:grid;
+  grid-template-columns:minmax(670px,1fr) auto;
+  gap:38px;
+  align-items:start;
+}
+.form-grid{
+  display:grid;
+  grid-template-columns:150px minmax(260px,1fr);
+  row-gap:8px;
+  align-items:center;
+}
+.right-form{
+  grid-template-columns:82px auto;
+  justify-self:end;
+  width:440px;
+}
+.right-form .field-row{justify-content:flex-end}
+.right-form .series{flex:0 0 135px}
+.right-form .docnum{flex:0 0 205px}
+label{white-space:nowrap}
+input,select,textarea,button{
+  font-family:inherit;
+  font-size:13px;
+}
+input,select,textarea{
+  border:1px solid var(--sap-border);
+  background:#fff;
+  color:#17212b;
+  min-height:25px;
+  padding:3px 7px;
+  outline:none;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#5d8fb8;
+  box-shadow:0 0 0 1px #b7d0e3 inset;
+}
+.disabled{
+  background:var(--sap-disabled)!important;
+  color:#334455;
+}
+.field-row{
+  display:flex;
+  gap:4px;
+  min-width:0;
+}
+.field-row>input,.field-row>select{
+  flex:1;
+  min-width:0;
+}
+.period-row{
+  display:grid;
+  grid-template-columns:160px 28px 160px;
+  align-items:center;
+  gap:6px;
+  width:max-content;
+}
+.period-row span{text-align:center}
+.cfl{
+  width:31px;
+  min-width:31px;
+  height:25px;
+  padding:0;
+  border:1px solid #6e8799;
+  background:var(--sap-blue);
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+}
+.cfl:hover:not(:disabled){background:var(--sap-blue-dark)}
+.cfl:disabled{
+  background:#c8d0d6;
+  color:#7b858c;
+  cursor:not-allowed;
+}
+.main-panel{
+  border:1px solid #c5cbd0;
+  background:#fff;
+  flex:1;
+  min-height:450px;
+  display:flex;
+  flex-direction:column;
+}
+.panel-caption{
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 13px;
+  border-bottom:1px solid #aeb8c0;
+  background:#f5f7f8;
+  font-weight:600;
+  color:#263945;
+}
+.matrix-panel{
+  padding:12px 13px 12px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+.table-wrap{
+  border:1px solid #aeb8c0;
+  flex:1;
+  min-height:330px;
+  overflow:auto;
+  background:#fff;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+th,td{
+  border-right:1px solid var(--sap-line);
+  border-bottom:1px solid var(--sap-line);
+  height:27px;
+  padding:3px 6px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+th{
+  background:linear-gradient(#edf1f4,#dce4ea);
+  font-weight:600;
+  text-align:left;
+}
+td.rowno,th.rowno{
+  width:42px;
+  text-align:center;
+  background:#edf1f4;
+}
+.visit-date{width:112px}
+.time-col{width:82px}
+.bp-code{width:125px}
+.bp-name{width:185px}
+.contact{width:150px}
+.subject{width:170px}
+.address-id{width:125px}
+.opportunity{width:145px}
+.opp-line{width:95px}
+.opp-stage{width:135px}
+.remarks{width:220px}
+.activity-no{width:105px}
+td input,td select{
+  border:0;
+  width:100%;
+  height:22px;
+  min-height:22px;
+  padding:1px 3px;
+  background:transparent;
+}
+td input:focus,td select:focus{
+  border:1px solid #5d8fb8;
+  box-shadow:none;
+  background:#fff;
+}
+.cell-cfl{
+  display:grid;
+  grid-template-columns:1fr 26px;
+  gap:2px;
+}
+.cell-cfl button{
+  height:22px;
+  padding:0;
+  border:1px solid #7f96a8;
+  background:#e6edf2;
+  cursor:pointer;
+}
+.cell-cfl button:hover:not(:disabled){background:#d7e3ec}
+.readonly-cell{
+  background:var(--sap-disabled)!important;
+  color:#334455;
+}
+.doc-footer{
+  display:grid;
+  grid-template-columns:minmax(620px,1fr) 1fr;
+  gap:34px;
+  align-items:start;
+}
+.remarks-footer{
+  display:grid;
+  grid-template-columns:140px minmax(420px,650px);
+  align-items:start;
+}
+textarea{
+  height:70px;
+  resize:none;
+}
+.bottom-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.left-actions,.right-actions{
+  display:flex;
+  gap:9px;
+}
+.sap-btn{
+  min-width:96px;
+  height:31px;
+  padding:0 17px;
+  border:1px solid #778b9a;
+  background:linear-gradient(#3e6484,#294e72);
+  color:#fff;
+  cursor:pointer;
+  position:relative;
+}
+.sap-btn.primary:before{
+  content:"";
+  position:absolute;
+  left:-1px;
+  top:-1px;
+  bottom:-1px;
+  width:5px;
+  background:var(--sap-yellow);
+}
+.sap-btn:hover:not(:disabled){
+  background:linear-gradient(#496f8f,#244764);
+}
+.sap-btn.secondary{
+  background:linear-gradient(#657d91,#476176);
+}
+.sap-btn:disabled{
+  background:#c7cdd2;
+  border-color:#aeb5ba;
+  color:#70777c;
+  cursor:not-allowed;
+  opacity:.78;
+}
+.sap-btn:disabled:before{display:none}
+.status-message{
+  min-height:18px;
+  color:#3b586f;
+}
+.status-message.error{color:#ad2727}
+.status-message.success{color:#217044}
+
+/* modal */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(20,32,42,.28);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:50;
+}
+.modal-backdrop.show{display:flex}
+.modal{
+  width:760px;
+  max-width:calc(100vw - 50px);
+  background:#f7f8f9;
+  border:1px solid #698096;
+  box-shadow:0 10px 30px rgba(0,0,0,.32);
+}
+.modal.note-modal{width:720px}
+.modal.confirm-modal{width:455px}
+.modal-title{
+  height:32px;
+  background:linear-gradient(#365f84,#294e72);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 11px 0 13px;
+  font-size:14px;
+}
+.modal-close{
+  border:0;
+  background:transparent;
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+}
+.modal-body{padding:16px}
+.search-row{
+  display:flex;
+  gap:8px;
+  margin-bottom:10px;
+}
+.search-row input{flex:1}
+.picker-wrap{
+  border:1px solid #aeb8c0;
+  max-height:330px;
+  overflow:auto;
+  background:#fff;
+}
+.picker-table tr{cursor:pointer}
+.picker-table tbody tr:hover{background:#dce9f2}
+.picker-table tbody tr.selected{background:#cfe2f1}
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  padding:12px 16px 16px;
+}
+.note-block{
+  border:1px solid #c7d0d7;
+  background:#fff;
+  padding:14px 16px;
+  line-height:1.55;
+}
+.note-block table{margin-top:10px;border:1px solid #c7d0d7}
+.note-block th,.note-block td{height:26px}
+.note-block td:first-child{width:190px;background:#f3f5f6;font-weight:600}
+.note-block .small{margin-top:10px;color:#59656e;font-size:12px}
+.confirm-text{
+  border:1px solid #c7d0d7;
+  background:#fff;
+  padding:16px;
+  line-height:1.55;
+}
+
+@media(max-width:1440px){
+  body{padding:8px}
+  .sap-window{width:1424px;min-width:1424px}
+}
+</style>
+</head>
+<body>
+<div class="sap-window">
+  <div class="titlebar">
+    <span>Sales Visit Schedule</span>
+    <div class="window-controls"><span>─</span><span>□</span><span>×</span></div>
+  </div>
+
+  <div class="content">
+    <section class="header-grid">
+      <div class="form-grid">
+        <label>Sales Employee</label>
+        <select id="salesEmployee">
+          <option value="S001" selected>S001 - Andi Wijaya</option>
+          <option value="S002">S002 - Budi Santoso</option>
+          <option value="S003">S003 - Santi Lestari</option>
+        </select>
+
+        <label>Period</label>
+        <div class="period-row">
+          <input id="dateFrom" type="date" value="2026-09-21">
+          <span>To</span>
+          <input id="dateTo" type="date" value="2026-09-26">
+        </div>
+      </div>
+
+      <div class="form-grid right-form">
+        <label>No.</label>
+        <div class="field-row">
+          <select id="series" class="series"><option>26 SVS</option></select>
+          <input id="docNum" class="docnum disabled" value="Automatic" readonly>
+        </div>
+
+        <label>Status</label>
+        <input id="status" class="disabled" value="Draft" readonly>
+      </div>
+    </section>
+
+    <section class="main-panel">
+      <div class="panel-caption">
+        <span>Visit Schedule Detail</span>
+        <span id="lineSummary">2 Lines</span>
+      </div>
+
+      <div class="matrix-panel">
+        <div class="table-wrap">
+          <table id="scheduleTable">
+            <thead>
+              <tr>
+                <th class="rowno">#</th>
+                <th class="visit-date">Visit Date</th>
+                <th class="time-col">Start Time</th>
+                <th class="time-col">End Time</th>
+                <th class="bp-code">BP Code</th>
+                <th class="bp-name">BP Name</th>
+                <th class="contact">Contact Person</th>
+                <th class="subject">Subject</th>
+                <th class="address-id">BP Address ID</th>
+                <th class="remarks">Remarks</th>
+                <th class="opportunity">Related Opportunity</th>
+                <th class="opp-line">Opp. Line</th>
+                <th class="opp-stage">Stage</th>
+                <th class="activity-no">Activity No.</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-footer">
+      <div class="remarks-footer">
+        <label>Remarks</label>
+        <textarea id="headerRemarks">Weekly customer visit planning.</textarea>
+      </div>
+      <div></div>
+    </section>
+
+    <div class="bottom-bar">
+      <div class="left-actions">
+        <button class="sap-btn primary" id="mainBtn">Add</button>
+        <button class="sap-btn secondary" id="cancelBtn">Cancel</button>
+      </div>
+      <div class="right-actions">
+        <button class="sap-btn secondary" id="technicalNoteBtn">Technical Note</button>
+        <button class="sap-btn" id="scheduleBtn" disabled>Schedule</button>
+      </div>
+    </div>
+    <div id="message" class="status-message"></div>
+  </div>
+</div>
+
+<!-- Generic picker -->
+<div class="modal-backdrop" id="pickerModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="pickerTitle">Choose From List</span>
+      <button class="modal-close" id="pickerClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="search-row"><input id="pickerSearch" placeholder="Search..."></div>
+      <div class="picker-wrap">
+        <table class="picker-table">
+          <thead id="pickerHead"></thead>
+          <tbody id="pickerBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="sap-btn primary" id="pickerSelect">Select</button>
+      <button class="sap-btn secondary" id="pickerCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Technical Note -->
+<div class="modal-backdrop" id="technicalNoteModal">
+  <div class="modal note-modal">
+    <div class="modal-title">
+      <span>Technical Note - Schedule Posting</span>
+      <button class="modal-close" id="technicalNoteClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="note-block">
+        Saat tombol <strong>Schedule</strong> dijalankan, setiap baris akan dibuat menjadi
+        <strong>1 SAP Business One Activity</strong>.
+        <table>
+          <tbody>
+            <tr><td>Activity</td><td>Meeting</td></tr>
+            <tr><td>Type</td><td>General</td></tr>
+            <tr><td>Status</td><td>Open</td></tr>
+            <tr><td>Assigned To</td><td>Mengikuti Sales Employee pada header Schedule</td></tr>
+            <tr><td>Start / End</td><td>Mengikuti Visit Date, Start Time, dan End Time pada baris</td></tr>
+            <tr><td>Business Partner</td><td>Mengikuti BP Code pada baris</td></tr>
+            <tr><td>Contact Person</td><td>Mengikuti Contact Person pada baris</td></tr>
+            <tr><td>Subject</td><td>Mengikuti Subject pada baris</td></tr>
+            <tr><td>Meeting Location</td><td>Otomatis dari BP Address ID yang dipilih</td></tr>
+            <tr><td>Priority</td><td>Normal</td></tr>
+            <tr><td>Reminder</td><td>Tidak digunakan pada SAP Activity; reminder dikelola dari iReapBiz</td></tr>
+            <tr><td>Related Opportunity</td><td>Optional. Jika diisi, Activity akan di-link ke Opportunity tersebut</td></tr>
+            <tr><td>Opportunity Line</td><td>Wajib dipilih jika Related Opportunity diisi. Activity di-link ke line Opportunity yang dipilih, bukan hanya berdasarkan nama Stage</td></tr>
+            <tr><td>Stage</td><td>Read-only, otomatis mengikuti Stage pada Opportunity Line yang dipilih</td></tr>
+            <tr><td>Remarks</td><td>Mengikuti Remarks pada baris</td></tr>
+            <tr><td>Activity No.</td><td>Disimpan kembali ke baris Schedule setelah posting berhasil</td></tr>
+          </tbody>
+        </table>
+        <div class="small">Schedule hanya aktif setelah dokumen sudah di-Add dan berada pada OK Mode. Jika dokumen berubah ke Update Mode, perubahan harus disimpan dulu sebelum Schedule dapat dijalankan.<br>Setelah status menjadi <strong>Scheduled</strong>, Schedule Document menjadi final dan tidak dapat diedit atau dibatalkan lagi. Perubahan rencana berikutnya dilakukan pada SAP Activity yang sudah terbentuk.</div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="sap-btn primary" id="technicalNoteOk">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- Simple SAP-style confirmation -->
+<div class="modal-backdrop" id="scheduleConfirmModal">
+  <div class="modal confirm-modal">
+    <div class="modal-title">
+      <span>System Message</span>
+      <button class="modal-close" id="scheduleConfirmClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="confirm-text">Create SAP Business One Activity for all schedule lines?</div>
+    </div>
+    <div class="modal-actions">
+      <button class="sap-btn primary" id="scheduleYes">Yes</button>
+      <button class="sap-btn secondary" id="scheduleNo">No</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(()=>{
+const el=id=>document.getElementById(id);
+const body=document.querySelector("#scheduleTable tbody");
+let docMode="ADD"; // ADD | OK | UPDATE
+let posted=false;
+
+const bpMaster=[
+  {
+    code:"C000145", name:"PT Sumber Makmur",
+    contacts:["Pak Hendra","Bu Rina"],
+    addresses:["OFFICE","WAREHOUSE"],
+    opportunities:[
+      {
+        no:"OPP-00028",
+        name:"Feed Product Expansion",
+        lines:[
+          {lineNo:1,stage:"Introduction",startDate:"10/09/2026",endDate:"11/09/2026",remarks:"Initial discussion"},
+          {lineNo:2,stage:"Quotation",startDate:"12/09/2026",endDate:"15/09/2026",remarks:"Quotation submitted"},
+          {lineNo:3,stage:"Quotation",startDate:"16/09/2026",endDate:"",remarks:"Revised quotation / follow up"}
+        ]
+      }
+    ]
+  },
+  {
+    code:"L000032", name:"CV Berkah Jaya",
+    contacts:["Ibu Melati"],
+    addresses:["NPWP","DOMISILI"],
+    opportunities:[]
+  },
+  {
+    code:"C000210", name:"PT Maju Bersama",
+    contacts:["Pak Rudi","Bu Anita"],
+    addresses:["HEAD OFFICE","SITE"],
+    opportunities:[
+      {
+        no:"OPP-00031",
+        name:"New Product Trial",
+        lines:[
+          {lineNo:1,stage:"Introduction",startDate:"14/09/2026",endDate:"",remarks:"Initial opportunity"}
+        ]
+      }
+    ]
+  }
+];
+
+const subjects=[
+  "Initial Visit",
+  "Follow Up",
+  "Product Presentation",
+  "Negotiation",
+  "Quotation Discussion",
+  "Order Follow Up",
+  "Relationship Visit",
+  "Collection",
+  "Complaint / Service Follow Up",
+  "Other"
+];
+
+let rows=[
+  {
+    date:"2026-09-21",start:"09:00",end:"10:00",
+    bpCode:"C000145",bpName:"PT Sumber Makmur",
+    contact:"Pak Hendra",subject:"Follow Up",address:"OFFICE",
+    opportunity:"OPP-00028",oppLine:"3",oppStage:"Quotation",remarks:"Follow up kebutuhan produk A",activityNo:""
+  },
+  {
+    date:"2026-09-22",start:"13:30",end:"14:30",
+    bpCode:"L000032",bpName:"CV Berkah Jaya",
+    contact:"Ibu Melati",subject:"Initial Visit",address:"NPWP",
+    opportunity:"",oppLine:"",oppStage:"",remarks:"Perkenalan produk dan kebutuhan awal",activityNo:""
+  }
+];
+
+let pickerRows=[], pickerCols=[], pickerSelected=null, pickerCb=null;
+
+function esc(v){
+  return String(v??"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
+function msg(t,c=""){
+  el("message").textContent=t;
+  el("message").className="status-message"+(c?" "+c:"");
+}
+function bpByCode(code){return bpMaster.find(x=>x.code===code)}
+
+function options(list,value,blank=false){
+  let out=blank?'<option value=""></option>':"";
+  return out+list.map(x=>`<option value="${esc(x)}" ${x===value?"selected":""}>${esc(x)}</option>`).join("");
+}
+
+function validTime(v){return /^([01]\d|2[0-3]):[0-5]\d$/.test(v)}
+function setMode(mode){
+  if(posted)return;
+  docMode=mode;
+  if(mode==="ADD"){mainBtn.textContent="Add";scheduleBtn.disabled=true}
+  else if(mode==="OK"){mainBtn.textContent="OK";scheduleBtn.disabled=false}
+  else if(mode==="UPDATE"){mainBtn.textContent="Update";scheduleBtn.disabled=true}
+}
+function markChanged(){if(docMode==="OK"&&!posted)setMode("UPDATE")}
+
+function render(){
+  body.innerHTML="";
+  rows.forEach((r,i)=>{
+    const bp=bpByCode(r.bpCode);
+    const contacts=bp?bp.contacts:[];
+    const addresses=bp?bp.addresses:[];
+    const opps=bp?bp.opportunities:[];
+
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td class="rowno">${i+1}</td>
+      <td><input type="date" data-i="${i}" data-f="date" value="${esc(r.date)}"></td>
+      <td><input type="text" maxlength="5" placeholder="HH:mm" data-i="${i}" data-f="start" value="${esc(r.start)}"></td>
+      <td><input type="text" maxlength="5" placeholder="HH:mm" data-i="${i}" data-f="end" value="${esc(r.end)}"></td>
+      <td>
+        <div class="cell-cfl">
+          <input data-i="${i}" data-f="bpCode" value="${esc(r.bpCode)}" readonly>
+          <button type="button" data-bp-picker="${i}">...</button>
+        </div>
+      </td>
+      <td><input value="${esc(r.bpName)}" class="readonly-cell" readonly></td>
+      <td><select data-i="${i}" data-f="contact">${options(contacts,r.contact,true)}</select></td>
+      <td><select data-i="${i}" data-f="subject">${options(subjects,r.subject,true)}</select></td>
+      <td><select data-i="${i}" data-f="address">${options(addresses,r.address,true)}</select></td>
+      <td><input data-i="${i}" data-f="remarks" value="${esc(r.remarks)}"></td>
+      <td>
+        <div class="cell-cfl">
+          <input data-i="${i}" data-f="opportunity" value="${esc(r.opportunity)}" readonly placeholder="Optional">
+          <button type="button" data-opp-picker="${i}">...</button>
+        </div>
+      </td>
+      <td>
+        <div class="cell-cfl">
+          <input value="${esc(r.oppLine)}" readonly placeholder="Optional">
+          <button type="button" data-opp-line-picker="${i}" ${r.opportunity ? "" : "disabled"}>...</button>
+        </div>
+      </td>
+      <td><input value="${esc(r.oppStage)}" class="readonly-cell" readonly></td>
+      <td><input value="${esc(r.activityNo)}" class="readonly-cell" readonly></td>
+    `;
+    body.appendChild(tr);
+  });
+
+  // SAP-style blank row
+  const i=rows.length;
+  const tr=document.createElement("tr");
+  tr.innerHTML=`
+    <td class="rowno">${i+1}</td>
+    <td><input type="date" id="newDate"></td>
+    <td><input type="text" maxlength="5" placeholder="HH:mm" id="newStart"></td>
+    <td><input type="text" maxlength="5" placeholder="HH:mm" id="newEnd"></td>
+    <td>
+      <div class="cell-cfl">
+        <input id="newBpCode" readonly>
+        <button type="button" data-bp-picker="new">...</button>
+      </div>
+    </td>
+    <td><input id="newBpName" class="readonly-cell" readonly></td>
+    <td><select id="newContact"><option value=""></option></select></td>
+    <td><select id="newSubject">${options(subjects,"",true)}</select></td>
+    <td><select id="newAddress"><option value=""></option></select></td>
+    <td><input id="newRemarks"></td>
+    <td>
+      <div class="cell-cfl">
+        <input id="newOpportunity" readonly placeholder="Optional">
+        <button type="button" data-opp-picker="new">...</button>
+      </div>
+    </td>
+    <td>
+      <div class="cell-cfl">
+        <input id="newOppLine" readonly placeholder="Optional">
+        <button type="button" id="newOppLineBtn" data-opp-line-picker="new" disabled>...</button>
+      </div>
+    </td>
+    <td><input id="newOppStage" class="readonly-cell" readonly></td>
+    <td><input class="readonly-cell" readonly></td>
+  `;
+  body.appendChild(tr);
+
+  body.querySelectorAll("[data-i][data-f]").forEach(x=>{
+    const event=x.tagName==="SELECT"?"change":"input";
+    x.addEventListener(event,()=>{
+      rows[+x.dataset.i][x.dataset.f]=x.value;
+      markChanged();
+    });
+  });
+
+  body.querySelectorAll("[data-bp-picker]").forEach(btn=>{
+    btn.onclick=()=>openBpPicker(btn.dataset.bpPicker);
+  });
+
+  body.querySelectorAll("[data-opp-picker]").forEach(btn=>{
+    btn.onclick=()=>openOppPicker(btn.dataset.oppPicker);
+  });
+
+  body.querySelectorAll("[data-opp-line-picker]").forEach(btn=>{
+    btn.onclick=()=>openOppLinePicker(btn.dataset.oppLinePicker);
+  });
+
+  el("lineSummary").textContent=`${rows.length} Line${rows.length===1?"":"s"}`;
+
+  ["newDate","newStart","newEnd","newContact","newSubject","newAddress","newRemarks"].forEach(id=>{
+    const node=el(id);
+    if(node) node.addEventListener("change",tryCommitNewRow);
+  });
+}
+
+function openPicker(title,cols,rowsList,cb){
+  pickerTitle.textContent=title;
+  pickerCols=cols;
+  pickerRows=rowsList;
+  pickerCb=cb;
+  pickerSelected=null;
+  pickerSearch.value="";
+  renderPicker(rowsList);
+  pickerModal.classList.add("show");
+}
+function renderPicker(list){
+  pickerHead.innerHTML="<tr>"+pickerCols.map(c=>`<th>${esc(c.label)}</th>`).join("")+"</tr>";
+  pickerBody.innerHTML=list.map((r,i)=>"<tr data-i='"+i+"'>"+
+    pickerCols.map(c=>`<td>${esc(r[c.key])}</td>`).join("")+"</tr>").join("");
+  [...pickerBody.querySelectorAll("tr")].forEach((tr,i)=>{
+    tr.onclick=()=>{
+      [...pickerBody.querySelectorAll("tr")].forEach(x=>x.classList.remove("selected"));
+      tr.classList.add("selected");
+      pickerSelected=list[i];
+    };
+    tr.ondblclick=()=>{pickerSelected=list[i];selectPicker()};
+  });
+}
+function selectPicker(){
+  if(pickerSelected&&pickerCb){
+    pickerCb(pickerSelected);
+    pickerModal.classList.remove("show");
+  }
+}
+pickerSearch.oninput=()=>{
+  const q=pickerSearch.value.trim().toLowerCase();
+  const filtered=!q?pickerRows:pickerRows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(q)));
+  renderPicker(filtered);
+};
+pickerSelect.onclick=selectPicker;
+pickerClose.onclick=pickerCancel.onclick=()=>pickerModal.classList.remove("show");
+
+function openBpPicker(target){
+  openPicker(
+    "Choose Business Partner",
+    [{key:"code",label:"BP Code"},{key:"name",label:"BP Name"}],
+    bpMaster,
+    bp=>{
+      if(target==="new"){
+        newBpCode.value=bp.code;
+        newBpName.value=bp.name;
+        newContact.innerHTML=options(bp.contacts,"",true);
+        newAddress.innerHTML=options(bp.addresses,"",true);
+        newOpportunity.value=""; newOppLine.value=""; newOppStage.value=""; newOppLineBtn.disabled=true;
+      }else{
+        const i=+target;
+        rows[i].bpCode=bp.code;
+        rows[i].bpName=bp.name;
+        rows[i].contact="";
+        rows[i].address="";
+        rows[i].opportunity="";
+        rows[i].oppLine="";
+        rows[i].oppStage="";
+        markChanged();
+        render();
+      }
+    }
+  );
+}
+function openOppPicker(target){
+  let code="";
+  if(target==="new") code=newBpCode.value;
+  else code=rows[+target]?.bpCode||"";
+  const bp=bpByCode(code);
+  const opps=bp?bp.opportunities:[];
+  if(!bp){msg("Pilih BP terlebih dahulu.","error");return}
+  if(!opps.length){msg("Tidak ada Opportunity aktif untuk BP ini.");return}
+
+  openPicker(
+    "Choose Sales Opportunity",
+    [{key:"no",label:"Opportunity No."},{key:"name",label:"Opportunity Name"}],
+    opps,
+    opp=>{
+      if(target==="new"){
+        newOpportunity.value=opp.no;
+        newOppLine.value="";
+        newOppStage.value="";
+        newOppLineBtn.disabled=false;
+      }else{
+        rows[+target].opportunity=opp.no;
+        rows[+target].oppLine="";
+        rows[+target].oppStage="";
+        markChanged();
+        render();
+      }
+    }
+  );
+}
+
+function openOppLinePicker(target){
+  let code="", oppNo="";
+  if(target==="new"){
+    code=newBpCode.value;
+    oppNo=newOpportunity.value;
+  }else{
+    code=rows[+target]?.bpCode||"";
+    oppNo=rows[+target]?.opportunity||"";
+  }
+
+  const bp=bpByCode(code);
+  if(!bp){msg("Pilih BP terlebih dahulu.","error");return}
+  if(!oppNo){msg("Pilih Related Opportunity terlebih dahulu.","error");return}
+
+  const opp=bp.opportunities.find(x=>x.no===oppNo);
+  const lines=opp?.lines||[];
+  if(!lines.length){msg("Opportunity Line tidak ditemukan.","error");return}
+
+  openPicker(
+    "Choose Opportunity Line",
+    [
+      {key:"lineNo",label:"Line"},
+      {key:"stage",label:"Stage"},
+      {key:"startDate",label:"Start Date"},
+      {key:"endDate",label:"End Date"},
+      {key:"remarks",label:"Remarks"}
+    ],
+    lines,
+    line=>{
+      if(target==="new"){
+        newOppLine.value=String(line.lineNo);
+        newOppStage.value=line.stage;
+      }else{
+        rows[+target].oppLine=String(line.lineNo);
+        rows[+target].oppStage=line.stage;
+        markChanged();
+        render();
+      }
+    }
+  );
+}
+
+function tryCommitNewRow(){
+  if(!newBpCode.value || !newDate.value || !newStart.value || !newEnd.value || !newSubject.value || !newAddress.value) return;
+  if(!validTime(newStart.value)||!validTime(newEnd.value)) return;
+
+  const bp=bpByCode(newBpCode.value);
+  rows.push({
+    date:newDate.value,
+    start:newStart.value,
+    end:newEnd.value,
+    bpCode:newBpCode.value,
+    bpName:bp?bp.name:"",
+    contact:newContact.value,
+    subject:newSubject.value,
+    address:newAddress.value,
+    opportunity:newOpportunity.value,
+    oppLine:newOppLine.value,
+    oppStage:newOppStage.value,
+    remarks:newRemarks.value,
+    activityNo:""
+  });
+  markChanged();
+  render();
+}
+
+function validate(){
+  const from=dateFrom.value, to=dateTo.value;
+  if(!from||!to) return "Date From dan Date To wajib diisi.";
+  if(from>to) return "Date From tidak boleh lebih besar dari Date To.";
+  if(!rows.length) return "Minimal 1 baris schedule wajib tersedia.";
+
+  for(let i=0;i<rows.length;i++){
+    const r=rows[i];
+    if(!r.date) return `Visit Date baris ${i+1} wajib diisi.`;
+    if(r.date<from||r.date>to) return `Visit Date baris ${i+1} harus berada di dalam periode dokumen.`;
+    if(!validTime(r.start)||!validTime(r.end)) return `Start Time dan End Time baris ${i+1} harus menggunakan format 24 jam HH:mm.`;
+    if(r.end<=r.start) return `End Time baris ${i+1} harus lebih besar dari Start Time.`;
+    if(!r.bpCode) return `BP Code baris ${i+1} wajib diisi.`;
+    if(!r.subject) return `Subject baris ${i+1} wajib diisi.`;
+    if(!r.address) return `BP Address ID baris ${i+1} wajib diisi.`;
+    if(r.opportunity && !r.oppLine) return `Opportunity Line baris ${i+1} wajib dipilih jika Related Opportunity diisi.`;
+  }
+  return "";
+}
+
+mainBtn.onclick=()=>{
+  if(posted)return;
+  if(docMode==="OK"){msg("");return}
+  const e=validate();
+  if(e){msg(e,"error");return}
+  if(docMode==="ADD"){
+    docNum.value="SVS26000015";
+    status.value="Draft";
+    setMode("OK");
+    msg("Sales Visit Schedule berhasil ditambahkan.","success");
+  }else if(docMode==="UPDATE"){
+    setMode("OK");
+    msg("Sales Visit Schedule berhasil di-update.","success");
+  }
+};
+
+cancelBtn.onclick=()=>msg("");
+
+technicalNoteBtn.onclick=()=>technicalNoteModal.classList.add("show");
+technicalNoteClose.onclick=technicalNoteOk.onclick=()=>technicalNoteModal.classList.remove("show");
+
+scheduleBtn.onclick=()=>{
+  if(docMode!=="OK"||posted)return;
+  const e=validate();
+  if(e){msg(e,"error");return}
+  scheduleConfirmModal.classList.add("show");
+};
+scheduleConfirmClose.onclick=scheduleNo.onclick=()=>scheduleConfirmModal.classList.remove("show");
+
+scheduleYes.onclick=()=>{
+  rows=rows.map((r,i)=>({...r,activityNo:String(51021+i)}));
+  status.value="Scheduled";
+  posted=true;
+  scheduleConfirmModal.classList.remove("show");
+  scheduleBtn.disabled=true;
+  mainBtn.textContent="OK";
+  msg("Schedule berhasil dibuat. SAP Activity telah dibuat untuk setiap baris.","success");
+  render();
+};
+
+["salesEmployee","dateFrom","dateTo","headerRemarks"].forEach(id=>{
+  const node=el(id);
+  const ev=node.tagName==="SELECT"?"change":"input";
+  node.addEventListener(ev,markChanged);
+});
+
+render();
+setMode("ADD");
+})();
+</script>
+</body>
+</html>

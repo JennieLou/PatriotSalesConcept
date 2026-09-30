@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tambah Sales Quotation</title>
+<style>
+*{box-sizing:border-box}
+:root{
+ --nav:#17196d;--nav2:#273142;--bg:#eef3f7;--panel:#fff;--line:#d6dde3;
+ --text:#4d5963;--muted:#89939b;--blue:#4d6df3;--green:#4a8a64;--red:#d95d55;
+}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:var(--text);background:var(--bg)}
+button,input,select,textarea{font:inherit}.hidden{display:none!important}
+.topbar{height:54px;background:var(--nav);color:#fff;display:flex;align-items:center;padding:0 16px;gap:10px}
+.brand{font-weight:700}.topbar .spacer{flex:1}.topbar .icon-btn{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer}
+.workspace-nav{background:var(--nav2);color:#fff;padding:9px 13px;display:flex;align-items:center;gap:10px}
+.nav-btn{border:0;color:#fff;font-weight:700;padding:9px 18px;border-radius:7px;cursor:pointer}
+.nav-btn.customer{background:#536df2}.nav-btn.confirm{background:#4c8a67}.nav-btn.inactive{opacity:.72}
+.workspace-nav .spacer{flex:1}.doc-date{background:#1f2938;border:1px solid #465267;padding:8px 11px;border-radius:3px}
+.customer-strip{background:#3b4657;color:#fff;padding:10px 14px;display:flex;align-items:center;font-weight:700;font-size:14px;min-height:48px}
+.customer-strip .spacer{flex:1}.customer-strip .total{font-size:22px}
+.panel{background:#fff;min-height:calc(100vh - 102px);padding:14px}
+.section-title{font-size:15px;font-weight:700;margin:8px 0 11px}
+.sub-title{font-size:12px;font-weight:700;margin:14px 0 8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px 18px}.span2{grid-column:span 2}
+.field label{display:block;font-weight:700;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;border:1px solid #c7c7c7;background:#fff;color:#555;padding:7px 9px;border-radius:2px}
+.field input,.field select{height:34px}.field textarea{min-height:76px;resize:vertical}
+.readonly{background:#f3f5f6!important;color:#777!important}
+.cfl{display:flex}.cfl input{border-radius:2px 0 0 2px}.cfl button{width:38px;border:1px solid #c7c7c7;border-left:0;background:#f5f5f5;cursor:pointer}
+.helper{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.4}
+.btn{border:1px solid #d2d8dd;background:#fff;color:#59656e;padding:8px 13px;border-radius:2px;cursor:pointer}
+.btn-blue{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:700}
+.btn-green{background:var(--green);border-color:var(--green);color:#fff;font-weight:700}
+.btn-red{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
+.btn-sm{padding:5px 9px;font-size:11px}
+.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.item-search{display:flex;gap:0}.item-search input{flex:1;height:38px;border:1px solid #c7c7c7;padding:8px}.item-search button{width:125px;border-radius:0 4px 4px 0}
+.item-table{width:100%;border-collapse:collapse;margin-top:8px}.item-table th,.item-table td{border-bottom:1px solid #e2e6e9;padding:9px 7px;text-align:left;vertical-align:middle}.item-table th{background:#fafafa}
+.item-table input{height:32px;border:1px solid #c7c7c7;padding:6px 8px;width:100%}
+.qtybox{display:flex;align-items:center;gap:5px}.qtybox button{width:34px;height:34px;border:0;color:#fff;font-size:16px}.qtybox .minus{background:#d95d55}.qtybox .plus{background:#51aa80}.qtybox input{width:72px;text-align:center}
+.mobile-item-card{display:none;border:1px solid #dce2e6;background:#fff;margin-top:10px;padding:10px;border-radius:3px}.mobile-top{display:flex;justify-content:space-between;gap:8px}.mobile-title{font-weight:700}.mobile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.confirm-wrap{max-width:860px;margin:0 auto}.confirm-grid{display:grid;grid-template-columns:180px 1fr;gap:8px 14px;align-items:center}.confirm-grid .label{font-weight:700}.confirm-grid .value{background:#f3f5f6;padding:9px 10px;text-align:right}.confirm-grid textarea{width:100%;min-height:80px;border:1px solid #c7c7c7;padding:8px}
+.lookup-modal{display:none;position:fixed;inset:0;background:rgba(39,48,60,.72);z-index:80;align-items:center;justify-content:center;padding:20px}.lookup-modal.show{display:flex}
+.modal{width:980px;max-width:96vw;max-height:90vh;background:#fff;padding:16px;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.modal-title{font-size:20px;font-weight:700}.modal-search{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.modal-search input{height:34px;border:1px solid #c7c7c7;padding:7px 9px}
+.table-wrap{overflow:auto}.lookup-table{width:100%;min-width:900px;border-collapse:collapse}.lookup-table th,.lookup-table td{border:1px solid #e0e5e9;padding:8px;text-align:left}.lookup-table th{background:#f5f5f5}
+.lookup-mobile-list{display:none}.lookup-card{border:1px solid #dce3e8;background:#fff;border-radius:3px;padding:10px;margin-bottom:8px}.lookup-code{font-weight:700;margin-bottom:3px}.lookup-name{line-height:1.4;margin-bottom:8px}.lookup-meta{display:flex;justify-content:space-between;align-items:center;gap:10px}.lookup-stock{font-size:11px;color:#6e7982}.lookup-stock b{color:#4d5963}
+@media(max-width:800px){
+ .panel{padding:10px}.grid2{grid-template-columns:1fr}.span2{grid-column:auto}.workspace-nav{flex-wrap:wrap}.doc-date{width:100%;order:4}
+ .item-search{flex-direction:column;gap:7px}.item-search button{width:100%;border-radius:2px}
+}
+@media(max-width:650px){
+ .topbar{height:48px}.workspace-nav{padding:8px}.nav-btn{padding:8px 12px;font-size:11px}.customer-strip{font-size:12px;padding:8px 10px}.customer-strip .total{font-size:18px}
+ .desktop-items{display:none}.mobile-item-card{display:block}
+ .lookup-modal{padding:8px;align-items:flex-start}.modal{width:100%;max-width:100%;max-height:96vh;margin-top:8px;padding:12px}
+ .lookup-table-wrap{display:none}.lookup-mobile-list{display:block}.modal-search>div:first-child{display:none}.modal-search>div:last-child{display:flex;align-items:center;gap:7px;width:100%}.modal-search input{flex:1;width:100%}
+ .confirm-grid{grid-template-columns:1fr}.confirm-grid .value{text-align:right}
+}
+
+.lookup-pagination{
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+  margin-top:10px;flex-wrap:wrap;color:#6a747d
+}
+.lookup-pagination .page-info{font-size:11px}
+.lookup-pagination .pager{display:flex;align-items:center}
+.lookup-pagination .pager button{
+  border:1px solid #d7d7d7;background:#fff;color:#59656e;
+  padding:6px 10px;cursor:pointer
+}
+.lookup-pagination .pager button+button{margin-left:-1px}
+.lookup-pagination .pager button.active{background:#f1f3f5;font-weight:700}
+.lookup-pagination .pager button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:650px){
+  .lookup-pagination{align-items:flex-start}
+  .lookup-pagination .pager{width:100%}
+  .lookup-pagination .pager button{flex:1;padding:8px 6px}
+}
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="icon-btn">☰</button>
+  <div class="brand">iReap Biz</div>
+  <div class="spacer"></div>
+  <button class="icon-btn">⌂</button>
+  <div>18/09/2026</div>
+  <div style="font-weight:700">Logout</div>
+</div>
+
+<div class="workspace-nav">
+  <button id="btnCustomer" class="nav-btn customer" onclick="showPanel('customer')">Customer</button>
+  <button id="btnConfirm" class="nav-btn confirm" onclick="showPanel('confirm')">Konfirmasi Detail</button>
+  <div class="spacer"></div>
+  <div class="doc-date">Tanggal Dokumen: 18/09/2026</div>
+</div>
+
+<div class="customer-strip">
+  <span id="customerSummary">Belum pilih Customer | 0 Item</span>
+  <div class="spacer"></div>
+  <span class="total" id="headerTotal">0,00</span>
+</div>
+
+<!-- MAIN ITEM WORKSPACE -->
+<section id="itemPanel" class="panel">
+  <div class="item-search">
+    <input id="scanItem" placeholder="Scan / Masukkan Kode Item">
+    <button class="btn btn-blue" onclick="openLookup()">Pilih Item</button>
+  </div>
+
+  <div class="desktop-items">
+    <table class="item-table">
+      <thead><tr><th style="width:45px">No.</th><th style="width:150px">Item</th><th>Deskripsi</th><th style="width:180px">Qty</th><th style="width:130px">Harga</th><th style="width:140px">Total</th><th style="width:70px"></th></tr></thead>
+      <tbody id="itemBody"></tbody>
+    </table>
+  </div>
+  <div id="mobileItems"></div>
+</section>
+
+<!-- CUSTOMER -->
+<section id="customerPanel" class="panel hidden">
+  <div class="section-title">Customer</div>
+  <div class="grid2">
+    <div class="field"><label>Kode *</label><div class="cfl"><input id="custCode" readonly><button type="button" onclick="chooseCustomer()">🔍</button></div><div class="helper">Dapat memilih BP tipe Lead maupun Customer.</div></div>
+    <div class="field"><label>Nama</label><input id="custName" class="readonly" disabled></div>
+    <div class="field"><label>Contact Person</label><div class="cfl"><input id="contact" readonly><button type="button">🔍</button></div></div>
+  </div>
+
+  <div class="sub-title">Logistik</div>
+  <div class="grid2">
+    <div class="field"><label>Ship To</label><div class="cfl"><input id="shipTo" readonly><button type="button">🔍</button></div></div>
+    <div class="field"><label>Shipping Type</label><select><option>INCLUDE FREIGHT</option><option>EXCLUDE FREIGHT</option></select></div>
+    <div class="field span2"><label>Address</label><textarea id="address" class="readonly" disabled></textarea></div>
+  </div>
+
+  <div class="sub-title">Akuntansi</div>
+  <div class="grid2">
+    <div class="field"><label>Payment Terms</label><select><option>30 Days</option><option>Cash</option></select></div>
+    <div class="field"><label>Tax Group</label><select><option>PPN Keluaran 11% General</option><option>Non PPN</option></select></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn" onclick="showPanel('item')">Batal</button>
+    <button class="btn btn-blue" onclick="saveCustomer()">Simpan Customer</button>
+  </div>
+</section>
+
+<!-- CONFIRM -->
+<section id="confirmPanel" class="panel hidden">
+  <div class="confirm-wrap">
+    <div class="section-title">Konfirmasi Detail</div>
+    <div class="grid2" style="margin-bottom:16px">
+      <div class="field"><label>Kode Customer</label><input id="cfCode" class="readonly" disabled></div>
+      <div class="field"><label>Nama Customer</label><input id="cfName" class="readonly" disabled></div>
+    </div>
+
+    <div class="section-title">Detail Penjualan</div>
+    <div class="confirm-grid">
+      <div class="label">Sub Total</div><div class="value" id="subTotal">0,00</div>
+      <div class="label">Diskon</div><div class="value"><input id="discount" type="number" min="0" max="100" value="0" oninput="recalc()" style="width:80px;text-align:right"> %</div>
+      <div class="label">Pajak</div><div class="value" id="tax">0,00</div>
+      <div class="label">Grand Total</div><div class="value" id="grandTotal" style="font-weight:700">0,00</div>
+      <div class="label">Keterangan</div><textarea placeholder="Masukkan keterangan jika ada"></textarea>
+    </div>
+
+    <div class="actions">
+      <button class="btn" onclick="showPanel('item')">Kembali</button>
+      <button class="btn btn-green" onclick="saveQuotation()">Konfirmasi & Simpan</button>
+    </div>
+  </div>
+</section>
+
+<!-- LOOKUP -->
+<div class="lookup-modal" id="lookupModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">Pilih Item</div><button class="btn" onclick="closeLookup()">✕</button></div>
+    <div class="modal-search">
+      <div>Tampilkan <select><option>10</option></select> data</div>
+      <div><span>Cari:</span> <input id="lookupSearch" placeholder="Kode / Nama Item" oninput="filterLookup()"></div>
+    </div>
+
+    <div class="table-wrap lookup-table-wrap">
+      <table class="lookup-table">
+        <thead><tr><th>Item</th><th>Deskripsi</th><th>Sales UOM</th><th>On Hand</th><th>In Stock</th><th>Committed</th><th>Ordered</th><th>Tersedia</th><th></th></tr></thead>
+        <tbody id="lookupDesktopBody"></tbody>
+      </table>
+    </div>
+
+    <div class="lookup-mobile-list" id="lookupMobileList"></div>
+
+    <div class="lookup-pagination">
+      <div class="page-info" id="lookupPageInfo">Menampilkan 0 data</div>
+      <div class="pager">
+        <button type="button" id="lookupPrev" onclick="lookupPrevPage()">‹ Sebelumnya</button>
+        <button type="button" class="active" id="lookupCurrentPage">1</button>
+        <button type="button" id="lookupNext" onclick="lookupNextPage()">Berikutnya ›</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let items=[];
+const lookupItems=[
+ {code:'3000000001',desc:'KAIN CXO 065 GSM PP 003 PW',uom:'METER',onHand:0,inStock:1500,committed:0,ordered:0,available:1500,price:126},
+ {code:'3000000006',desc:'KAIN LMN 065 GSM PP 005 MN',uom:'METER',onHand:0,inStock:1660,committed:0,ordered:0,available:1660,price:132},
+ {code:'3000000010',desc:'KAIN LMN 065 GSM PP 090 DO',uom:'METER',onHand:0,inStock:7788,committed:0,ordered:0,available:7788,price:145},
+ {code:'3000000012',desc:'KAIN CXO 075 GSM PP 010 PW',uom:'METER',onHand:0,inStock:820,committed:120,ordered:500,available:700,price:151},
+ {code:'3000000018',desc:'KAIN CXO 080 GSM PP 015 BK',uom:'METER',onHand:0,inStock:940,committed:100,ordered:0,available:840,price:154},
+ {code:'3000000021',desc:'KAIN LMN 070 GSM PP 012 GR',uom:'METER',onHand:0,inStock:2100,committed:250,ordered:500,available:1850,price:139},
+ {code:'3000000026',desc:'KAIN LMN 090 GSM PP 020 NV',uom:'METER',onHand:0,inStock:3150,committed:450,ordered:0,available:2700,price:162},
+ {code:'3000000030',desc:'KAIN CXO 100 GSM PP 030 RD',uom:'METER',onHand:0,inStock:780,committed:80,ordered:300,available:700,price:176},
+ {code:'3000000034',desc:'KAIN CXO 055 GSM PP 008 WH',uom:'METER',onHand:0,inStock:1280,committed:0,ordered:0,available:1280,price:118},
+ {code:'3000000039',desc:'KAIN LMN 060 GSM PP 018 BL',uom:'METER',onHand:0,inStock:1650,committed:150,ordered:0,available:1500,price:127},
+ {code:'3000000042',desc:'KAIN CXO 085 GSM PP 025 BR',uom:'METER',onHand:0,inStock:970,committed:120,ordered:200,available:850,price:159},
+ {code:'3000000047',desc:'KAIN LMN 095 GSM PP 028 GY',uom:'METER',onHand:0,inStock:2450,committed:350,ordered:0,available:2100,price:168}
+];
+let lookupFiltered=[...lookupItems];
+let lookupPage=1;
+const lookupPageSize=5;
+
+function showPanel(name){
+  ['item','customer','confirm'].forEach(x=>document.getElementById(x+'Panel').classList.toggle('hidden',x!==name));
+  document.getElementById('btnCustomer').style.opacity=name==='customer'?'1':'.88';
+  document.getElementById('btnConfirm').style.opacity=name==='confirm'?'1':'.88';
+  if(name==='confirm'){
+    if(!document.getElementById('custCode').value){alert('Pilih Customer terlebih dahulu.');showPanel('customer');return;}
+    if(!items.length){alert('Tambahkan minimal 1 Item terlebih dahulu.');showPanel('item');return;}
+    document.getElementById('cfCode').value=document.getElementById('custCode').value;
+    document.getElementById('cfName').value=document.getElementById('custName').value;
+    recalc();
+  }
+}
+function chooseCustomer(){
+  document.getElementById('custCode').value='L000032';
+  document.getElementById('custName').value='CV BERKAH JAYA';
+  document.getElementById('contact').value='Ibu Melati';
+  document.getElementById('shipTo').value='DOMISILI';
+  document.getElementById('address').value='Jl. Melati No. 15, Jakarta';
+}
+function saveCustomer(){
+  if(!document.getElementById('custCode').value)return alert('Customer wajib dipilih.');
+  updateHeader();showPanel('item');
+}
+function openLookup(){
+  document.getElementById('lookupSearch').value='';
+  lookupFiltered=[...lookupItems];
+  lookupPage=1;
+  renderLookupPage();
+  document.getElementById('lookupModal').classList.add('show');
+}
+function closeLookup(){document.getElementById('lookupModal').classList.remove('show')}
+function filterLookup(){
+  const q=document.getElementById('lookupSearch').value.toLowerCase().trim();
+  lookupFiltered=lookupItems.filter(x=>!q||(`${x.code} ${x.desc}`).toLowerCase().includes(q));
+  lookupPage=1;
+  renderLookupPage();
+}
+function lookupPrevPage(){
+  if(lookupPage>1){lookupPage--;renderLookupPage();}
+}
+function lookupNextPage(){
+  const totalPages=Math.max(1,Math.ceil(lookupFiltered.length/lookupPageSize));
+  if(lookupPage<totalPages){lookupPage++;renderLookupPage();}
+}
+function renderLookupPage(){
+  const total=lookupFiltered.length;
+  const totalPages=Math.max(1,Math.ceil(total/lookupPageSize));
+  if(lookupPage>totalPages)lookupPage=totalPages;
+  const start=(lookupPage-1)*lookupPageSize;
+  const pageData=lookupFiltered.slice(start,start+lookupPageSize);
+
+  document.getElementById('lookupDesktopBody').innerHTML=pageData.map(x=>`<tr>
+   <td>${x.code}</td><td>${x.desc}</td><td>${x.uom}</td><td>${stockFmt(x.onHand)}</td><td>${stockFmt(x.inStock)}</td><td>${stockFmt(x.committed)}</td><td>${stockFmt(x.ordered)}</td><td>${stockFmt(x.available)}</td>
+   <td><button class="btn btn-blue btn-sm" onclick="addItem('${x.code}','${x.desc}',${x.price})">Pilih</button></td>
+  </tr>`).join('');
+
+  document.getElementById('lookupMobileList').innerHTML=pageData.length?pageData.map(x=>`<div class="lookup-card">
+    <div class="lookup-code">${x.code}</div>
+    <div class="lookup-name">${x.desc}</div>
+    <div class="lookup-meta">
+      <div class="lookup-stock">Tersedia: <b>${stockFmt(x.available)} ${x.uom}</b></div>
+      <button class="btn btn-blue btn-sm" onclick="addItem('${x.code}','${x.desc}',${x.price})">Pilih</button>
+    </div>
+  </div>`).join(''):'<div class="helper">Item tidak ditemukan.</div>';
+
+  const from=total?start+1:0;
+  const to=Math.min(start+lookupPageSize,total);
+  document.getElementById('lookupPageInfo').textContent=`Menampilkan ${from}–${to} dari ${total} item`;
+  document.getElementById('lookupCurrentPage').textContent=`${lookupPage} / ${totalPages}`;
+  document.getElementById('lookupPrev').disabled=lookupPage<=1;
+  document.getElementById('lookupNext').disabled=lookupPage>=totalPages;
+}
+function addItem(code,desc,price){
+  const ex=items.find(x=>x.code===code); if(ex)ex.qty+=1; else items.push({code,desc,qty:1,price});
+  renderItems();closeLookup();
+}
+function renderItems(){
+  document.getElementById('itemBody').innerHTML=items.map((x,i)=>`<tr>
+    <td>${i+1}</td><td>${x.code}</td><td>${x.desc}</td>
+    <td><div class="qtybox"><button class="minus" onclick="changeQty(${i},-1)">-</button><input value="${x.qty}" onchange="setQty(${i},this.value)"><button class="plus" onclick="changeQty(${i},1)">+</button></div></td>
+    <td><input value="${x.price}" onchange="setPrice(${i},this.value)"></td><td>${money(x.qty*x.price)}</td>
+    <td><button class="btn btn-red btn-sm" onclick="removeItem(${i})">🗑</button></td>
+  </tr>`).join('');
+  document.getElementById('mobileItems').innerHTML=items.map((x,i)=>`<div class="mobile-item-card">
+    <div class="mobile-top"><div><div class="mobile-title">${x.code}</div><div>${x.desc}</div></div><button class="btn btn-red btn-sm" onclick="removeItem(${i})">🗑</button></div>
+    <div class="mobile-grid"><div class="field"><label>Qty</label><input value="${x.qty}" onchange="setQty(${i},this.value)"></div><div class="field"><label>Harga</label><input value="${x.price}" onchange="setPrice(${i},this.value)"></div></div>
+    <div style="text-align:right;margin-top:8px;font-weight:700">Total: ${money(x.qty*x.price)}</div>
+  </div>`).join('');
+  updateHeader();recalc();
+}
+function updateHeader(){
+  const name=document.getElementById('custName').value||'Belum pilih Customer';
+  document.getElementById('customerSummary').textContent=`${name} | ${items.length} Item`;
+}
+function changeQty(i,d){items[i].qty=Math.max(1,items[i].qty+d);renderItems()}
+function setQty(i,v){items[i].qty=Math.max(1,+v||1);renderItems()}
+function setPrice(i,v){items[i].price=Math.max(0,+v||0);renderItems()}
+function removeItem(i){items.splice(i,1);renderItems()}
+function money(n){return new Intl.NumberFormat('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)}
+function stockFmt(n){return new Intl.NumberFormat('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)}
+function recalc(){
+  const sub=items.reduce((a,x)=>a+x.qty*x.price,0);
+  const disc=(+document.getElementById('discount').value||0);
+  const after=sub*(1-disc/100),tax=after*.11,grand=after+tax;
+  document.getElementById('subTotal').textContent=money(sub);
+  document.getElementById('tax').textContent=money(tax);
+  document.getElementById('grandTotal').textContent=money(grand);
+  document.getElementById('headerTotal').textContent=money(grand);
+}
+function saveQuotation(){
+  alert('Mockup: Sales Quotation berhasil dibuat di SAP. Perubahan selanjutnya dilakukan di SAP Business One.');
+}
+showPanel('item');
+updateHeader();
+recalc();
+</script>
+</body>
+</html>

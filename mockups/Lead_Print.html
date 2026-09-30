@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Print Lead - L0000123</title>
+<style>
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:12px;
+    color:#4b4b4b;
+    background:#dce8f1;
+  }
+  .topbar{
+    height:40px;
+    background:#16156b;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    padding:0 18px;
+    font-size:13px;
+  }
+  .topbar .brand{font-weight:700}
+  .topbar .logout{margin-left:auto}
+  .page-head{
+    background:#fff;
+    border-bottom:1px solid #c9d3da;
+    padding:14px 20px 16px;
+  }
+  .page-title{font-size:20px;color:#666;margin-bottom:9px}
+  .crumbs{color:#6c7881}
+  .crumbs span{margin:0 7px;color:#aaa}
+
+  .section-box{
+    margin:20px 24px 0;
+    background:#fff;
+    border:1px solid #cbd4da;
+    box-shadow:0 1px 2px rgba(0,0,0,.14);
+    padding:12px 14px;
+  }
+  .btn{
+    border:1px solid #d6dbe0;
+    background:#fff;
+    color:#59656e;
+    padding:7px 12px;
+    cursor:pointer;
+    font-size:12px;
+    border-radius:2px;
+  }
+  .btn-blue{
+    background:#1e73be;
+    border-color:#1e73be;
+    color:#fff;
+    font-weight:600;
+  }
+
+  .viewer-card{
+    margin:14px 24px 24px;
+    background:#fff;
+    border:1px solid #cbd4da;
+    box-shadow:0 1px 2px rgba(0,0,0,.14);
+  }
+  .viewer-head{
+    padding:14px;
+    border-bottom:1px solid #e3e3e3;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .viewer-head .title{font-size:16px;color:#666}
+  .viewer-toolbar{
+    height:36px;
+    background:#f3f3f5;
+    border-bottom:1px solid #d4d4d4;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:0 10px;
+    color:#666;
+  }
+  .viewer-toolbar .pagebox{
+    width:42px;
+    height:24px;
+    border:1px solid #c9c9c9;
+    background:#fff;
+    text-align:center;
+  }
+  .viewer-toolbar .zoom{
+    width:86px;
+    height:26px;
+    border:1px solid #c9c9c9;
+    background:#fff;
+    padding:3px 7px;
+  }
+  .viewer-toolbar .spacer{flex:1}
+  .pdf-area{
+    background:#ececef;
+    padding:20px 12px 28px;
+    height:calc(100vh - 250px);
+    min-height:720px;
+    overflow:auto;
+  }
+
+  .page{
+    width:794px;
+    min-height:1123px;
+    margin:0 auto 20px;
+    background:#fff;
+    box-shadow:0 1px 5px rgba(0,0,0,.22);
+    padding:26px 30px 34px;
+    position:relative;
+    color:#111;
+    font-size:10.5px;
+  }
+  .doc-header{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:18px;
+    align-items:start;
+    margin-bottom:10px;
+  }
+  .company-name{
+    font-weight:700;
+    font-size:15px;
+    margin-bottom:3px;
+  }
+  .subtitle{
+    font-size:11px;
+    color:#444;
+  }
+  .right-head{
+    border:1px solid #222;
+    padding:6px 8px;
+  }
+  .right-head .doc-title{
+    text-align:center;
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:6px;
+    border-bottom:2px solid #222;
+    padding-bottom:4px;
+  }
+  .meta-row{
+    display:grid;
+    grid-template-columns:125px 8px 1fr;
+    gap:3px;
+    margin:2px 0;
+  }
+
+  .section-title{
+    margin-top:8px;
+    border:1px solid #222;
+    border-bottom:none;
+    background:#efefef;
+    padding:5px 7px;
+    font-weight:700;
+    text-transform:uppercase;
+  }
+  .section-box-print{
+    border:1px solid #222;
+    padding:7px 8px;
+  }
+  .grid-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 14px;
+  }
+  .line{
+    display:grid;
+    grid-template-columns:135px 8px 1fr;
+    gap:3px;
+    align-items:start;
+    min-height:18px;
+  }
+  .line .val{
+    border-bottom:1px dotted #888;
+    min-height:15px;
+    padding:1px 2px;
+  }
+  .info-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:4px 14px;
+  }
+
+  table.doc-table{
+    width:100%;
+    border-collapse:collapse;
+  }
+  table.doc-table th,
+  table.doc-table td{
+    border:1px solid #222;
+    padding:5px 6px;
+    vertical-align:top;
+  }
+  table.doc-table th{
+    background:#f2f2f2;
+    font-weight:700;
+    text-align:left;
+  }
+
+  .note{
+    line-height:1.45;
+    text-align:justify;
+  }
+
+  .checklist{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:5px 12px;
+  }
+  .item-check::before{
+    content:"☐";
+    margin-right:5px;
+  }
+  .item-check.checked::before{
+    content:"☑";
+  }
+
+  .three-sign{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-top:12px;
+  }
+  .four-sign{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-top:18px;
+  }
+  .sign-box{
+    text-align:center;
+    min-height:110px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+  }
+  .sign-space{
+    min-height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#888;
+  }
+  .materai{
+    border:1px dashed #777;
+    min-height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#777;
+    margin:0 18px 10px;
+  }
+  .sign-line{
+    border-top:1px solid #222;
+    margin:0 14px;
+    padding-top:4px;
+  }
+  .blank-box{
+    border:1px solid #222;
+    min-height:115px;
+    padding:6px;
+  }
+
+  .footer{
+    position:absolute;
+    left:30px;
+    right:30px;
+    bottom:14px;
+    display:flex;
+    justify-content:space-between;
+    border-top:1px solid #bbb;
+    padding-top:5px;
+    color:#555;
+    font-size:9px;
+  }
+  .footer .page-no{font-weight:700}
+
+  @media(max-width:900px){
+    .page{
+      transform:scale(.85);
+      transform-origin:top center;
+      margin-bottom:-150px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">iReap Biz</div>
+  <div class="logout">Log out</div>
+</div>
+
+<div class="page-head">
+  <div class="page-title">Manajemen Lead</div>
+  <div class="crumbs">Beranda <span>/</span> Master Data <span>/</span> Lead <span>/</span> Print</div>
+</div>
+
+<div class="section-box">
+  <button class="btn">Back To List</button>
+</div>
+
+<div class="viewer-card">
+  <div class="viewer-head">
+    <div class="title">Preview Form Lead</div>
+    <button class="btn btn-blue" onclick="window.print()">Print</button>
+  </div>
+
+  <div class="viewer-toolbar">
+    <span>☰</span>
+    <span>⌕</span>
+    <span>▲</span>
+    <span>▼</span>
+    <input class="pagebox" value="1">
+    <span>of 3</span>
+    <div class="spacer"></div>
+    <span>−</span>
+    <span>＋</span>
+    <select class="zoom">
+      <option>100%</option>
+      <option selected>125%</option>
+      <option>150%</option>
+    </select>
+    <div class="spacer"></div>
+    <span>🖨</span>
+    <span>⇩</span>
+  </div>
+
+  <div class="pdf-area">
+
+    <section class="page">
+      <div class="doc-header">
+        <div>
+          <div class="company-name">PT PANCA PATRIOT PRIMA</div>
+          <div class="subtitle">FORMULIR LEAD / DATA PELANGGAN</div>
+        </div>
+        <div class="right-head">
+          <div class="doc-title">FORM DATA PELANGGAN</div>
+          <div class="meta-row"><span>Kode BP</span><span>:</span><span><b>L0000123</b></span></div>
+          <div class="meta-row"><span>Tanggal Pengajuan</span><span>:</span><span>15-Sep-2026</span></div>
+          <div class="meta-row"><span>Tanggal Verifikasi</span><span>:</span><span>................................</span></div>
+          <div class="meta-row"><span>Tanggal Finish Proses</span><span>:</span><span>................................</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">Informasi Umum</div>
+      <div class="section-box-print">
+        <div class="info-grid">
+          <div class="line"><span>Kode BP</span><span>:</span><span class="val">L0000123</span></div>
+          <div class="line"><span>Sales</span><span>:</span><span class="val">Sales A</span></div>
+
+          <div class="line"><span>Nama BP</span><span>:</span><span class="val">Toko Maju Jaya</span></div>
+          <div class="line"><span>Grup BP</span><span>:</span><span class="val">Retail</span></div>
+
+          <div class="line"><span>Jenis Usaha</span><span>:</span><span class="val">Poultry Shop</span></div>
+          <div class="line"><span>No. Telp</span><span>:</span><span class="val">0812-1234-5678</span></div>
+
+          <div class="line"><span>No. KTP</span><span>:</span><span class="val">3173XXXXXXXXXXXX</span></div>
+          <div class="line"><span>No. NPWP</span><span>:</span><span class="val">12.345.678.9-012.000</span></div>
+
+          <div class="line"><span>No. NIB</span><span>:</span><span class="val">1234567890123</span></div>
+          <div class="line"><span>Lama Beroperasi</span><span>:</span><span class="val">8 Tahun</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">Alamat</div>
+      <div class="section-box-print" style="padding:0">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th style="width:12%">ID Alamat</th>
+              <th style="width:11%">Status</th>
+              <th style="width:8%">Tipe</th>
+              <th>Jalan</th>
+              <th style="width:11%">Kecamatan</th>
+              <th style="width:12%">Kota/Kab.</th>
+              <th style="width:10%">Provinsi</th>
+              <th style="width:8%">Kode Pos</th>
+              <th style="width:10%">Negara</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>NPWP/USAHA</td>
+              <td>Milik Pribadi</td>
+              <td>Bill To</td>
+              <td>Jl. Raya Serang KM 12 No. 8</td>
+              <td>Cikupa</td>
+              <td>Tangerang</td>
+              <td>Banten</td>
+              <td>15710</td>
+              <td>Indonesia</td>
+            </tr>
+            <tr>
+              <td>NPWP/USAHA</td>
+              <td>Milik Pribadi</td>
+              <td>Ship To</td>
+              <td>Jl. Raya Serang KM 12 No. 8</td>
+              <td>Cikupa</td>
+              <td>Tangerang</td>
+              <td>Banten</td>
+              <td>15710</td>
+              <td>Indonesia</td>
+            </tr>
+            <tr>
+              <td>DOMISILI</td>
+              <td>Sewa</td>
+              <td>Bill To</td>
+              <td>Jl. Melati No. 21</td>
+              <td>Curug</td>
+              <td>Tangerang</td>
+              <td>Banten</td>
+              <td>15810</td>
+              <td>Indonesia</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Kontak</div>
+      <div class="section-box-print" style="padding:0">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th style="width:25%">Nama Lengkap</th>
+              <th style="width:18%">Posisi</th>
+              <th style="width:16%">No. Telp</th>
+              <th>Alamat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Bambang Hartono</td>
+              <td>Pemilik</td>
+              <td>0812-1234-5678</td>
+              <td>Jl. Melati No. 21, Curug, Tangerang, Banten, 15810, Indonesia</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer">
+        <span>Dicetak: 15-Sep-2026 06:37</span>
+        <span class="page-no">Halaman 1 dari 3</span>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="doc-header" style="grid-template-columns:1fr">
+        <div class="right-head" style="max-width:100%">
+          <div class="doc-title">RINGKASAN PENJUALAN & TERMIN</div>
+          <div class="meta-row"><span>Kode BP</span><span>:</span><span><b>L0000123</b></span></div>
+          <div class="meta-row"><span>Nama BP</span><span>:</span><span>Toko Maju Jaya</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">Penjualan</div>
+      <div class="section-box-print">
+        <div class="grid-2">
+          <div class="line"><span>Potensi Pembelian</span><span>:</span><span class="val">25 Ton</span></div>
+          <div class="line"><span>Periode Potensi</span><span>:</span><span class="val">Per Bulan</span></div>
+
+          <div class="line"><span>Perkiraan Nilai Transaksi</span><span>:</span><span class="val">&gt; Rp 100.000.000 s/d Rp 500.000.000</span></div>
+          <div class="line"><span>Periode Nilai</span><span>:</span><span class="val">Per Bulan</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">Termin</div>
+      <div class="section-box-print">
+        <div class="grid-2">
+          <div class="line"><span>Termin Pembayaran</span><span>:</span><span class="val">14 Hari</span></div>
+          <div class="line"><span>Price List</span><span>:</span><span class="val">Retail Price</span></div>
+
+          <div class="line"><span>Credit Limit</span><span>:</span><span class="val">Rp 250.000.000</span></div>
+          <div class="line"><span>Objek Jaminan</span><span>:</span><span class="val">BPKB Kendaraan</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">Bank</div>
+      <div class="section-box-print" style="padding:0">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th style="width:25%">Bank</th>
+              <th style="width:30%">No. Akun</th>
+              <th>Nama Akun</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>BCA</td>
+              <td>1234567890</td>
+              <td>Bambang Hartono</td>
+            </tr>
+            <tr>
+              <td>BRI</td>
+              <td>009601001294308</td>
+              <td>Toko Maju Jaya</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Lampiran</div>
+      <div class="section-box-print">
+        <div class="checklist">
+          <div class="item-check checked">KTP</div>
+          <div class="item-check checked">NPWP</div>
+          <div class="item-check checked">NIB</div>
+          <div class="item-check">SIUP</div>
+          <div class="item-check checked">BPKB</div>
+          <div class="item-check">Sertifikat</div>
+          <div class="item-check">Foto Rumah</div>
+          <div class="item-check checked">Foto Tempat Usaha</div>
+          <div class="item-check checked">Foto Pemilik</div>
+          <div class="item-check">Foto Aset Kendaraan</div>
+          <div class="item-check">Foto Aset Tanah/Rumah</div>
+          <div class="item-check checked">Form Pendaftaran Ditandatangani</div>
+        </div>
+      </div>
+
+      <div class="section-title">Keterangan</div>
+      <div class="section-box-print note">
+        Dokumen ini merupakan hasil cetak dari data Lead pada iReapBiz. Struktur data mengikuti master dan detail pada sistem, sedangkan tampilan dibuat tetap memiliki nuansa formulir manual yang digunakan sebelumnya.
+      </div>
+
+      <div class="footer">
+        <span>Dicetak: 15-Sep-2026 06:37</span>
+        <span class="page-no">Halaman 2 dari 3</span>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="doc-header" style="grid-template-columns:1fr">
+        <div class="right-head" style="max-width:100%">
+          <div class="doc-title">KETENTUAN & PENGESAHAN</div>
+          <div class="meta-row"><span>Kode BP</span><span>:</span><span><b>L0000123</b></span></div>
+          <div class="meta-row"><span>Nama BP</span><span>:</span><span>Toko Maju Jaya</span></div>
+        </div>
+      </div>
+
+      <div class="section-title">Ketentuan Pembayaran Dengan Syarat</div>
+      <div class="section-box-print note">
+        1. Pelanggan menyatakan bahwa seluruh data yang disampaikan adalah benar dan dapat dipertanggungjawabkan.<br>
+        2. Perusahaan berhak melakukan verifikasi atas data pelanggan, lampiran, dan informasi pendukung lainnya.<br>
+        3. Persetujuan terhadap termin pembayaran, limit kredit, dan fasilitas lain sepenuhnya menjadi kewenangan perusahaan berdasarkan hasil evaluasi.<br>
+        4. Segala perubahan data pelanggan wajib diberitahukan secara tertulis kepada perusahaan.<br>
+        5. Ketentuan resmi final pada implementasi dapat mengikuti redaksi yang saat ini digunakan pada form manual Patriot.
+      </div>
+
+      <div class="section-title">Pertimbangan Sales / TS</div>
+      <div class="blank-box"></div>
+
+      <div class="section-title">Catatan Verifikator</div>
+      <div class="blank-box"></div>
+
+      <div class="section-title">Spesimen Tanda Tangan</div>
+      <div class="section-box-print" style="padding:0">
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th style="width:34%">Nama</th>
+              <th style="width:24%">Jabatan</th>
+              <th style="width:18%">NIK</th>
+              <th>Tanda Tangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="height:56px"></td><td></td><td></td><td></td></tr>
+            <tr><td style="height:56px"></td><td></td><td></td><td></td></tr>
+            <tr><td style="height:56px"></td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">Persetujuan & Tanda Tangan</div>
+      <div class="section-box-print">
+        <div class="three-sign">
+          <div class="sign-box">
+            <div class="materai">Materai / Tanda Tangan</div>
+            <div class="sign-line">Customer / Pembeli</div>
+          </div>
+          <div class="sign-box">
+            <div class="sign-space"></div>
+            <div class="sign-line">Sales / Penjual</div>
+          </div>
+          <div class="sign-box">
+            <div class="sign-space"></div>
+            <div class="sign-line">Verifikator</div>
+          </div>
+        </div>
+
+        <div class="four-sign">
+          <div class="sign-box">
+            <div class="sign-space"></div>
+            <div class="sign-line">Management / Approver</div>
+          </div>
+          <div class="sign-box">
+            <div class="sign-space"></div>
+            <div class="sign-line">Tanggal</div>
+          </div>
+          <div class="sign-box">
+            <div class="sign-space"></div>
+            <div class="sign-line">Nama Jelas</div>
+          </div>
+          <div class="sign-box">
+            <div class="sign-space"></div>
+            <div class="sign-line">Paraf</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Dicetak: 15-Sep-2026 06:37</span>
+        <span class="page-no">Halaman 3 dari 3</span>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>iReapBiz - Sales Visit Planner v3</title>
+<style>
+:root{
+  --top:#211b74;--side1:#79a8d5;--side2:#6394c8;--page:#dceaf6;--panel:#fff;
+  --line:#d4dce3;--line2:#e8edf1;--text:#4a555f;--muted:#87919a;
+  --blue:#527fb7;--blue2:#3e6d9f;--blueSoft:#eef6fc;--green:#568154;--greenSoft:#eef7ef;
+  --amber:#9b6c1b;--amberSoft:#fff6df;--red:#a84e48;--redSoft:#fff0ef;--purple:#7561a8;
+  --purpleSoft:#f1eef9;--graySoft:#f4f6f7;--shadow:0 3px 7px rgba(41,65,86,.16);--sidebarW:195px
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif;font-size:13px;color:var(--text);background:var(--page)}
+body{overflow-x:hidden}
+button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}
+.hidden{display:none!important}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebarW);background:#fff;border-right:1px solid #cad3db;z-index:70;overflow:auto}
+.sidebar-profile{min-height:122px;padding:14px;background:linear-gradient(180deg,var(--side1),var(--side2));color:#fff}
+.logo-row{display:flex;align-items:center;gap:10px}.user-orb{width:47px;height:47px;border-radius:50%;border:2px solid #fff;background:linear-gradient(#dd7a5f,#aa2c21);position:relative}
+.user-orb:after{content:"BIZ";position:absolute;left:8px;bottom:-7px;background:#315c9c;color:#fff;border-radius:10px;padding:2px 6px;font-size:9px;font-weight:700}
+.logo-text{font-size:21px;font-style:italic;font-weight:700}.logo-text .i{color:#f47e4c}.logo-text .reap{color:#edf7ff}
+.company-name{font-size:12px;font-weight:600;line-height:1.45;margin-top:15px}
+.nav{padding:9px 0 24px}.nav-row{min-height:41px;display:flex;align-items:center;gap:10px;padding:0 17px;color:#67717a;border-left:3px solid transparent}
+.nav-row.section{font-weight:600;background:#f5f5f5;color:#4e555b}.nav-row.child{padding-left:47px;min-height:34px;font-size:12px}
+.nav-row.active{background:#e7f1f9;color:#2f67a1;border-left-color:#5790c8;font-weight:600}.chev{margin-left:auto}
+.main{margin-left:var(--sidebarW);min-width:0}.topbar{height:53px;background:var(--top);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 21px;position:sticky;top:0;z-index:50}
+.top-left{display:flex;align-items:center;gap:10px;font-weight:600}.menu-btn{width:36px;height:34px;border:0;border-radius:2px;background:#477eae;color:#fff;font-size:20px}.logout{font-size:12px}
+.page-header{background:#fff;padding:17px 22px 14px;border-bottom:1px solid #d9e0e5}.page-title{margin:0 0 7px;font-size:23px;font-weight:300;color:#69747d}
+.breadcrumb{font-size:12px;color:#59636d}.breadcrumb .sep{padding:0 11px;color:#9aa2a9}.content{padding:22px 26px 32px}
+.filter-panel{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);padding:14px 16px 12px;margin-bottom:16px}
+.filter-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.filter-title{font-size:12px;font-weight:700;color:#596672}.scope-note{font-size:9px;color:#81909a}
+.filter-grid{display:grid;grid-template-columns:minmax(180px,1fr) minmax(210px,1.2fr) minmax(145px,.8fr) minmax(160px,.9fr) auto;gap:12px;align-items:end;margin-top:12px}
+.field label{display:block;font-size:10px;font-weight:700;color:#596670;margin-bottom:5px}.control{width:100%;height:34px;border:1px solid #d0d7dd;background:#fff;color:#5c6670;padding:0 9px}
+.cfl{display:flex;height:34px}.cfl input{height:34px;min-width:0;flex:1;border:1px solid #d0d7dd;border-right:0;padding:0 9px;background:#fff;color:#5c6670}.cfl button{width:31px;border:1px solid #d0d7dd;background:#f5f8fa;color:#66747f}
+.actions{display:flex;gap:7px}.btn{height:34px;border:1px solid #d5dbe0;background:#fff;color:#69727b;padding:0 13px;border-radius:2px}.btn:hover{background:#f8fafb}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.green{background:#5c865b;border-color:#5c865b;color:#fff}.btn.warn{background:#fff;border-color:#d8c08a;color:#8c681e}
+.btn.danger{background:#fff;border-color:#d9aaa6;color:#9a4641}.btn.small{height:29px;padding:0 9px;font-size:11px}
+.layer-row{border-top:1px solid var(--line2);margin-top:12px;padding-top:10px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}.layer-label{font-size:10px;font-weight:700;color:#65717b;text-transform:uppercase}
+.layer-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid #d2dbe2;background:#fafcfd;padding:5px 8px;font-size:10px;color:#61707b}.layer-chip input{margin:0}.layer-help{font-size:9px;color:#8a959d}
+.workspace{background:#fff;border:1px solid #d5dde4;box-shadow:var(--shadow);min-height:650px}.workspace-top{min-height:58px;border-bottom:1px solid #d8e0e6;padding:10px 13px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.switch-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.view-switch,.subview-switch{display:flex}.seg-btn{height:32px;min-width:88px;border:1px solid #cbd5de;background:#fff;color:#5f6871;padding:0 12px}.seg-btn+.seg-btn{border-left:0}.seg-btn.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.subview-label{font-size:9px;font-weight:700;color:#7a858e;text-transform:uppercase}.period-nav{display:flex;align-items:center;gap:7px}.period-title{min-width:190px;text-align:center;font-size:14px;font-weight:700;color:#53616c}.nav-btn{width:32px;padding:0}
+.workspace-body{padding:13px}.view-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}.display-panel{width:100%;border:1px solid #dde4e9;background:#fafcfd;padding:9px 10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.display-panel-title{font-size:9px;font-weight:800;color:#65717b;text-transform:uppercase;margin-right:2px}.display-sales{display:flex;align-items:center;gap:7px}.display-sales label{font-size:10px;font-weight:700;color:#65717b}.display-sales select{height:31px;border:1px solid #d0d7dd;padding:0 8px;background:#fff;color:#5c6670}
+.badge{display:inline-block;padding:3px 6px;border-radius:2px;font-size:9px;font-weight:800;border:1px solid;white-space:nowrap}.badge.open{color:#3f6e98;background:#f2f8fc;border-color:#bfd4e5}.badge.tentative{color:#86631e;background:#fff8e9;border-color:#e2ca92}.badge.inactive{color:#7b7f83;background:#f4f4f4;border-color:#d3d6d8}.badge.close{color:#50775b;background:#f2f8f3;border-color:#c5dcc9}.badge.ongoing{color:#4f7351;background:#edf7ee;border-color:#bdd8c1}.badge.draft{color:#8a681d;background:#fff8e8;border-color:#e5cd95}.badge.flag{color:#a06413;background:#fff4df;border-color:#e2bd76}
+.summary-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-bottom:10px}.summary-card{border:1px solid #d8e0e6;background:#fafcfd;padding:12px}.summary-label{font-size:9px;color:#7c8993;font-weight:700;text-transform:uppercase}.summary-value{font-size:23px;font-weight:800;color:#526473;margin-top:4px}.summary-card.accent .summary-value{color:#4f7ead}
+.warning-banner{display:none;border:1px solid #e1c57e;background:#fff8e8;padding:9px 11px;margin-bottom:12px;align-items:center;justify-content:space-between;gap:10px}.warning-banner.show{display:flex}.warning-title{font-weight:700;color:#7e611f}.warning-sub{font-size:9px;color:#8e7b55;margin-top:2px}
+.personal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 10px}.personal-title{font-size:14px;font-weight:800;color:#53616c}.personal-date{font-size:10px;color:#88929a;margin-top:2px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:15px 0 7px}.section-title{font-size:11px;font-weight:800;color:#596672;text-transform:uppercase;letter-spacing:.25px}.section-note{font-size:9px;color:#8f99a2}
+.agenda-list{display:grid;gap:7px}.agenda-card{border:1px solid #d8e0e6;background:#fff;padding:10px 11px;display:grid;grid-template-columns:115px minmax(0,1fr) auto;gap:12px;align-items:center;cursor:pointer}.agenda-card:hover{background:#fbfdff}.agenda-card.muted{opacity:.68}.agenda-time{font-weight:800;color:#456d92;font-size:13px}.agenda-type{font-size:9px;color:#7e8a93;margin-top:3px}.agenda-customer{font-weight:800;color:#4c5963;font-size:13px}.agenda-line{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:3px}.agenda-subject{font-size:11px;color:#66727c;font-weight:600}.opp-chip{display:inline-block;border:1px solid #d5dce3;background:#f7f9fb;color:#66717a;padding:2px 5px;font-size:9px}.agenda-note{font-size:9px;color:#89949d;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.agenda-right{text-align:right}.agenda-exec{font-size:9px;color:#73817b;margin-top:4px}.card-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-top:7px}.dots{width:32px;height:31px;border:1px solid #d2d9df;background:#fff;color:#65717b;font-weight:800}
+.monthly-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.monthly-card{border:1px solid #d8e0e6;background:#fafcfd;padding:13px}.monthly-title{font-size:11px;font-weight:800;color:#56646f}.monthly-main{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-top:10px}.monthly-number{font-size:24px;font-weight:800;color:#50677a}.monthly-caption{font-size:9px;color:#89949d}.progress{height:7px;background:#e8edf1;margin-top:9px;overflow:hidden}.progress>span{display:block;height:100%;background:#6b96bb}.monthly-breakdown{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px;font-size:9px;color:#77838d}.draft-summary{margin-top:10px;border-top:1px solid #edf0f2;padding-top:9px;font-size:10px;color:#66727c}
+.calendar-month{border-left:1px solid #d8e0e6;border-top:1px solid #d8e0e6}.month-head,.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}.month-head div{padding:8px;background:#f5f7f8;border-right:1px solid #d8e0e6;border-bottom:1px solid #d8e0e6;text-align:center;font-size:10px;font-weight:700}.month-cell{min-height:175px;border-right:1px solid #d8e0e6;border-bottom:1px solid #d8e0e6;padding:5px;background:#fff;position:relative;overflow:hidden}.month-cell.out{background:#fafbfc;color:#b1b7bc}.month-cell.today{box-shadow:inset 0 0 0 2px #70a7d1}.month-day{font-size:10px;font-weight:700;margin-bottom:4px}.cal-card{border:1px solid #d4dee6;background:#fafdff;padding:6px 7px;margin-bottom:5px;cursor:pointer;min-width:0;min-height:65px}.date-head-row{display:flex;align-items:center;justify-content:space-between;gap:5px}.date-add{width:22px;height:22px;border:1px solid #cfd8df;background:#fff;color:#527aa0;border-radius:2px;padding:0;line-height:18px;font-weight:800}.date-add:hover{background:#eef6fc}.date-add:disabled{visibility:hidden}.week-head{display:flex!important;align-items:center;justify-content:space-between;gap:6px}.cal-card.other{background:#f7f7f7;border-color:#d8d8d8}.cal-card.draft{border-style:dashed;background:#fffaf0}.cal-card.ghost{border-style:dashed;background:#f4f6f7;color:#7b858c}.cal-time{font-size:9px;font-weight:800;color:#4f7392;white-space:nowrap}.cal-card.other .cal-time{color:#6f7377}.cal-customer{font-size:10px;font-weight:800;color:#4f5d68;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}.cal-subject{font-size:9px;color:#78848d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}.cal-meta{display:flex;align-items:center;gap:4px;margin-top:3px;min-width:0}.cal-initial{font-size:8px;color:#87929a;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.more-link{font-size:9px;color:#4775a0;font-weight:700;cursor:pointer;margin:4px 2px}
+.calendar-week{display:grid;grid-template-columns:repeat(7,minmax(150px,1fr));border-left:1px solid #d8e0e6;border-top:1px solid #d8e0e6;overflow-x:auto}.week-day{min-height:480px;border-right:1px solid #d8e0e6;border-bottom:1px solid #d8e0e6;background:#fff}.week-day.today{box-shadow:inset 0 0 0 2px #70a7d1}.week-head{padding:8px;border-bottom:1px solid #e1e6ea;background:#f7f9fa;font-size:10px;font-weight:800}.week-list{padding:6px}
+.timeline-wrap{border:1px solid #d8e0e6;background:#fff;overflow:auto;max-height:650px}.timeline-grid{display:grid;min-width:760px;position:relative}.time-head{position:sticky;top:0;z-index:8;background:#f5f7f8;border-bottom:1px solid #d8e0e6;height:38px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}.time-label{border-right:1px solid #d8e0e6;border-bottom:1px solid #edf0f2;padding:4px 5px;font-size:9px;color:#89939a;text-align:right}.time-cell{border-right:1px solid #d8e0e6;border-bottom:1px solid #edf0f2;position:relative;min-height:54px;background:linear-gradient(to bottom,transparent 49%,#f2f4f6 50%,transparent 51%)}.timeline-col-head{position:sticky;top:0;z-index:8;background:#f5f7f8;border-right:1px solid #d8e0e6;border-bottom:1px solid #d8e0e6;height:38px;padding:5px 6px;text-align:center;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px}.timeline-add{width:20px;height:20px;padding:0;border:1px solid #cfd8df;background:#fff;color:#527aa0;border-radius:2px;font-weight:800;line-height:16px}.timeline-event-layer{position:absolute;left:58px;right:0;top:38px;bottom:0;pointer-events:none}.tl-event{position:absolute;border:1px solid #c8d7e2;background:#f8fcff;padding:5px 6px;overflow:hidden;pointer-events:auto;cursor:pointer;min-height:28px}.tl-event.other{background:#f7f7f7;border-color:#d7d7d7}.tl-event.draft{border-style:dashed;background:#fffaf0}.tl-event.ghost{border-style:dashed;background:#f4f6f7;color:#7b858c}.tl-title{font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tl-sub{font-size:9px;color:#7d8991;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.conflict{position:absolute;right:3px;top:3px;font-size:8px;border:1px solid #e2bd76;background:#fff4df;color:#986515;padding:1px 3px}
+.side-backdrop{display:none;position:fixed;inset:0;background:rgba(27,38,48,.30);z-index:90}.side-backdrop.show{display:block}.side-panel{position:fixed;top:0;right:-520px;width:500px;max-width:96vw;height:100vh;background:#fff;z-index:95;box-shadow:-6px 0 18px rgba(32,47,58,.2);transition:right .18s;display:flex;flex-direction:column}.side-panel.show{right:0}.side-head{padding:14px 15px;border-bottom:1px solid #dbe2e7}.side-close{float:right;border:0;background:none;font-size:22px;color:#78838b}.side-title{font-size:17px;font-weight:800;color:#4e5c67;padding-right:32px}.side-ref{font-size:9px;color:#8b959d;margin-top:3px}.side-subject{font-size:13px;font-weight:700;color:#5b6771;margin-top:10px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}.side-time{font-size:11px;color:#64717b;margin-top:6px}.initial-line{display:none;margin-top:5px;padding:5px 7px;background:#f4f6f7;border-left:3px solid #aab5bd;font-size:9px;color:#717d85}.initial-line.show{display:block}
+.side-body{padding:0 15px 90px;overflow:auto;flex:1}.side-section{padding:13px 0;border-bottom:1px solid #e7ecef}.side-section-title{font-size:10px;font-weight:800;text-transform:uppercase;color:#5c6974;margin-bottom:9px}.detail-pair{display:grid;grid-template-columns:92px 1fr;gap:5px 9px;font-size:10px;margin-bottom:5px}.detail-pair .label{color:#89949c}.detail-pair .value{color:#53616c;font-weight:600}.text-block{font-size:10px;line-height:1.5;color:#5e6b75;background:#fafcfd;border:1px solid #e1e7eb;padding:8px}
+.opp-card{border:1px solid #d9e1e6;background:#fafcfd;padding:10px}.opp-title{font-weight:800;color:#54636e}.opp-sub{font-size:9px;color:#828e97;margin-top:4px}.opp-actions{display:flex;gap:6px;margin-top:8px}
+.exec-top{display:flex;align-items:center;justify-content:space-between;gap:9px}.exec-duration{font-size:10px;font-weight:800;color:#557157}.exec-row{margin-top:9px;padding-top:9px;border-top:1px solid #edf0f2}.exec-label{font-size:9px;font-weight:800;color:#6e7a83;text-transform:uppercase}.exec-value{font-size:11px;font-weight:700;color:#53616b;margin-top:3px}.exec-meta{font-size:9px;color:#839099;margin-top:3px}.map-link{color:#4779a6;text-decoration:none;font-weight:700}.evidence{display:flex;align-items:center;gap:9px;margin-top:8px}.thumb{width:58px;height:46px;background:linear-gradient(135deg,#d7e7f2,#8fb4d2);border:1px solid #b9cad6;display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:800}.file-name{font-size:9px;color:#67747e;word-break:break-word}.file-sub{font-size:8px;color:#929ba2;margin-top:2px}
+.attach-list{display:grid;gap:6px}.attach-item{border:1px solid #e0e5e9;background:#fafcfd;padding:7px 8px;display:flex;align-items:center;justify-content:space-between;gap:8px}.attach-name{font-size:9px;color:#5f6c76;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.attach-actions{display:flex;gap:5px;white-space:nowrap}.attach-item.pending{border-style:dashed;background:#fffaf0}.attach-note{font-size:8px;color:#8c969d;margin-top:6px}
+.side-footer{position:absolute;left:0;right:0;bottom:0;padding:10px 15px;border-top:1px solid #dbe2e7;background:#fff;display:flex;align-items:center;justify-content:flex-end;gap:7px}.more-wrap{position:relative}.more-menu{display:none;position:absolute;right:0;bottom:38px;width:150px;background:#fff;border:1px solid #cfd7dd;box-shadow:0 4px 12px rgba(0,0,0,.12);z-index:20}.more-menu.show{display:block}.more-menu button{width:100%;height:34px;border:0;border-bottom:1px solid #eef1f3;background:#fff;text-align:left;padding:0 10px;color:#596670}.more-menu button:hover{background:#f7f9fa}
+.edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.edit-field label{display:block;font-size:9px;font-weight:700;color:#66737d;margin-bottom:4px}.edit-field input,.edit-field select,.edit-field textarea{width:100%;border:1px solid #d1d8de;padding:7px;color:#59656f;background:#fff}.edit-field textarea{min-height:72px;resize:vertical}.span2{grid-column:span 2}
+.modal-wrap{display:none;position:fixed;inset:0;background:rgba(25,36,45,.36);z-index:120;align-items:center;justify-content:center;padding:15px}.modal-wrap.show{display:flex}.modal{width:520px;max-width:96vw;max-height:92vh;background:#fff;border:1px solid #cbd4da;box-shadow:0 7px 22px rgba(0,0,0,.25);display:flex;flex-direction:column}.modal-head{padding:12px 14px;border-bottom:1px solid #dce2e6;background:#f6f8f9;display:flex;align-items:center;justify-content:space-between}.modal-title{font-size:13px;font-weight:800;color:#55626c}.modal-body{padding:14px;overflow:auto}.modal-actions{padding:10px 14px;border-top:1px solid #dde3e7;display:flex;justify-content:flex-end;gap:7px}.helper{font-size:9px;color:#89949c;margin-top:5px;line-height:1.4}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.form-field label{display:block;font-size:9px;font-weight:700;margin-bottom:4px;color:#65727c}.form-field input,.form-field select,.form-field textarea{width:100%;border:1px solid #ced7dd;padding:8px;color:#596670}.form-field textarea{min-height:80px;resize:vertical}.form-field.span2{grid-column:span 2}
+.gps-box{margin-top:10px;border:1px solid #dce3e7;background:#fafcfd;padding:9px}.gps-state{font-size:10px;font-weight:700;color:#5f6c76}.gps-detail{font-size:9px;color:#85919a;margin-top:3px}.gps-actions{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}.accuracy-warn{color:#9a6514;font-weight:700}
+.photo-drop{border:1px dashed #c9d5de;background:#fafcfd;padding:10px}.photo-state{font-size:9px;color:#7f8b94;margin-top:5px}.photo-preview{display:none;width:90px;height:68px;margin-top:7px;background:linear-gradient(135deg,#dcebf4,#82aac8);border:1px solid #b9cad6;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:800}.photo-preview.show{display:flex}
+.popover{display:none;position:fixed;z-index:110;width:285px;max-height:320px;overflow:auto;background:#fff;border:1px solid #ccd5dc;box-shadow:0 7px 18px rgba(0,0,0,.16);padding:8px}.popover.show{display:block}.popover-title{font-size:10px;font-weight:800;color:#5c6872;margin-bottom:6px}.popover-item{border-top:1px solid #edf0f2;padding:7px 3px;cursor:pointer}.popover-item:first-of-type{border-top:0}.popover-item:hover{background:#f7fafc}.popover-item b{font-size:10px}.popover-item span{display:block;font-size:9px;color:#85919a;margin-top:2px}
+.toast{position:fixed;right:20px;bottom:20px;display:none;background:#3d444b;color:#fff;padding:10px 14px;box-shadow:0 3px 10px rgba(0,0,0,.25);z-index:160}.toast.show{display:block}
+@media(max-width:1100px){.filter-grid{grid-template-columns:1fr 1fr}.filter-grid .filter-actions{grid-column:span 2}.summary-grid{grid-template-columns:repeat(3,1fr)}.side-panel{width:100vw;max-width:100vw;right:-100vw}.side-panel.show{right:0}}
+@media(max-width:900px){.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0)}.main{margin-left:0}.content{padding:12px}.filter-grid{grid-template-columns:1fr}.filter-grid .filter-actions{grid-column:auto}.summary-grid{grid-template-columns:repeat(2,1fr)}.monthly-grid{grid-template-columns:1fr}.agenda-card{grid-template-columns:90px minmax(0,1fr)}.agenda-right{grid-column:1/-1;text-align:left}.card-actions{justify-content:flex-start}.workspace-top{align-items:flex-start}.period-nav{width:100%;justify-content:center}.edit-grid,.form-grid{grid-template-columns:1fr}.span2,.form-field.span2{grid-column:auto}}
+@media(max-width:700px){.content{padding:8px}.filter-panel{padding:11px}.workspace-body{padding:9px}.view-switch,.subview-switch{width:100%}.view-switch .seg-btn,.subview-switch .seg-btn{flex:1}.seg-btn[data-mode="month"],.timeline-week-btn{display:none!important}.calendar-week{display:block;overflow:visible;border-top:0;border-left:0}.week-day{min-height:auto;margin-bottom:10px;border:1px solid #d8e0e6}.week-head{position:sticky;top:53px;z-index:7}.timeline-wrap{max-height:620px;overflow-y:auto;overflow-x:hidden}.timeline-grid{min-width:0!important;width:100%}.display-panel{align-items:flex-start}.display-sales{width:100%;justify-content:space-between}.display-sales select{flex:1;min-width:0}.period-title{min-width:0;flex:1}.period-nav{gap:5px}.period-nav .btn{padding:0 9px}.summary-grid{grid-template-columns:1fr 1fr}.agenda-card{grid-template-columns:80px 1fr;padding:9px}.agenda-right{grid-column:1/-1}.page-title{font-size:20px}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-profile">
+    <div class="logo-row"><div class="user-orb"></div><div class="logo-text"><span class="i">i</span><span class="reap">ReapBiz</span></div></div>
+    <div class="company-name">PT PANCA PATRIOT PRIMA<br>Login: Rudi</div>
+  </div>
+  <div class="nav">
+    <div class="nav-row section">▦ Transaction <span class="chev">⌄</span></div>
+    <div class="nav-row child">Lead</div>
+    <div class="nav-row child active">Sales Visit Planner</div>
+    <div class="nav-row child">Activity</div>
+    <div class="nav-row child">Opportunity</div>
+    <div class="nav-row child">Sales Quotation</div>
+    <div class="nav-row section">▤ Report <span class="chev">⌄</span></div>
+    <div class="nav-row child">Sales Report</div>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar"><div class="top-left"><button class="menu-btn" id="menuBtn">☰</button><span>iReapBiz</span></div><div class="logout">Logout</div></div>
+  <header class="page-header"><h1 class="page-title">Sales Visit Planner</h1><div class="breadcrumb">Home <span class="sep">/</span> Transaction <span class="sep">/</span> Sales Visit Planner</div></header>
+  <main class="content">
+
+    <section class="filter-panel">
+      <div class="filter-head"><div class="filter-title">Filter Data</div><div class="scope-note">Sales yang tersedia mengikuti Sales Assignment user login.</div></div>
+      <div class="filter-grid">
+        <div class="field"><label>Sales</label><select id="salesScope" class="control" multiple size="1"><option value="SLS-10" selected>Rudi (Me)</option><option value="SLS-01" selected>Andi</option><option value="SLS-02" selected>Budi</option><option value="SLS-03" selected>Citra</option></select></div>
+        <div class="field"><label>Customer</label><div class="cfl"><input id="customerFilter" readonly placeholder="Semua Customer"><button id="customerBtn">...</button></div></div>
+        <div class="field"><label>Status</label><select id="statusFilter" class="control"><option value="">Semua</option><option>Open</option><option>Tentative</option><option>Inactive</option><option>Close</option></select></div>
+        <div class="field"><label>Tipe Activity</label><select id="typeFilter" class="control"><option value="">Semua</option><option>Scheduled Visit</option><option>Ad-hoc Visit</option></select></div>
+        <div class="filter-actions actions"><button class="btn primary" id="applyFilter">Filter</button><button class="btn" id="resetFilter">Reset</button></div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div class="workspace-top">
+        <div class="switch-wrap">
+          <div class="view-switch">
+            <button class="seg-btn active" data-view="personal">Personal</button>
+            <button class="seg-btn" data-view="calendar">Kalendar</button>
+            <button class="seg-btn" data-view="timeline">Timeline</button>
+          </div>
+          <span class="subview-label" id="subviewLabel"></span><div class="subview-switch" id="subviewSwitch"></div>
+        </div>
+        <div class="period-nav" id="periodNav">
+          <button class="btn nav-btn" id="prevBtn">‹</button>
+          <button class="btn" id="todayBtn">Hari Ini</button>
+          <div class="period-title" id="periodTitle"></div>
+          <button class="btn nav-btn" id="nextBtn">›</button>
+        </div>
+      </div>
+      <div class="workspace-body" id="workspaceBody"></div>
+    </section>
+  </main>
+</div>
+
+<div class="side-backdrop" id="sideBackdrop"></div>
+<aside class="side-panel" id="sidePanel">
+  <div class="side-head">
+    <button class="side-close" id="sideClose">×</button>
+    <div class="side-title" id="sideTitle"></div>
+    <div class="side-ref" id="sideRef"></div>
+    <div class="side-subject" id="sideSubject"></div>
+    <div class="side-time" id="sideTime"></div>
+    <div class="initial-line" id="initialLine"></div>
+  </div>
+  <div class="side-body" id="sideBody"></div>
+  <div class="side-footer" id="sideFooter"></div>
+</aside>
+
+<div class="modal-wrap" id="checkinModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">Check In</div><button class="side-close" data-close="checkinModal">×</button></div>
+    <div class="modal-body">
+      <div id="checkinContext" style="font-weight:800;color:#53616b;margin-bottom:10px"></div>
+      <div class="photo-drop">
+        <b>Bukti Foto *</b>
+        <div class="helper">Foto akan disimpan sebagai Lampiran Activity dengan penanda Bukti Foto Check In.</div>
+        <input id="checkinPhoto" type="file" accept="image/*" capture="environment" style="margin-top:8px">
+        <div class="gps-actions"><button class="btn small" id="demoPhoto">Use Demo Photo</button></div>
+        <div class="photo-state" id="photoState">Belum ada foto.</div><div class="photo-preview" id="photoPreview">Bukti Foto</div>
+      </div>
+      <div class="gps-box">
+        <div class="gps-state" id="ciGpsState">Location belum tersedia.</div>
+        <div class="gps-detail" id="ciGpsDetail">Latitude, Longitude, dan Accuracy akan disimpan.</div>
+        <div class="gps-actions"><button class="btn small" id="captureCi">Capture Location</button><button class="btn small" id="demoCi">Use Demo GPS</button></div>
+      </div>
+      <div class="helper">Waktu dan lokasi akan direkam saat Check In dikonfirmasi.</div>
+    </div>
+    <div class="modal-actions"><button class="btn" data-close="checkinModal">Cancel</button><button class="btn primary" id="confirmCi" disabled>Confirm Check In</button></div>
+  </div>
+</div>
+
+<div class="modal-wrap" id="checkoutModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">Check Out</div><button class="side-close" data-close="checkoutModal">×</button></div>
+    <div class="modal-body">
+      <div id="checkoutContext" style="font-weight:800;color:#53616b;margin-bottom:10px"></div>
+      <div class="form-field"><label>Hasil *</label><textarea id="hasilInput" placeholder="Tuliskan hasil kunjungan..."></textarea></div>
+      <div class="gps-box">
+        <div class="gps-state" id="coGpsState">Location belum tersedia.</div>
+        <div class="gps-detail" id="coGpsDetail">GPS Check Out dicatat terpisah dari Check In.</div>
+        <div class="gps-actions"><button class="btn small" id="captureCo">Capture Location</button><button class="btn small" id="demoCo">Use Demo GPS</button></div>
+      </div>
+      <div class="helper">Waktu dan lokasi akan direkam saat Check Out dikonfirmasi.</div>
+    </div>
+    <div class="modal-actions"><button class="btn" data-close="checkoutModal">Cancel</button><button class="btn green" id="confirmCo" disabled>Confirm Check Out</button></div>
+  </div>
+</div>
+
+<div class="modal-wrap" id="adhocModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">Ad-hoc Visit</div><button class="side-close" data-close="adhocModal">×</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-field span2"><label>Customer *</label><select id="adhocCustomer"></select></div>
+        <div class="form-field"><label>Kontak</label><input id="adhocContact"></div>
+        <div class="form-field"><label>Subject *</label><select id="adhocSubject"><option>Follow Up</option><option>Negotiation</option><option>Initial Visit</option><option>Collection</option><option>Product Presentation</option></select></div>
+        <div class="form-field"><label>Tanggal *</label><input id="adhocDate" type="date"></div>
+        <div class="form-field"><label>Start Time *</label><input id="adhocStart" type="time"></div>
+        <div class="form-field"><label>End Time *</label><input id="adhocEnd" type="time"></div>
+        <div class="form-field"><label>Address</label><select id="adhocAddress"><option>DOMISILI</option><option>NPWP</option><option>KTP</option></select></div>
+        <div class="form-field span2"><label>Opportunity Terkait</label><select id="adhocOpp"><option value="">Tidak ada</option><option value="OPP-00028">OPP-00028 - Penambahan Produk Feed · Quotation</option><option value="OPP-00031">OPP-00031 - New Layer Project · Introduction</option></select></div>
+        <div class="form-field span2"><label>Keterangan</label><textarea id="adhocRemark"></textarea></div>
+      </div>
+      <div class="helper">Tanggal Ad-hoc Visit hanya dapat hari ini atau tanggal berikutnya. Check In dilakukan setelah Activity tersimpan.</div>
+    </div>
+    <div class="modal-actions"><button class="btn" data-close="adhocModal">Cancel</button><button class="btn primary" id="saveAdhoc">Save</button></div>
+  </div>
+</div>
+
+<div class="modal-wrap" id="customerModal">
+  <div class="modal" style="width:420px">
+    <div class="modal-head"><div class="modal-title">Pilih Customer</div><button class="side-close" data-close="customerModal">×</button></div>
+    <div class="modal-body" id="customerList"></div>
+    <div class="modal-actions"><button class="btn" id="clearCustomer">Hapus Pilihan</button><button class="btn" data-close="customerModal">Close</button></div>
+  </div>
+</div>
+
+<div class="popover" id="morePopover"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(()=>{
+const TODAY='2026-09-18';
+const LOGIN_SALES='SLS-10';
+const SALES=[
+  {code:'SLS-10',name:'Rudi'},
+  {code:'SLS-01',name:'Andi'},
+  {code:'SLS-02',name:'Budi'},
+  {code:'SLS-03',name:'Citra'}
+];
+const CUSTOMERS=[
+  {code:'C000145',name:'PT Sumber Makmur'},
+  {code:'C000210',name:'PT Maju Bersama'},
+  {code:'L000032',name:'CV Berkah Jaya'},
+  {code:'C000311',name:'PT Cahaya Interlining Perkasa'},
+  {code:'C000515',name:'PT Sentosa Abadi'}
+];
+const ADDRESS_BOOK={
+  'C000145':['DOMISILI · Jl. Raya Bogor No. 18, Jakarta','NPWP · Jl. Raya Bogor No. 18, Jakarta'],
+  'C000210':['NPWP · Jl. Industri Raya No. 7, Bekasi','DOMISILI · Kawasan Industri Blok B2, Bekasi'],
+  'L000032':['DOMISILI · Jl. Melati 15, Jakarta','KTP · Jl. Melati 15, Jakarta'],
+  'C000311':['DOMISILI · Jl. Kebon Jeruk 8, Jakarta','NPWP · Jl. Kebon Jeruk 8, Jakarta'],
+  'C000515':['DOMISILI · Jl. Gading Raya 2, Jakarta','NPWP · Jl. Gading Raya 2, Jakarta']
+};
+const OPP_AUTH={view:true,edit:true};
+
+let activities=[
+  {id:'A-51060',sales:'SLS-10',bp:'C000145',bpName:'PT Sumber Makmur',contact:'Pak Hendra',subject:'Follow Up',address:'DOMISILI · Jl. Raya Bogor No. 18, Jakarta',date:'2026-09-18',start:'09:00',end:'10:00',initialDate:'2026-09-18',initialStart:'08:00',initialEnd:'09:00',type:'Scheduled Visit',status:'Open',opp:'OPP-00028',oppName:'Penambahan Produk Feed',stage:'Quotation',remark:'Bahas revisi harga dan target pembelian bulan depan.',checkIn:'',checkOut:'',ciGps:null,coGps:null,hasil:'',relatedDocType:'',relatedDocNo:'',attachments:[{name:'Quotation_Revisi.pdf',kind:'file'}]},
+  {id:'A-51061',sales:'SLS-10',bp:'C000210',bpName:'PT Maju Bersama',contact:'Bu Anita',subject:'Product Presentation',address:'NPWP · Jl. Industri Raya No. 7, Bekasi',date:'2026-09-18',start:'10:30',end:'13:30',initialDate:'2026-09-17',initialStart:'10:00',initialEnd:'11:00',type:'Scheduled Visit',status:'Open',opp:'OPP-00031',oppName:'New Layer Project',stage:'Introduction',remark:'Presentasi produk dan diskusi volume awal.',checkIn:'',checkOut:'',ciGps:null,coGps:null,hasil:'',relatedDocType:'',relatedDocNo:'',attachments:[]},
+  {id:'A-51062',sales:'SLS-10',bp:'L000032',bpName:'CV Berkah Jaya',contact:'Ibu Melati',subject:'Negotiation',address:'DOMISILI · Jl. Melati 15, Jakarta',date:'2026-09-18',start:'14:00',end:'15:00',initialDate:'2026-09-18',initialStart:'14:00',initialEnd:'15:00',type:'Ad-hoc Visit',status:'Tentative',opp:'',oppName:'',stage:'',remark:'',checkIn:'',checkOut:'',ciGps:null,coGps:null,hasil:'',relatedDocType:'',relatedDocNo:'',attachments:[]},
+  {id:'A-51063',sales:'SLS-10',bp:'C000515',bpName:'PT Sentosa Abadi',contact:'Pak Dedi',subject:'Collection',address:'DOMISILI · Jl. Gading Raya 2, Jakarta',date:'2026-09-18',start:'15:30',end:'16:30',initialDate:'2026-09-18',initialStart:'15:30',initialEnd:'16:30',type:'Scheduled Visit',status:'Close',opp:'',oppName:'',stage:'',remark:'',checkIn:'18 Sep 2026 15:32',checkOut:'18 Sep 2026 16:21',ciGps:{lat:-6.201234,lng:106.812345,accuracy:18},coGps:{lat:-6.201198,lng:106.812401,accuracy:16},hasil:'Pembayaran dijanjikan pada hari Senin.',relatedDocType:'Sales Order',relatedDocNo:'SO-2600456',attachments:[{name:'CI_A-51063_20260918_153200.jpg',kind:'evidence'}]},
+  {id:'A-51040',sales:'SLS-10',bp:'C000311',bpName:'PT Cahaya Interlining Perkasa',contact:'Pak Surya',subject:'Quotation Discussion',address:'DOMISILI · Jl. Kebon Jeruk 8, Jakarta',date:'2026-09-16',start:'11:00',end:'12:00',initialDate:'2026-09-16',initialStart:'11:00',initialEnd:'12:00',type:'Scheduled Visit',status:'Open',opp:'OPP-02977',oppName:'Expansion 2026',stage:'Quotation',remark:'Follow up quotation.',checkIn:'',checkOut:'',ciGps:null,coGps:null,hasil:'',relatedDocType:'',relatedDocNo:'',attachments:[]},
+  {id:'A-51070',sales:'SLS-01',bp:'C000145',bpName:'PT Sumber Makmur',contact:'Bu Rina',subject:'Negotiation',address:'DOMISILI · Jl. Raya Bogor No. 18, Jakarta',date:'2026-09-18',start:'09:30',end:'11:30',initialDate:'2026-09-18',initialStart:'09:30',initialEnd:'11:30',type:'Scheduled Visit',status:'Open',opp:'OPP-00028',oppName:'Penambahan Produk Feed',stage:'Quotation',remark:'',checkIn:'',checkOut:'',ciGps:null,coGps:null,hasil:'',relatedDocType:'',relatedDocNo:'',attachments:[]},
+  {id:'A-51071',sales:'SLS-01',bp:'C000210',bpName:'PT Maju Bersama',contact:'Pak Toni',subject:'Follow Up',address:'NPWP · Jl. Industri Raya No. 7, Bekasi',date:'2026-09-18',start:'10:30',end:'12:00',initialDate:'2026-09-18',initialStart:'10:30',initialEnd:'12:00',type:'Scheduled Visit',status:'Open',opp:'',oppName:'',stage:'',remark:'',checkIn:'',checkOut:'',ciGps:null,coGps:null,hasil:'',relatedDocType:'',relatedDocNo:'',attachments:[]},
+  {id:'A-51072',sales:'SLS-02',bp:'C000515',bpName:'PT Sentosa Abadi',contact:'Pak Dedi',subject:'Initial Visit',address:'DOMISILI · Jl. Gading Raya 2, Jakarta',date:'2026-09-18',start:'07:00',end:'08:00',initialDate:'2026-09-18',initialStart:'07:00',initialEnd:'08:00',type:'Ad-hoc Visit',status:'Open',opp:'',oppName:'',stage:'',remark:'',checkIn:'',checkOut:'',ciGps:null,coGps:null,hasil:'',relatedDocType:'',relatedDocNo:'',attachments:[]},
+  {id:'A-51073',sales:'SLS-03',bp:'L000032',bpName:'CV Berkah Jaya',contact:'Ibu Melati',subject:'Follow Up',address:'DOMISILI · Jl. Melati 15, Jakarta',date:'2026-09-18',start:'18:30',end:'20:00',initialDate:'2026-09-18',initialStart:'18:30',initialEnd:'20:00',type:'Scheduled Visit',status:'Open',opp:'',oppName:'',stage:'',remark:'',checkIn:'',checkOut:'',ciGps:null,coGps:null,hasil:'',relatedDocType:'',relatedDocNo:'',attachments:[]}
+];
+
+let draftSchedules=[
+  {id:'D-00071',sales:'SLS-10',bp:'C000145',bpName:'PT Sumber Makmur',contact:'Pak Hendra',subject:'Negotiation',address:'DOMISILI · Jl. Raya Bogor No. 18, Jakarta',date:'2026-09-19',start:'09:30',end:'10:30',remark:'Diskusi harga lanjutan.',opp:'OPP-00028',oppName:'Penambahan Produk Feed',stage:'Quotation'},
+  {id:'D-00072',sales:'SLS-01',bp:'L000032',bpName:'CV Berkah Jaya',contact:'Ibu Melati',subject:'Follow Up',address:'DOMISILI · Jl. Melati 15, Jakarta',date:'2026-09-18',start:'13:00',end:'14:00',remark:'',opp:'',oppName:'',stage:''}
+];
+
+const state={
+  view:'personal',calendarMode:'month',timelineMode:'day',
+  monthAnchor:'2026-09-01',weekStart:'2026-09-14',timelineDate:TODAY,
+  displaySales:'SLS-10',loadedSales:new Set(SALES.map(x=>x.code)),
+  customer:'',status:'',type:'',showDraft:false,showInitial:false,
+  selected:null,sideMode:'activity',edit:false,followupEdit:false,pendingAttachments:[],ciGps:null,coGps:null,ciPhoto:false,lastWidth:window.innerWidth
+};
+
+const isMobile=()=>window.innerWidth<=700;
+function normalizeResponsiveMode(){
+  if(isMobile()){
+    if(state.view==='calendar') state.calendarMode='week';
+    if(state.view==='timeline'){state.timelineMode='day';if(state.displaySales==='all')state.displaySales=LOGIN_SALES;}
+  }
+}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const salesName=code=>SALES.find(x=>x.code===code)?.name||code;
+const iso=d=>{const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`};
+const dateObj=s=>new Date(s+'T00:00:00');
+const addDays=(s,n)=>{const d=dateObj(s);d.setDate(d.getDate()+n);return iso(d)};
+const startWeek=s=>{const d=dateObj(s);const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return iso(d)};
+const monthNames=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const formatDate=s=>{const d=dateObj(s);return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`};
+const formatShort=s=>{const d=dateObj(s);return `${d.getDate()} ${monthNames[d.getMonth()]}`};
+const minutes=t=>{const [h,m]=t.split(':').map(Number);return h*60+m};
+const durationText=(start,end)=>{let n=Math.max(0,minutes(end)-minutes(start));const h=Math.floor(n/60),m=n%60;return h?`${h}j${m?` ${m}m`:''}`:`${m}m`};
+const statusClass=s=>s.toLowerCase();
+const badge=s=>`<span class="badge ${statusClass(s)}">${esc(s)}</span>`;
+const isDifferentInitial=a=>a.initialDate&&(`${a.initialDate}|${a.initialStart}|${a.initialEnd}`!==`${a.date}|${a.start}|${a.end}`);
+const isPastOpen=a=>a.status==='Open'&&a.date<TODAY&&!a.checkIn;
+const isOngoing=a=>!!a.checkIn&&!a.checkOut;
+const displayStatus=a=>isOngoing(a)?'Ongoing':a.status;
+const canExecute=a=>a.sales===LOGIN_SALES;
+const nowStamp=()=>{const d=new Date();const pad=n=>String(n).padStart(2,'0');return `${pad(d.getDate())} ${monthNames[d.getMonth()]} ${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`};
+const nowFileStamp=()=>{const d=new Date();const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`};
+
+function filteredActivities(){
+  return activities.filter(a=>state.loadedSales.has(a.sales)&&(!state.customer||a.bp===state.customer)&&(!state.status||a.status===state.status)&&(!state.type||a.type===state.type));
+}
+function filteredDrafts(){
+  return draftSchedules.filter(a=>state.loadedSales.has(a.sales)&&(!state.customer||a.bp===state.customer));
+}
+function render(){
+  normalizeResponsiveMode();
+  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===state.view));
+  renderSubview();
+  renderPeriod();
+  if(state.view==='personal') renderPersonal();
+  else if(state.view==='calendar') renderCalendar();
+  else renderTimeline();
+}
+function renderSubview(){
+  const label=$('subviewLabel'),wrap=$('subviewSwitch');
+  if(state.view==='personal'){label.textContent='';wrap.innerHTML='';return}
+  label.textContent=state.view==='calendar'?'Kalendar':'Timeline';
+  if(state.view==='calendar'){
+    wrap.innerHTML=`${isMobile()?'':`<button class="seg-btn ${state.calendarMode==='month'?'active':''}" data-mode="month">Month</button>`}<button class="seg-btn ${state.calendarMode==='week'?'active':''}" data-mode="week">Week</button>`;
+  }else{
+    wrap.innerHTML=`<button class="seg-btn ${state.timelineMode==='day'?'active':''}" data-mode="day">Day</button>${isMobile()?'':`<button class="seg-btn timeline-week-btn ${state.timelineMode==='week'?'active':''}" data-mode="week">Week</button>`}`;
+  }
+  wrap.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{
+    if(state.view==='calendar')state.calendarMode=b.dataset.mode;
+    else{
+      state.timelineMode=b.dataset.mode;
+      if(state.timelineMode==='week'&&state.displaySales==='all')state.displaySales=LOGIN_SALES;
+    }
+    mockBackendLoad('Activity');render();
+  });
+}
+function renderPeriod(){
+  const nav=$('periodNav');
+  if(state.view==='personal'){
+    nav.style.visibility='hidden';
+    return;
+  }
+  nav.style.visibility='visible';
+  if(state.view==='calendar'&&state.calendarMode==='month'){
+    const d=dateObj(state.monthAnchor);$('periodTitle').textContent=`${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+  }else if((state.view==='calendar'&&state.calendarMode==='week')||(state.view==='timeline'&&state.timelineMode==='week')){
+    $('periodTitle').textContent=`${formatShort(state.weekStart)} - ${formatShort(addDays(state.weekStart,6))}`;
+  }else $('periodTitle').textContent=formatDate(state.timelineDate);
+}
+function displaySalesControl(allowAll=true){
+  if(isMobile()&&state.view==='timeline') allowAll=false;
+  if(state.displaySales==='all'&&!allowAll)state.displaySales=LOGIN_SALES;
+  const opts=[...(allowAll?['<option value="all">All</option>']:[])].concat([...state.loadedSales].map(code=>`<option value="${code}" ${state.displaySales===code?'selected':''}>${salesName(code)}${code===LOGIN_SALES?' (Me)':''}</option>`));
+  return `<div class="display-sales"><label>Tampilkan Sales</label><select id="displaySales">${opts.join('')}</select></div>`;
+}
+function displayOptionsControl(allowAll=true){
+  return `<div class="display-panel"><span class="display-panel-title">Tampilan</span>${displaySalesControl(allowAll)}<label class="layer-chip"><input type="checkbox" id="viewShowDraft" ${state.showDraft?'checked':''}> Schedule Draft</label><label class="layer-chip"><input type="checkbox" id="viewShowInitial" ${state.showInitial?'checked':''}> Tampilkan Schedule Awal</label><span class="layer-help">Pengaturan ini hanya mengubah tampilan periode yang sedang dibuka.</span></div>`;
+}
+function bindDisplayOptions(){
+  const el=$('displaySales');if(el){el.value=state.displaySales;el.onchange=()=>{state.displaySales=el.value;render()}}
+  const draft=$('viewShowDraft');if(draft)draft.onchange=()=>{const turningOn=draft.checked&&!state.showDraft;state.showDraft=draft.checked;if(turningOn)mockBackendLoad('Schedule Draft');render();refreshOpenSide()};
+  const initial=$('viewShowInitial');if(initial)initial.onchange=()=>{state.showInitial=initial.checked;render();refreshOpenSide()};
+}
+function currentPeriodLabel(){
+  if(state.view==='calendar'&&state.calendarMode==='month'){const d=dateObj(state.monthAnchor);return `${monthNames[d.getMonth()]} ${d.getFullYear()}`}
+  if((state.view==='calendar'&&state.calendarMode==='week')||(state.view==='timeline'&&state.timelineMode==='week'))return `${formatShort(state.weekStart)}-${formatShort(addDays(state.weekStart,6))}`;
+  return formatDate(state.timelineDate);
+}
+function mockBackendLoad(what='Activity'){state.backendLoaded=`${what} · ${currentPeriodLabel()}`;}
+function refreshOpenSide(){if(!$('sidePanel').classList.contains('show'))return;if(state.sideMode==='activity'&&state.selected)openActivity(state.selected);else if(state.sideMode==='draft'&&state.selected)openDraft(state.selected)}
+function actionFor(a){
+  if(a.status==='Close'||a.status==='Inactive')return '';
+  if(isOngoing(a))return canExecute(a)?`<button class="btn green small" data-checkout="${a.id}">Check Out</button>`:'';
+  if(a.status==='Tentative')return canExecute(a)?`<button class="btn primary small" data-openstatus="${a.id}">Set Open</button>`:'';
+  if(a.status==='Open')return canExecute(a)?`<button class="btn primary small" data-checkin="${a.id}">Check In</button>`:'';
+  return '';
+}
+function renderPersonal(){
+  const mine=activities.filter(a=>a.sales===LOGIN_SALES);
+  const today=mine.filter(a=>a.date===TODAY&&a.status!=='Inactive');
+  const ongoing=today.filter(isOngoing);
+  const open=today.filter(a=>a.status==='Open'&&!isOngoing(a));
+  const tentative=today.filter(a=>a.status==='Tentative');
+  const close=today.filter(a=>a.status==='Close');
+  const overdue=mine.filter(isPastOpen);
+  const scheduledMonth=mine.filter(a=>a.type==='Scheduled Visit'&&a.date.startsWith('2026-09'));
+  const adHocMonth=mine.filter(a=>a.type==='Ad-hoc Visit'&&a.date.startsWith('2026-09'));
+  const scheduledClose=scheduledMonth.filter(a=>a.status==='Close').length;
+  const pct=scheduledMonth.length?Math.round(scheduledClose/scheduledMonth.length*100):0;
+  const draftMonth=draftSchedules.filter(d=>d.sales===LOGIN_SALES&&d.date.startsWith('2026-09')).length;
+
+  const agenda=[...today].sort((a,b)=>{
+    const rank=x=>isOngoing(x)?0:(x.status==='Open'&&minutes(x.end)<minutes('15:45'))?1:x.status==='Open'?2:x.status==='Tentative'?3:4;
+    return rank(a)-rank(b)||minutes(a.start)-minutes(b.start);
+  });
+
+  $('workspaceBody').innerHTML=`
+    <div class="personal-head">
+      <div><div class="personal-title">Personal</div><div class="personal-date">${formatDate(TODAY)}</div></div>
+      <button class="btn primary" id="addAdhoc">+ Ad-hoc Visit</button>
+    </div>
+    <div class="summary-grid">
+      <div class="summary-card accent"><div class="summary-label">Total Kunjungan</div><div class="summary-value">${today.length}</div></div>
+      <div class="summary-card"><div class="summary-label">Ongoing</div><div class="summary-value">${ongoing.length}</div></div>
+      <div class="summary-card"><div class="summary-label">Open</div><div class="summary-value">${open.length}</div></div>
+      <div class="summary-card"><div class="summary-label">Tentative</div><div class="summary-value">${tentative.length}</div></div>
+      <div class="summary-card"><div class="summary-label">Close</div><div class="summary-value">${close.length}</div></div>
+    </div>
+    <div class="warning-banner ${overdue.length?'show':''}">
+      <div><div class="warning-title">${overdue.length} Activity Lewat Masih Open</div><div class="warning-sub">Jadwal sudah lewat dan Activity belum diselesaikan.</div></div>
+      <button class="btn small" id="openActivityList">Buka Activity List</button>
+    </div>
+    <div class="section-head"><div class="section-title">Today's Agenda</div><div class="section-note">${today.length} Activity hari ini</div></div>
+    <div class="agenda-list">${agenda.map(renderAgendaCard).join('')||`<div class="text-block">Tidak ada Activity hari ini.</div>`}</div>
+    <div class="section-head"><div class="section-title">Aktivitas Bulan Ini</div><div class="section-note">September 2026</div></div>
+    <div class="monthly-grid">
+      <div class="monthly-card">
+        <div class="monthly-title">Scheduled Visit</div>
+        <div class="monthly-main"><div><div class="monthly-number">${scheduledClose} / ${scheduledMonth.length}</div><div class="monthly-caption">Close dari Total Scheduled</div></div><div><b>${pct}%</b><div class="monthly-caption">Realisasi</div></div></div>
+        <div class="progress"><span style="width:${pct}%"></span></div>
+        <div class="monthly-breakdown">${statusCounts(scheduledMonth)}</div>
+      </div>
+      <div class="monthly-card">
+        <div class="monthly-title">Ad-hoc Visit</div>
+        <div class="monthly-main"><div><div class="monthly-number">${adHocMonth.length}</div><div class="monthly-caption">Total Activity</div></div></div>
+        <div class="monthly-breakdown">${statusCounts(adHocMonth)}</div>
+        <div class="draft-summary"><b>Schedule Draft</b><br>${draftMonth} Visit masih dalam perencanaan.</div>
+      </div>
+    </div>`;
+  bindAgendaActions();
+  $('addAdhoc').onclick=()=>openAdhoc();
+  if($('openActivityList'))$('openActivityList').onclick=()=>window.open('PATRIOT_Activity_List_v5.html?preset=past-open','_blank');
+}
+function statusCounts(arr){
+  const c={Open:0,Tentative:0,Inactive:0,Close:0};arr.forEach(x=>c[x.status]=(c[x.status]||0)+1);
+  return Object.entries(c).map(([k,v])=>`<span><b>${k}</b> ${v}</span>`).join('');
+}
+function renderAgendaCard(a){
+  const ds=displayStatus(a);
+  const isOld=isPastOpen(a);
+  let exec='';
+  if(isOngoing(a))exec=`Check In ${a.checkIn.split(' ').slice(-1)[0]} · Berjalan ${liveDuration(a)}`;
+  else if(a.status==='Close')exec=`Check In ${a.checkIn.split(' ').slice(-1)[0]} · Check Out ${a.checkOut.split(' ').slice(-1)[0]}`;
+  return `<div class="agenda-card ${a.status==='Close'?'muted':''}" data-openactivity="${a.id}">
+    <div><div class="agenda-time">${a.start}–${a.end}</div><div class="agenda-type">${esc(a.type)}</div></div>
+    <div><div class="agenda-customer">${esc(a.bpName)}</div><div class="agenda-line"><span class="agenda-subject">${esc(a.subject)}</span>${a.opp?`<span class="opp-chip">${esc(a.opp)} · ${esc(a.stage)}</span>`:''}</div>${a.remark?`<div class="agenda-note">${esc(a.remark)}</div>`:''}</div>
+    <div class="agenda-right">${badge(ds)}${isOld?` <span class="badge flag">Jadwal Lewat</span>`:''}<div class="agenda-exec">${exec}</div><div class="card-actions">${actionFor(a)}${!['Close','Inactive'].includes(a.status)&&!isOngoing(a)?`<button class="dots" data-more="${a.id}">...</button>`:''}</div></div>
+  </div>`;
+}
+function liveDuration(a){return '42 menit'}
+function bindAgendaActions(){
+  document.querySelectorAll('[data-openactivity]').forEach(x=>x.onclick=e=>{if(e.target.closest('button'))return;openActivity(x.dataset.openactivity)});
+  document.querySelectorAll('[data-checkin]').forEach(x=>x.onclick=e=>{e.stopPropagation();openCheckin(x.dataset.checkin)});
+  document.querySelectorAll('[data-checkout]').forEach(x=>x.onclick=e=>{e.stopPropagation();openCheckout(x.dataset.checkout)});
+  document.querySelectorAll('[data-openstatus]').forEach(x=>x.onclick=e=>{e.stopPropagation();setStatus(x.dataset.openstatus,'Open')});
+  document.querySelectorAll('[data-more]').forEach(x=>x.onclick=e=>{e.stopPropagation();openMoreMenu(e.currentTarget,x.dataset.more)});
+}
+
+function calendarEventsForDate(date){
+  let arr=[];
+  filteredActivities().forEach(a=>{
+    if((state.displaySales==='all'||a.sales===state.displaySales)&&a.date===date)arr.push({kind:'activity',data:a});
+    if(state.showInitial&&isDifferentInitial(a)&&a.initialDate!==a.date&&(state.displaySales==='all'||a.sales===state.displaySales)&&a.initialDate===date)arr.push({kind:'ghost',data:a});
+  });
+  if(state.showDraft)filteredDrafts().forEach(d=>{if((state.displaySales==='all'||d.sales===state.displaySales)&&d.date===date)arr.push({kind:'draft',data:d})});
+  return arr.sort((x,y)=>minutes((x.kind==='ghost'?x.data.initialStart:x.data.start))-minutes((y.kind==='ghost'?y.data.initialStart:y.data.start)));
+}
+function renderCalendar(){
+  if(!state.loadedSales.has(state.displaySales)&&state.displaySales!=='all')state.displaySales=LOGIN_SALES;
+  const body=$('workspaceBody');
+  body.innerHTML=`<div class="view-controls"><div class="section-note">Klik Activity / Schedule Draft untuk membuka detail.</div>${displayOptionsControl(true)}</div><div id="calendarArea"></div>`;
+  bindDisplayOptions();
+  if(state.calendarMode==='month')renderCalendarMonth();
+  else renderCalendarWeek();
+}
+function renderCalendarMonth(){
+  const d=dateObj(state.monthAnchor),y=d.getFullYear(),m=d.getMonth();
+  const first=new Date(y,m,1),offset=(first.getDay()+6)%7,start=new Date(y,m,1-offset);
+  let cells='';
+  for(let i=0;i<42;i++){
+    const dt=new Date(start);dt.setDate(start.getDate()+i);const ds=iso(dt),inside=dt.getMonth()===m,events=calendarEventsForDate(ds);
+    const shown=events.slice(0,2),more=events.length-2;
+    cells+=`<div class="month-cell ${inside?'':'out'} ${ds===TODAY?'today':''}"><div class="date-head-row"><div class="month-day">${dt.getDate()}</div><button class="date-add" data-adddate="${ds}" ${(!inside||ds<TODAY)?'disabled':''}>+</button></div>${shown.map(e=>renderCalCard(e,'month')).join('')}${more>0?`<div class="more-link" data-moredate="${ds}">+${more} more</div>`:''}</div>`;
+  }
+  $('calendarArea').innerHTML=`<div class="calendar-month"><div class="month-head">${['Sen','Sel','Rab','Kam','Jum','Sab','Min'].map(x=>`<div>${x}</div>`).join('')}</div><div class="month-grid">${cells}</div></div>`;
+  bindCalendarItems();
+}
+function renderCalendarWeek(){
+  const days=Array.from({length:7},(_,i)=>addDays(state.weekStart,i));
+  $('calendarArea').innerHTML=`<div class="calendar-week">${days.map(d=>`<div class="week-day ${d===TODAY?'today':''}"><div class="week-head"><span>${formatShort(d)}</span><button class="date-add" data-adddate="${d}" ${d<TODAY?'disabled':''}>+</button></div><div class="week-list">${calendarEventsForDate(d).map(e=>renderCalCard(e,'week')).join('')||`<div class="section-note">Tidak ada data</div>`}</div></div>`).join('')}</div>`;
+  bindCalendarItems();
+}
+function renderCalCard(e,mode){
+  if(e.kind==='draft'){
+    const d=e.data;return `<div class="cal-card draft" data-opendraft="${d.id}"><div class="cal-time">${d.start}–${d.end}${state.displaySales==='all'?` · ${esc(salesName(d.sales))}`:''}</div><div class="cal-customer">${esc(d.bpName)}</div><div class="cal-meta"><span class="cal-subject">${esc(d.subject)}</span>${badge('Draft')}</div></div>`;
+  }
+  const a=e.data;
+  if(e.kind==='ghost'){
+    return `<div class="cal-card ghost" data-openactivity="${a.id}"><div class="cal-time">${a.initialStart}–${a.initialEnd}${state.displaySales==='all'?` · ${esc(salesName(a.sales))}`:''}</div><div class="cal-customer">${esc(a.bpName)}</div><div class="cal-subject">Schedule Awal</div><div class="cal-initial">Current: ${formatShort(a.date)} ${a.start}–${a.end}</div></div>`;
+  }
+  const sameDateChanged=state.showInitial&&isDifferentInitial(a)&&a.initialDate===a.date;
+  return `<div class="cal-card ${a.sales===LOGIN_SALES?'':'other'}" data-openactivity="${a.id}"><div class="cal-time">${a.start}–${a.end}${state.displaySales==='all'&&a.sales!==LOGIN_SALES?` · ${esc(salesName(a.sales))}`:''}</div><div class="cal-customer">${esc(a.bpName)}</div><div class="cal-meta"><span class="cal-subject">${esc(a.subject)}</span>${badge(displayStatus(a))}</div>${sameDateChanged?`<div class="cal-initial">Schedule Awal ${a.initialStart}–${a.initialEnd}</div>`:''}</div>`;
+}
+function bindCalendarItems(){
+  document.querySelectorAll('[data-openactivity]').forEach(x=>x.onclick=()=>openActivity(x.dataset.openactivity));
+  document.querySelectorAll('[data-opendraft]').forEach(x=>x.onclick=()=>openDraft(x.dataset.opendraft));
+  document.querySelectorAll('[data-moredate]').forEach(x=>x.onclick=e=>openMoreDate(e.currentTarget,x.dataset.moredate));
+  document.querySelectorAll('[data-adddate]').forEach(x=>x.onclick=e=>{e.stopPropagation();openAdhoc(x.dataset.adddate)});
+}
+
+function renderTimeline(){
+  const allowAll=state.timelineMode==='day'&&!isMobile();
+  if(!allowAll&&state.displaySales==='all')state.displaySales=LOGIN_SALES;
+  $('workspaceBody').innerHTML=`<div class="view-controls"><div class="section-note">${state.timelineMode==='day'?'Day: satu Sales satu kolom.':'Week: satu Sales pada satu waktu.'}</div>${displayOptionsControl(allowAll)}</div><div id="timelineArea"></div>`;
+  bindDisplayOptions();
+  if(state.timelineMode==='day')renderTimelineDay();else renderTimelineWeek();
+}
+function timelineRange(events){
+  let min=8*60,max=18*60;
+  events.forEach(e=>{const s=minutes(e.start),en=minutes(e.end);min=Math.min(min,s);max=Math.max(max,en)});
+  min=Math.floor(min/60)*60;max=Math.ceil(max/60)*60;
+  return {min,max};
+}
+function renderTimelineDay(){
+  const date=state.timelineDate;
+  const salesCodes=state.displaySales==='all'?[...state.loadedSales]:[state.displaySales];
+  let ev=filteredActivities().filter(a=>a.date===date&&salesCodes.includes(a.sales)).map(a=>({...a,kind:'activity'}));
+  if(state.showDraft)ev=ev.concat(filteredDrafts().filter(d=>d.date===date&&salesCodes.includes(d.sales)).map(d=>({...d,kind:'draft'})));
+  const range=timelineRange(ev);
+  renderTimelineGrid([date],salesCodes,ev,range,'day');
+}
+function renderTimelineWeek(){
+  const days=Array.from({length:7},(_,i)=>addDays(state.weekStart,i)),sales=[state.displaySales];
+  let ev=filteredActivities().filter(a=>days.includes(a.date)&&a.sales===state.displaySales).map(a=>({...a,kind:'activity'}));
+  if(state.showDraft)ev=ev.concat(filteredDrafts().filter(d=>days.includes(d.date)&&d.sales===state.displaySales).map(d=>({...d,kind:'draft'})));
+  const range=timelineRange(ev);
+  renderTimelineGrid(days,sales,ev,range,'week');
+}
+function renderTimelineGrid(days,salesCodes,events,range,mode){
+  const hourH=54,totalH=((range.max-range.min)/60)*hourH;
+  let columns=[];
+  if(mode==='day')columns=salesCodes.map(code=>({key:code,label:`${salesName(code)}${code===LOGIN_SALES?' (Me)':''}`,date:days[0],sales:code}));
+  else columns=days.map(d=>({key:d,label:formatShort(d),date:d,sales:salesCodes[0]}));
+  const gridCols=`58px repeat(${columns.length}, minmax(170px,1fr))`;
+  const minGridWidth=isMobile()?0:(58+columns.length*190);
+  let html=`<div class="timeline-wrap"><div class="timeline-grid" style="grid-template-columns:${gridCols};grid-template-rows:38px repeat(${(range.max-range.min)/60},54px);min-height:${38+totalH}px;${minGridWidth?`min-width:${minGridWidth}px;`:''}"><div class="time-head">Jam</div>${columns.map(c=>`<div class="timeline-col-head"><span>${c.label}</span>${(mode==='week'||c.sales===LOGIN_SALES)&&c.date>=TODAY?`<button class="timeline-add" data-adddate="${c.date}">+</button>`:''}</div>`).join('')}`;
+  for(let h=range.min;h<range.max;h+=60){
+    html+=`<div class="time-label">${String(Math.floor(h/60)).padStart(2,'0')}:00</div>${columns.map(()=>`<div class="time-cell"></div>`).join('')}`;
+  }
+  html+=`<div class="timeline-event-layer" id="tlLayer" style="height:${totalH}px"></div></div></div>`;
+  $('timelineArea').innerHTML=html;
+  const layer=$('tlLayer'),colW=100/columns.length;
+  columns.forEach((c,ci)=>{
+    const colEvents=events.filter(e=>e.sales===c.sales&&e.date===c.date);
+    colEvents.forEach((e,idx)=>{
+      const top=(minutes(e.start)-range.min)/60*hourH;
+      const height=Math.max(30,(minutes(e.end)-minutes(e.start))/60*hourH);
+      const overlaps=colEvents.filter(o=>o!==e&&minutes(o.start)<minutes(e.end)&&minutes(o.end)>minutes(e.start));
+      let left=ci*colW,width=colW;
+      if(overlaps.length){
+        const group=[e,...overlaps].sort((a,b)=>minutes(a.start)-minutes(b.start));
+        const pos=group.findIndex(x=>x.id===e.id);width=colW/group.length;left=ci*colW+pos*width;
+      }
+      const cl=e.kind==='draft'?'draft':(e.sales===LOGIN_SALES?'':'other');
+      const conflict=overlaps.length&&e.kind==='activity'?`<span class="conflict">Time Conflict</span>`:'';
+      const node=document.createElement('div');node.className=`tl-event ${cl}`;node.style.top=top+'px';node.style.height=height+'px';node.style.left=`calc(${left}% + 2px)`;node.style.width=`calc(${width}% - 4px)`;
+      node.innerHTML=`${conflict}<div class="tl-title">${esc(e.bpName)}</div><div class="tl-sub">${e.start}–${e.end} · ${esc(e.subject)}</div><div class="tl-sub">${e.kind==='draft'?'Draft':displayStatus(e)}</div>${e.kind==='activity'&&state.showInitial&&isDifferentInitial(e)&&e.initialDate===e.date?`<div class="tl-sub">Schedule Awal ${e.initialStart}–${e.initialEnd}</div>`:''}`;
+      node.onclick=()=>e.kind==='draft'?openDraft(e.id):openActivity(e.id);layer.appendChild(node);
+    });
+    if(state.showInitial){
+      filteredActivities().filter(a=>a.sales===c.sales&&isDifferentInitial(a)&&a.initialDate!==a.date&&a.initialDate===c.date).forEach(a=>{
+        const top=(minutes(a.initialStart)-range.min)/60*hourH,height=Math.max(30,(minutes(a.initialEnd)-minutes(a.initialStart))/60*hourH);
+        const node=document.createElement('div');node.className='tl-event ghost';node.style.top=top+'px';node.style.height=height+'px';node.style.left=`calc(${ci*colW}% + 2px)`;node.style.width=`calc(${colW}% - 4px)`;
+        node.innerHTML=`<div class="tl-title">${esc(a.bpName)}</div><div class="tl-sub">${a.initialStart}–${a.initialEnd} · Schedule Awal</div><div class="tl-sub">Current ${formatShort(a.date)} ${a.start}</div>`;node.onclick=()=>openActivity(a.id);layer.appendChild(node);
+      });
+    }
+  });
+  document.querySelectorAll('.timeline-add[data-adddate]').forEach(x=>x.onclick=e=>{e.stopPropagation();openAdhoc(x.dataset.adddate)});
+}
+function openMoreDate(anchor,date){
+  const pop=$('morePopover'),events=calendarEventsForDate(date);
+  pop.innerHTML=`<div class="popover-title">${formatDate(date)}</div>${events.map(e=>{
+    const d=e.data,tm=e.kind==='ghost'?d.initialStart:d.start;return `<div class="popover-item" data-popkind="${e.kind}" data-popid="${d.id}"><b>${tm} · ${esc(d.bpName)}</b><span>${e.kind==='ghost'?'Schedule Awal':e.kind==='draft'?'Schedule Draft':d.subject}</span></div>`;
+  }).join('')}`;
+  const r=anchor.getBoundingClientRect();pop.style.left=Math.min(window.innerWidth-300,r.left)+'px';pop.style.top=Math.min(window.innerHeight-340,r.bottom+4)+'px';pop.classList.add('show');
+  pop.querySelectorAll('[data-popid]').forEach(x=>x.onclick=()=>{pop.classList.remove('show');x.dataset.popkind==='draft'?openDraft(x.dataset.popid):openActivity(x.dataset.popid)});
+}
+
+function openActivity(id){
+  const a=activities.find(x=>x.id===id);if(!a)return;
+  state.selected=id;state.sideMode='activity';state.edit=false;state.followupEdit=false;
+  $('sideTitle').textContent=a.bpName;$('sideRef').textContent=a.id;
+  $('sideSubject').innerHTML=`${esc(a.subject)} ${badge(displayStatus(a))}`;
+  $('sideTime').innerHTML=`${formatDate(a.date)} · ${a.start}–${a.end} · ${esc(a.type)}`;
+  const il=$('initialLine');
+  if(state.showInitial&&isDifferentInitial(a)){il.classList.add('show');il.textContent=`Schedule Awal: ${formatDate(a.initialDate)} · ${a.initialStart}–${a.initialEnd}`}
+  else il.classList.remove('show');
+  renderActivitySide(a);openSide();
+}
+function renderActivitySide(a){
+  if(state.followupEdit){renderFollowupEdit(a);return}
+  if(state.edit){renderActivityEdit(a);return}
+  const opp=a.opp?`<div class="side-section"><div class="side-section-title">Opportunity Terkait</div><div class="opp-card"><div class="opp-title">${esc(a.opp)} — ${esc(a.oppName)}</div><div class="opp-sub">Stage: ${esc(a.stage)}</div><div class="opp-actions">${OPP_AUTH.view?`<button class="btn small" data-viewopp="${a.id}">View</button>`:''}${OPP_AUTH.edit?`<button class="btn small" data-editopp="${a.id}">Edit</button>`:''}</div></div></div>`:'';
+  const relatedDoc=a.relatedDocNo?`<div class="side-section"><div class="side-section-title">Related Sales Document</div><div class="opp-card"><div class="opp-title">${esc(a.relatedDocType)} · ${esc(a.relatedDocNo)}</div><div class="opp-sub">Linked document pada SAP Activity</div><div class="opp-actions"><button class="btn small" data-viewdoc="${a.id}">View Document</button></div></div></div>`:'';
+  $('sideBody').innerHTML=`
+    <div class="side-section"><div class="side-section-title">Detail Activity</div>
+      <div class="detail-pair"><div class="label">Kontak</div><div class="value">${esc(a.contact||'-')}</div><div class="label">Address</div><div class="value">${esc(a.address||'-')}</div></div>
+      ${a.remark?`<div style="margin-top:8px"><div class="detail-pair"><div class="label">Keterangan</div><div></div></div><div class="text-block">${esc(a.remark)}</div></div>`:''}
+    </div>
+    ${opp}
+    ${relatedDoc}
+    ${executionHtml(a)}
+    ${attachmentsHtml(a,'view')}
+  `;
+  renderSideFooter(a);
+  bindSideActions(a);
+}
+function executionHtml(a){
+  if(!a.checkIn)return `<div class="side-section"><div class="side-section-title">Execution</div><div class="text-block">Belum Check In.</div></div>`;
+  const ongoing=isOngoing(a);
+  let html=`<div class="side-section"><div class="side-section-title">Execution</div><div class="exec-top"><div>${badge(ongoing?'Ongoing':'Close')}</div>${ongoing?`<div class="exec-duration">Berjalan ${liveDuration(a)}</div>`:`<div class="exec-duration">Durasi ${durationText(a.checkIn.split(' ').slice(-1)[0],a.checkOut.split(' ').slice(-1)[0])}</div>`}</div>
+    <div class="exec-row"><div class="exec-label">Check In</div><div class="exec-value">${esc(a.checkIn)}</div>${gpsHtml(a.ciGps)}${evidenceHtml(a)}</div>`;
+  if(a.checkOut)html+=`<div class="exec-row"><div class="exec-label">Check Out</div><div class="exec-value">${esc(a.checkOut)}</div>${gpsHtml(a.coGps)}</div>`;
+  if(a.hasil)html+=`<div class="exec-row"><div class="exec-label">Hasil</div><div class="text-block" style="margin-top:5px">${esc(a.hasil)}</div></div>`;
+  return html+`</div>`;
+}
+function gpsHtml(g){
+  if(!g)return '';
+  return `<div class="exec-meta">Accuracy ±${g.accuracy} m · <a class="map-link" href="https://www.google.com/maps?q=${g.lat},${g.lng}" target="_blank">Open in Maps</a></div>`;
+}
+function evidenceHtml(a){
+  const ev=a.attachments.find(x=>x.kind==='evidence');if(!ev)return '';
+  return `<div class="evidence"><div class="thumb">Bukti Foto</div><div><div class="file-name">${esc(ev.name)}</div><div class="file-sub">Bukti Foto Check In · <a class="map-link" href="#" onclick="return false">Download</a></div></div></div>`;
+}
+function attachmentsHtml(a,mode='view'){
+  const owner=canExecute(a);
+  const allowAdd=owner&&((mode==='edit'&&!a.checkIn&&['Open','Tentative'].includes(a.status))||(mode==='followup'&&(isOngoing(a)||a.status==='Close'))||(mode==='view'&&isOngoing(a)));
+  const pending=((mode==='edit'||mode==='followup')?state.pendingAttachments:[]);
+  return `<div class="side-section"><div class="side-section-title">Lampiran</div><div class="attach-list">${a.attachments.length?a.attachments.map(x=>`<div class="attach-item"><div class="attach-name">${esc(x.name)}${x.kind==='evidence'?' · Bukti Foto':''}</div><div class="attach-actions"><button class="btn small" data-download="${esc(x.name)}">Download</button></div></div>`).join(''):`<div class="section-note">Belum ada Lampiran.</div>`}${pending.map((x,i)=>`<div class="attach-item pending"><div class="attach-name">${esc(x.name)} · Belum disimpan</div><div class="attach-actions"><button class="btn small danger" data-removepending="${i}">Remove</button></div></div>`).join('')}</div>${allowAdd?`<button class="btn small" style="margin-top:8px" data-addattach="${a.id}">Add Attachment</button>`:''}${(mode==='edit'||mode==='followup')?`<div class="attach-note">Lampiran yang sudah tersimpan tidak dapat dihapus. File baru dapat di-Remove sebelum Save.</div>`:''}</div>`;
+}
+function renderSideFooter(a){
+  let html='';
+  if(isOngoing(a)&&canExecute(a))html=`<button class="btn green" data-sidecheckout="${a.id}">Check Out</button><button class="btn" data-followup="${a.id}">Update Follow-up</button>`;
+  else if(a.status==='Open'&&canExecute(a))html=`<button class="btn primary" data-sidecheckin="${a.id}">Check In</button><div class="more-wrap"><button class="dots" id="sideMoreBtn">...</button><div class="more-menu" id="sideMoreMenu"><button data-editactivity="${a.id}">Edit</button><button data-settentative="${a.id}">Set Tentative</button><button data-setinactive="${a.id}">Set Inactive</button></div></div>`;
+  else if(a.status==='Close'&&canExecute(a))html=`<button class="btn primary" data-followup="${a.id}">Update Follow-up</button>`;
+  else if(a.status==='Tentative'&&canExecute(a))html=`<button class="btn primary" data-setopen="${a.id}">Set Open</button><div class="more-wrap"><button class="dots" id="sideMoreBtn">...</button><div class="more-menu" id="sideMoreMenu"><button data-editactivity="${a.id}">Edit</button><button data-setinactive="${a.id}">Set Inactive</button></div></div>`;
+  $('sideFooter').innerHTML=html;
+}
+function bindSideActions(a){
+  document.querySelectorAll('[data-viewopp]').forEach(b=>b.onclick=()=>toast(`View Opportunity ${a.opp}`));
+  document.querySelectorAll('[data-viewdoc]').forEach(b=>b.onclick=()=>toast(`View ${a.relatedDocType} ${a.relatedDocNo}`));
+  document.querySelectorAll('[data-editopp]').forEach(b=>b.onclick=()=>toast(`Edit Opportunity ${a.opp} (sesuai authorization).`));
+  document.querySelectorAll('[data-download]').forEach(b=>b.onclick=()=>toast(`Download ${b.dataset.download}`));
+  document.querySelectorAll('[data-addattach]').forEach(b=>b.onclick=()=>{if(!canExecute(a)||!isOngoing(a))return;a.attachments.push({name:'Visit_Document_'+(a.attachments.length+1)+'.pdf',kind:'file'});renderActivitySide(a);toast('Lampiran ditambahkan (mockup).')});
+  const more=$('sideMoreBtn');if(more)more.onclick=()=>$('sideMoreMenu').classList.toggle('show');
+  document.querySelectorAll('[data-editactivity]').forEach(b=>b.onclick=()=>{if(!canExecute(a)||a.checkIn)return;state.pendingAttachments=[];state.edit=true;renderActivitySide(a)});
+  document.querySelectorAll('[data-settentative]').forEach(b=>b.onclick=()=>setStatus(a.id,'Tentative'));
+  document.querySelectorAll('[data-setinactive]').forEach(b=>b.onclick=()=>setStatus(a.id,'Inactive'));
+  document.querySelectorAll('[data-setopen]').forEach(b=>b.onclick=()=>setStatus(a.id,'Open'));
+  document.querySelectorAll('[data-sidecheckin]').forEach(b=>b.onclick=()=>openCheckin(a.id));
+  document.querySelectorAll('[data-sidecheckout]').forEach(b=>b.onclick=()=>openCheckout(a.id));
+  document.querySelectorAll('[data-followup]').forEach(b=>b.onclick=()=>{if(!canExecute(a))return;state.pendingAttachments=[];state.followupEdit=true;renderActivitySide(a)});
+}
+function addressOptions(a){const vals=[...(ADDRESS_BOOK[a.bp]||[])];if(a.address&&!vals.includes(a.address))vals.unshift(a.address);return vals.map(v=>`<option value="${esc(v)}" ${v===a.address?'selected':''}>${esc(v)}</option>`).join('')}
+function renderActivityEdit(a){
+  $('sideBody').innerHTML=`<div class="side-section"><div class="side-section-title">Edit Activity</div><div class="edit-grid">
+    <div class="edit-field"><label>Tanggal</label><input id="editDate" type="date" value="${a.date}"></div>
+    <div class="edit-field"><label>Status</label><input value="${a.status}" disabled></div>
+    <div class="edit-field"><label>Start Time</label><input id="editStart" type="time" value="${a.start}"></div>
+    <div class="edit-field"><label>End Time</label><input id="editEnd" type="time" value="${a.end}"></div>
+    <div class="edit-field span2"><label>Subject</label><input id="editSubject" value="${esc(a.subject)}"></div>
+    <div class="edit-field"><label>Kontak</label><input id="editContact" value="${esc(a.contact)}"></div>
+    <div class="edit-field"><label>Address</label><select id="editAddress">${addressOptions(a)}</select></div>
+    <div class="edit-field span2"><label>Keterangan</label><textarea id="editRemark">${esc(a.remark)}</textarea></div>
+    <div class="edit-field span2"><label>Opportunity Terkait</label><select id="editOpp"><option value="" ${!a.opp?'selected':''}>Tidak ada</option><option value="OPP-00028" ${a.opp==='OPP-00028'?'selected':''}>OPP-00028 — Penambahan Produk Feed</option><option value="OPP-00031" ${a.opp==='OPP-00031'?'selected':''}>OPP-00031 — New Layer Project</option></select></div>
+    <div class="edit-field"><label>Related Document Type</label><select id="editDocType"><option value="" ${!a.relatedDocType?'selected':''}>Tidak ada</option><option ${a.relatedDocType==='Sales Quotation'?'selected':''}>Sales Quotation</option><option ${a.relatedDocType==='Sales Order'?'selected':''}>Sales Order</option></select></div>
+    <div class="edit-field"><label>Related Document No.</label><input id="editDocNo" value="${esc(a.relatedDocNo||'')}" placeholder="Pilih / isi dokumen SAP"></div>
+    <div class="edit-field span2"><div class="helper">Related Document menggunakan link dokumen standard SAP Activity dan dapat diisi langsung, terutama jika Activity tidak terkait Opportunity.</div></div>
+  </div></div>${attachmentsHtml(a,'edit')}`;
+  $('sideFooter').innerHTML=`<button class="btn" id="cancelEdit">Cancel</button><button class="btn primary" id="saveEdit">Save</button>`;
+  $('cancelEdit').onclick=()=>{state.pendingAttachments=[];state.edit=false;renderActivitySide(a)};
+  $('saveEdit').onclick=()=>{a.date=$('editDate').value;a.start=$('editStart').value;a.end=$('editEnd').value;a.subject=$('editSubject').value.trim();a.contact=$('editContact').value.trim();a.address=$('editAddress').value;a.remark=$('editRemark').value.trim();const opp=$('editOpp').value;a.opp=opp;a.oppName=opp==='OPP-00028'?'Penambahan Produk Feed':opp==='OPP-00031'?'New Layer Project':'';a.stage=opp?(opp==='OPP-00028'?'Quotation':'Introduction'):'';a.relatedDocType=$('editDocType').value;a.relatedDocNo=$('editDocNo').value.trim();if(state.pendingAttachments.length)a.attachments.push(...state.pendingAttachments.map(x=>({...x})));state.pendingAttachments=[];state.edit=false;openActivity(a.id);render();toast('Activity diperbarui. Schedule Awal tetap tidak berubah.')};
+  document.querySelectorAll('[data-addattach]').forEach(b=>b.onclick=()=>{state.pendingAttachments.push({name:'Visit_Document_Baru_'+(state.pendingAttachments.length+1)+'.pdf',kind:'file'});renderActivityEdit(a)});
+  document.querySelectorAll('[data-removepending]').forEach(b=>b.onclick=()=>{state.pendingAttachments.splice(Number(b.dataset.removepending),1);renderActivityEdit(a)});
+  document.querySelectorAll('[data-download]').forEach(b=>b.onclick=()=>toast(`Download ${b.dataset.download}`));
+}
+
+function renderFollowupEdit(a){
+  $('sideBody').innerHTML=`<div class="side-section"><div class="side-section-title">Update Follow-up</div><div class="text-block" style="margin-bottom:10px">Planning dan data Check In / Check Out tetap dikunci. Area ini hanya untuk memperbarui hasil kunjungan dan relasi komersial.</div><div class="edit-grid">
+    <div class="edit-field span2"><label>Hasil</label><textarea id="fuHasil">${esc(a.hasil||'')}</textarea></div>
+    <div class="edit-field span2"><label>Opportunity Terkait</label><select id="fuOpp"><option value="" ${!a.opp?'selected':''}>Tidak ada</option><option value="OPP-00028" ${a.opp==='OPP-00028'?'selected':''}>OPP-00028 — Penambahan Produk Feed</option><option value="OPP-00031" ${a.opp==='OPP-00031'?'selected':''}>OPP-00031 — New Layer Project</option><option value="OPP-02977" ${a.opp==='OPP-02977'?'selected':''}>OPP-02977 — Expansion 2026</option></select></div>
+    <div class="edit-field"><label>Related Document Type</label><select id="fuDocType"><option value="" ${!a.relatedDocType?'selected':''}>Tidak ada</option><option ${a.relatedDocType==='Sales Quotation'?'selected':''}>Sales Quotation</option><option ${a.relatedDocType==='Sales Order'?'selected':''}>Sales Order</option></select></div>
+    <div class="edit-field"><label>Related Document No.</label><input id="fuDocNo" value="${esc(a.relatedDocNo||'')}" placeholder="Pilih / isi dokumen SAP"></div>
+    <div class="edit-field span2"><div class="helper">Related Document menggunakan link dokumen standard SAP Activity. Dapat ditambahkan setelah Check In / Check Out, misalnya saat kunjungan menghasilkan Sales Quotation atau Sales Order.</div></div>
+  </div></div>${attachmentsHtml(a,'followup')}`;
+  $('sideFooter').innerHTML=`<button class="btn" id="cancelFollowup">Cancel</button><button class="btn primary" id="saveFollowup">Save</button>`;
+  $('cancelFollowup').onclick=()=>{state.pendingAttachments=[];state.followupEdit=false;renderActivitySide(a)};
+  $('saveFollowup').onclick=()=>{a.hasil=$('fuHasil').value.trim();const opp=$('fuOpp').value;a.opp=opp;a.oppName=opp==='OPP-00028'?'Penambahan Produk Feed':opp==='OPP-00031'?'New Layer Project':opp==='OPP-02977'?'Expansion 2026':'';a.stage=opp?(opp==='OPP-00028'?'Quotation':opp==='OPP-00031'?'Introduction':'Quotation'):'';a.relatedDocType=$('fuDocType').value;a.relatedDocNo=$('fuDocNo').value.trim();if(state.pendingAttachments.length)a.attachments.push(...state.pendingAttachments.map(x=>({...x})));state.pendingAttachments=[];state.followupEdit=false;renderActivitySide(a);toast('Follow-up Activity diperbarui. Planning dan execution tetap tidak berubah.')};
+  document.querySelectorAll('[data-addattach]').forEach(b=>b.onclick=()=>{state.pendingAttachments.push({name:'Followup_Document_'+(state.pendingAttachments.length+1)+'.pdf',kind:'file'});renderFollowupEdit(a)});
+  document.querySelectorAll('[data-removepending]').forEach(b=>b.onclick=()=>{state.pendingAttachments.splice(Number(b.dataset.removepending),1);renderFollowupEdit(a)});
+  document.querySelectorAll('[data-download]').forEach(b=>b.onclick=()=>toast(`Download ${b.dataset.download}`));
+}
+
+function openDraft(id){
+  const d=draftSchedules.find(x=>x.id===id);if(!d)return;
+  state.selected=id;state.sideMode='draft';state.edit=false;
+  $('sideTitle').textContent=d.bpName;$('sideRef').textContent=d.id+' · Schedule Draft';$('sideSubject').innerHTML=`${esc(d.subject)} ${badge('Draft')}`;$('sideTime').textContent=`${formatDate(d.date)} · ${d.start}–${d.end}`;$('initialLine').classList.remove('show');
+  $('sideBody').innerHTML=`<div class="side-section"><div class="side-section-title">Detail Schedule Draft</div><div class="detail-pair"><div class="label">Sales</div><div class="value">${esc(salesName(d.sales))}</div><div class="label">Kontak</div><div class="value">${esc(d.contact||'-')}</div><div class="label">Address</div><div class="value">${esc(d.address||'-')}</div></div>${d.remark?`<div class="text-block" style="margin-top:8px">${esc(d.remark)}</div>`:''}</div>${d.opp?`<div class="side-section"><div class="side-section-title">Opportunity Terkait</div><div class="opp-card"><div class="opp-title">${esc(d.opp)} — ${esc(d.oppName)}</div><div class="opp-sub">Stage: ${esc(d.stage)}</div></div></div>`:''}<div class="side-section"><div class="text-block">Untuk mengubah status Schedule Draft menjadi Scheduled, lakukan proses melalui SAP Business One Desktop.</div></div>`;
+  $('sideFooter').innerHTML='';openSide();
+}
+
+function openSide(){$('sidePanel').classList.add('show');$('sideBackdrop').classList.add('show')}
+function closeSide(){$('sidePanel').classList.remove('show');$('sideBackdrop').classList.remove('show');$('morePopover').classList.remove('show')}
+
+function openCheckin(id){
+  const a=activities.find(x=>x.id===id);if(!a||!canExecute(a))return;
+  const other=activities.find(x=>x.sales===LOGIN_SALES&&isOngoing(x)&&x.id!==id);if(other){toast(`Selesaikan Check Out ${other.bpName} terlebih dahulu.`);return}
+  state.selected=id;state.ciGps=null;state.ciPhoto=false;$('checkinContext').textContent=`${a.bpName} · ${a.start}–${a.end}`;$('photoState').textContent='Belum ada foto.';$('photoPreview').classList.remove('show');$('ciGpsState').textContent='Location belum tersedia.';$('ciGpsDetail').textContent='Latitude, Longitude, dan Accuracy akan disimpan.';$('confirmCi').disabled=true;openModal('checkinModal');
+}
+function openCheckout(id){
+  const a=activities.find(x=>x.id===id);if(!a||!canExecute(a))return;
+  state.selected=id;state.coGps=null;$('checkoutContext').textContent=`${a.bpName} · Check In ${a.checkIn}`;$('hasilInput').value=a.hasil||'';$('coGpsState').textContent='Location belum tersedia.';$('coGpsDetail').textContent='GPS Check Out dicatat terpisah dari Check In.';$('confirmCo').disabled=true;openModal('checkoutModal');
+}
+function setGps(kind,g){
+  if(kind==='ci')state.ciGps=g;else state.coGps=g;
+  const stateEl=$(kind==='ci'?'ciGpsState':'coGpsState'),detail=$(kind==='ci'?'ciGpsDetail':'coGpsDetail');
+  stateEl.textContent='✓ Location captured';detail.innerHTML=`${g.lat.toFixed(6)}, ${g.lng.toFixed(6)} · Accuracy ±${g.accuracy} m ${g.accuracy>100?'<span class="accuracy-warn">· Akurasi lokasi rendah</span>':''}`;
+  updateConfirm();
+}
+function captureGps(kind){
+  if(!navigator.geolocation){toast('Geolocation tidak didukung browser.');return}
+  navigator.geolocation.getCurrentPosition(p=>setGps(kind,{lat:p.coords.latitude,lng:p.coords.longitude,accuracy:Math.round(p.coords.accuracy)}),()=>toast('Location belum tersedia. Aktifkan izin lokasi lalu coba lagi.'),{enableHighAccuracy:true,timeout:10000,maximumAge:0});
+}
+function updateConfirm(){
+  $('confirmCi').disabled=!(state.ciGps&&state.ciPhoto);
+  $('confirmCo').disabled=!(state.coGps&&$('hasilInput').value.trim());
+}
+function setStatus(id,s){const a=activities.find(x=>x.id===id);if(!a)return;a.status=s;closeSide();render();toast(`Status Activity menjadi ${s}.`)}
+function openMoreMenu(anchor,id){
+  const a=activities.find(x=>x.id===id),p=$('morePopover');
+  p.innerHTML=`<div class="popover-item" data-x="view"><b>View Detail</b></div>${a.status==='Open'?`<div class="popover-item" data-x="edit"><b>Edit</b></div><div class="popover-item" data-x="tentative"><b>Set Tentative</b></div>`:''}${a.status==='Tentative'?`<div class="popover-item" data-x="edit"><b>Edit</b></div><div class="popover-item" data-x="open"><b>Set Open</b></div>`:''}<div class="popover-item" data-x="inactive"><b>Set Inactive</b></div>`;
+  const r=anchor.getBoundingClientRect();p.style.left=Math.min(window.innerWidth-300,r.left)+'px';p.style.top=Math.min(window.innerHeight-260,r.bottom+3)+'px';p.classList.add('show');
+  p.querySelectorAll('[data-x]').forEach(x=>x.onclick=()=>{p.classList.remove('show');if(x.dataset.x==='view')openActivity(id);if(!canExecute(a))return;if(x.dataset.x==='edit'){openActivity(id);state.pendingAttachments=[];state.edit=true;renderActivitySide(a)}if(x.dataset.x==='tentative')setStatus(id,'Tentative');if(x.dataset.x==='open')setStatus(id,'Open');if(x.dataset.x==='inactive')setStatus(id,'Inactive')});
+}
+function openAdhoc(dateOverride){
+  $('adhocCustomer').innerHTML=CUSTOMERS.map(c=>`<option value="${c.code}">${c.code} - ${c.name}</option>`).join('');
+  $('adhocDate').min=TODAY;$('adhocDate').value=(dateOverride&&dateOverride>=TODAY)?dateOverride:TODAY;$('adhocStart').value='16:00';$('adhocEnd').value='17:00';$('adhocContact').value='';$('adhocRemark').value='';openModal('adhocModal');
+}
+function openModal(id){$(id).classList.add('show')}function closeModal(id){$(id).classList.remove('show')}
+
+$('demoPhoto').onclick=()=>{state.ciPhoto=true;$('photoState').textContent='✓ Demo_CheckIn_Photo.jpg';$('photoPreview').classList.add('show');updateConfirm()};
+$('checkinPhoto').onchange=e=>{state.ciPhoto=!!e.target.files.length;$('photoState').textContent=state.ciPhoto?`✓ ${e.target.files[0].name}`:'Belum ada foto.';$('photoPreview').classList.toggle('show',state.ciPhoto);updateConfirm()};
+$('demoCi').onclick=()=>setGps('ci',{lat:-6.201234,lng:106.812345,accuracy:18});$('demoCo').onclick=()=>setGps('co',{lat:-6.201198,lng:106.812401,accuracy:132});
+$('captureCi').onclick=()=>captureGps('ci');$('captureCo').onclick=()=>captureGps('co');$('hasilInput').oninput=updateConfirm;
+$('confirmCi').onclick=()=>{
+  const a=activities.find(x=>x.id===state.selected);a.checkIn=nowStamp();a.ciGps=state.ciGps;const filename=`CI_${a.id}_${nowFileStamp()}.jpg`;a.attachments.unshift({name:filename,kind:'evidence'});closeModal('checkinModal');openActivity(a.id);render();toast('Check In berhasil.');
+};
+$('confirmCo').onclick=()=>{
+  const a=activities.find(x=>x.id===state.selected);a.checkOut=nowStamp();a.coGps=state.coGps;a.hasil=$('hasilInput').value.trim();a.status='Close';closeModal('checkoutModal');openActivity(a.id);render();toast('Check Out berhasil. Activity menjadi Close.');
+};
+$('saveAdhoc').onclick=()=>{
+  const date=$('adhocDate').value;if(!date||date<TODAY)return toast('Tanggal Ad-hoc Visit tidak boleh masa lalu.');
+  const c=CUSTOMERS.find(x=>x.code===$('adhocCustomer').value),opp=$('adhocOpp').value;
+  activities.push({id:'A-'+(51100+activities.length),sales:LOGIN_SALES,bp:c.code,bpName:c.name,contact:$('adhocContact').value,subject:$('adhocSubject').value,address:$('adhocAddress').value,date,start:$('adhocStart').value,end:$('adhocEnd').value,initialDate:date,initialStart:$('adhocStart').value,initialEnd:$('adhocEnd').value,type:'Ad-hoc Visit',status:'Open',opp,oppName:opp==='OPP-00028'?'Penambahan Produk Feed':opp==='OPP-00031'?'New Layer Project':'',stage:opp==='OPP-00028'?'Quotation':opp==='OPP-00031'?'Introduction':'',remark:$('adhocRemark').value,checkIn:'',checkOut:'',ciGps:null,coGps:null,hasil:'',relatedDocType:'',relatedDocNo:'',attachments:[]});
+  closeModal('adhocModal');render();toast('Ad-hoc Visit tersimpan.');
+};
+
+function applyFilters(){
+  const sel=[...$('salesScope').selectedOptions].map(o=>o.value);state.loadedSales=new Set(sel.length?sel:[LOGIN_SALES]);if(!state.loadedSales.has(state.displaySales)&&state.displaySales!=='all')state.displaySales=[...state.loadedSales][0]||LOGIN_SALES;
+  state.status=$('statusFilter').value;state.type=$('typeFilter').value;mockBackendLoad('Activity');render();
+}
+$('applyFilter').onclick=applyFilters;
+$('resetFilter').onclick=()=>{[...$('salesScope').options].forEach(o=>o.selected=true);$('statusFilter').value='';$('typeFilter').value='';$('customerFilter').value='';state.customer='';state.displaySales=LOGIN_SALES;state.showDraft=false;state.showInitial=false;applyFilters()};
+$('customerBtn').onclick=()=>{$('customerList').innerHTML=CUSTOMERS.map(c=>`<div class="popover-item" data-customer="${c.code}"><b>${c.code}</b><span>${c.name}</span></div>`).join('');$('customerList').querySelectorAll('[data-customer]').forEach(x=>x.onclick=()=>{const c=CUSTOMERS.find(v=>v.code===x.dataset.customer);state.customer=c.code;$('customerFilter').value=`${c.code} - ${c.name}`;closeModal('customerModal')});openModal('customerModal')};
+$('clearCustomer').onclick=()=>{state.customer='';$('customerFilter').value='';closeModal('customerModal')};
+
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{state.view=b.dataset.view;normalizeResponsiveMode();if(state.view!=='personal'&&state.displaySales!=='all'&&!state.loadedSales.has(state.displaySales))state.displaySales=LOGIN_SALES;if(state.view!=='personal')mockBackendLoad('Activity');render()});
+function navigatePeriod(delta){
+  if(state.view==='calendar'&&state.calendarMode==='month'){
+    const d=dateObj(state.monthAnchor);d.setMonth(d.getMonth()+delta);state.monthAnchor=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`;
+  }else if((state.view==='calendar'&&state.calendarMode==='week')||(state.view==='timeline'&&state.timelineMode==='week')){
+    state.weekStart=addDays(state.weekStart,delta*7);
+  }else if(state.view==='timeline'&&state.timelineMode==='day'){
+    state.timelineDate=addDays(state.timelineDate,delta);
+  }
+  mockBackendLoad('Activity');render();
+}
+$('prevBtn').onclick=()=>navigatePeriod(-1);
+$('nextBtn').onclick=()=>navigatePeriod(1);
+$('todayBtn').onclick=()=>{state.monthAnchor='2026-09-01';state.weekStart=startWeek(TODAY);state.timelineDate=TODAY;mockBackendLoad('Activity');render()};
+$('sideClose').onclick=closeSide;$('sideBackdrop').onclick=closeSide;
+document.querySelectorAll('[data-close]').forEach(x=>x.onclick=()=>closeModal(x.dataset.close));
+document.querySelectorAll('.modal-wrap').forEach(m=>m.onclick=e=>{if(e.target===m)closeModal(m.id)});
+document.addEventListener('click',e=>{if(!e.target.closest('#morePopover')&&!e.target.closest('[data-moredate]')&&!e.target.closest('[data-more]'))$('morePopover').classList.remove('show')});
+$('menuBtn').onclick=()=>toast('Sidebar toggle pada mockup desktop.');
+let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{const was=state.lastWidth;state.lastWidth=window.innerWidth;if((was>700)!==(window.innerWidth>700))render()},120)});
+let tt;function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(tt);tt=setTimeout(()=>$('toast').classList.remove('show'),2800)}
+render();
+})();
+</script>
+</body>
+</html>

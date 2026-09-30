@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manajemen Lead - Daftar Lead</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#4b4b4b;background:#dce8f1}
+.page-head{background:#fff;border-top:5px solid #2e006b;border-bottom:1px solid #c9d3da;padding:16px 20px 17px}
+.page-title{font-size:20px;color:#666;margin-bottom:10px}.crumbs{color:#6c7881}.crumbs span{margin:0 7px;color:#aaa}
+.section-box{margin:26px 28px 0;background:#fff;border:1px solid #cbd4da;box-shadow:0 1px 2px rgba(0,0,0,.14);padding:14px}
+.section-box.main{margin-top:20px;padding:14px 18px}
+.btn{border:1px solid #d6dbe0;background:#fff;color:#59656e;padding:8px 14px;cursor:pointer;font-size:12px;border-radius:2px;line-height:1.2;white-space:nowrap}
+.btn-blue{background:#1e73be;border-color:#1e73be;color:#fff;font-weight:600}
+.btn-filter{width:100%;background:#1e73be;border-color:#1e73be;color:#fff;font-weight:600;height:32px}
+.btn-view{background:#15c4c8;border-color:#15c4c8;color:#fff;min-width:72px;font-weight:600;padding:7px 8px}
+.btn-edit{background:#f5b041;border-color:#f5b041;color:#fff;min-width:72px;font-weight:600;padding:7px 8px}
+.btn-print{background:#8e44ad;border-color:#8e44ad;color:#fff;min-width:72px;font-weight:600;padding:7px 8px}
+.filters{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:28px;align-items:end;margin-bottom:14px}
+.field label{display:block;margin-bottom:7px;font-weight:600;color:#555}
+input,select{width:100%;height:32px;border:1px solid #c7c7c7;padding:7px 9px;font:inherit;color:#555;background:#fff;border-radius:2px}
+.table-tools{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px}
+.table-tools-left{display:flex;align-items:center;flex-wrap:wrap}
+.entries-box,.search-box{display:flex;align-items:center;gap:8px;color:#666}
+.entries-box{margin-right:4px}.entries-box select{width:70px}.search-box input{width:180px;height:28px}
+.table-general-tools{display:flex;align-items:center;gap:0}
+.table-general-tools .btn{border-radius:0;margin-left:-1px;padding:8px 12px}
+.table-general-tools .btn:first-child{border-radius:2px 0 0 2px;margin-left:0}
+.table-general-tools .btn:last-child{border-radius:0 2px 2px 0}
+.table-outer{overflow-x:auto;border:1px solid #e0e0e0;position:relative}
+table{width:100%;min-width:1300px;border-collapse:separate;border-spacing:0}
+thead th{background:#f5f5f5;color:#666;text-align:left;padding:11px 8px;border-right:1px solid #dfdfdf;border-bottom:1px solid #dfdfdf;font-weight:700;white-space:nowrap}
+tbody td{padding:10px 8px;border-right:1px solid #e6e6e6;border-bottom:1px solid #e6e6e6;vertical-align:top;background:#fff;white-space:nowrap}
+thead th:last-child,tbody td:last-child{border-right:none}.col-hidden{display:none!important}
+.action-col{position:sticky!important;right:0;z-index:3;background:#f5f5f5!important;box-shadow:-2px 0 4px rgba(0,0,0,.05);min-width:100px}
+tbody .action-col{z-index:2;background:#fff!important}
+.actions{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.bottom-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 2px 2px;color:#666}.pagination{display:flex}.pagination button{border:1px solid #d7d7d7;background:#fff;color:#666;padding:6px 10px;font-size:12px}.pagination button+button{margin-left:-1px}.pagination .active{background:#f4f4f4}
+.modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;align-items:center;justify-content:center;padding:20px}.modal-wrap.show{display:flex}
+.modal{width:600px;max-width:96vw;max-height:88vh;background:#fff;border:1px solid #cbd4da;box-shadow:0 6px 20px rgba(0,0,0,.25);display:flex;flex-direction:column}
+.modal-head{padding:12px 14px;border-bottom:1px solid #ddd;background:#f5f5f5;display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.modal-body{padding:14px;overflow:auto}.modal-actions{padding:10px 14px;border-top:1px solid #ddd;display:flex;justify-content:flex-end;gap:8px}
+.close-x{border:0;background:none;font-size:18px;color:#777;cursor:pointer}
+.column-note{margin-bottom:10px;color:#777;font-size:11px;line-height:1.45}
+.column-list{display:grid;grid-template-columns:1fr 1fr;column-gap:18px}
+.column-item{min-height:36px;display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid #eee}
+.column-item input{width:auto;height:auto;margin:0}.column-item .default-tag{margin-left:auto;font-size:10px;color:#888}
+@media(max-width:1200px){.filters{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.section-box{margin:12px 12px 0}.filters{grid-template-columns:1fr}.table-tools{flex-direction:column;align-items:flex-start}.table-tools-left{gap:8px}.table-general-tools{flex-wrap:wrap}.table-general-tools .btn{margin-left:0;border-radius:2px}.bottom-bar{flex-direction:column;align-items:flex-start;gap:12px}.column-list{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div class="page-title">Manajemen Lead</div>
+  <div class="crumbs">Beranda <span>/</span> Master Data <span>/</span> Lead <span>/</span> Daftar Lead</div>
+</div>
+
+<div class="section-box">
+  <button class="btn btn-blue">+ Add Lead Baru</button>
+</div>
+
+<div class="section-box main">
+  <div class="filters">
+    <div class="field"><label>Grup:</label><select><option>Semua</option><option>Retail</option><option>Farm</option><option>Distributor</option></select></div>
+    <div class="field"><label>Jenis Usaha:</label><select><option>Semua</option><option>Poultry Shop</option><option>Peternakan</option><option>Kemitraan</option></select></div>
+    <div class="field"><label>Sales:</label><select><option>Semua</option><option>Sales A</option><option>Sales B</option></select></div>
+    <div class="field"><button class="btn btn-filter">⚗ Filter</button></div>
+  </div>
+
+  <div class="table-tools">
+    <div class="table-tools-left">
+      <div class="entries-box"><span>Tampilkan</span><select><option>10</option><option>25</option><option>50</option></select><span>data</span></div>
+      <div class="table-general-tools">
+        <button class="btn" onclick="openColumnSettings()">Columns Setting</button>
+        <button class="btn">Reset Column</button>
+        <button class="btn">Clear Filter</button>
+        <button class="btn">Copy</button>
+      </div>
+    </div>
+    <div class="search-box"><span>Cari:</span><input placeholder="Kode BP / Nama BP"></div>
+  </div>
+
+  <div class="table-outer">
+    <table id="leadTable">
+      <thead>
+        <tr>
+          <th data-col="bpCode">Kode BP</th>
+          <th data-col="bpName">Nama BP</th>
+          <th data-col="bpGroup">Grup BP</th>
+          <th data-col="industry">Jenis Usaha</th>
+          <th data-col="sales">Sales</th>
+          <th data-col="phone">No. Telp</th>
+          <th data-col="paymentTerm">Termin Pembayaran</th>
+          <th data-col="createDate" class="col-hidden">Tanggal Pengajuan</th>
+          <th data-col="ktp" class="col-hidden">No. KTP</th>
+          <th data-col="npwp" class="col-hidden">No. NPWP</th>
+          <th data-col="nib" class="col-hidden">No. NIB</th>
+          <th data-col="operatingLength" class="col-hidden">Lama Beroperasi</th>
+          <th data-col="purchasePotential" class="col-hidden">Potensi Pembelian</th>
+          <th data-col="uom" class="col-hidden">Satuan</th>
+          <th data-col="potentialPeriod" class="col-hidden">Periode Potensi</th>
+          <th data-col="transactionEstimate" class="col-hidden">Perkiraan Nilai Transaksi</th>
+          <th data-col="transactionPeriod" class="col-hidden">Periode Nilai</th>
+          <th data-col="creditLimit" class="col-hidden">Credit Limit</th>
+          <th data-col="priceList" class="col-hidden">Price List</th>
+          <th data-col="collateral" class="col-hidden">Objek Jaminan</th>
+          <th data-col="action" class="action-col">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-col="bpCode">L0000123</td><td data-col="bpName">Toko Maju Jaya</td><td data-col="bpGroup">Retail</td><td data-col="industry">Poultry Shop</td><td data-col="sales">Sales A</td><td data-col="phone">0812-1234-5678</td><td data-col="paymentTerm">14 Hari</td>
+          <td data-col="createDate" class="col-hidden">15 Sep 2026</td><td data-col="ktp" class="col-hidden">3173XXXXXXXXXXXX</td><td data-col="npwp" class="col-hidden">12.345.678.9-012.000</td><td data-col="nib" class="col-hidden">1234567890123</td><td data-col="operatingLength" class="col-hidden">8 Tahun</td><td data-col="purchasePotential" class="col-hidden">25</td><td data-col="uom" class="col-hidden">Ton</td><td data-col="potentialPeriod" class="col-hidden">Per Bulan</td><td data-col="transactionEstimate" class="col-hidden">&gt; Rp 100 Juta s/d Rp 500 Juta</td><td data-col="transactionPeriod" class="col-hidden">Per Bulan</td><td data-col="creditLimit" class="col-hidden">Rp 250.000.000</td><td data-col="priceList" class="col-hidden">Retail Price</td><td data-col="collateral" class="col-hidden">BPKB Kendaraan</td>
+          <td data-col="action" class="action-col"><div class="actions"><button class="btn btn-view">◉ View</button><button class="btn btn-edit">✎ Edit</button><button class="btn btn-print">🖨 Print</button></div></td>
+        </tr>
+        <tr>
+          <td data-col="bpCode">L0000124</td><td data-col="bpName">CV Sumber Makmur</td><td data-col="bpGroup">Farm</td><td data-col="industry">Peternakan</td><td data-col="sales">Sales B</td><td data-col="phone">0813-8899-2200</td><td data-col="paymentTerm">30 Hari</td>
+          <td data-col="createDate" class="col-hidden">16 Sep 2026</td><td data-col="ktp" class="col-hidden">3671XXXXXXXXXXXX</td><td data-col="npwp" class="col-hidden">55.222.888.4-999.000</td><td data-col="nib" class="col-hidden">9988776655443</td><td data-col="operatingLength" class="col-hidden">5 Tahun</td><td data-col="purchasePotential" class="col-hidden">40</td><td data-col="uom" class="col-hidden">Ton</td><td data-col="potentialPeriod" class="col-hidden">Per Bulan</td><td data-col="transactionEstimate" class="col-hidden">&gt; Rp 500 Juta s/d Rp 1 Miliar</td><td data-col="transactionPeriod" class="col-hidden">Per Bulan</td><td data-col="creditLimit" class="col-hidden">Rp 500.000.000</td><td data-col="priceList" class="col-hidden">Base Price</td><td data-col="collateral" class="col-hidden">Sertifikat</td>
+          <td data-col="action" class="action-col"><div class="actions"><button class="btn btn-view">◉ View</button><button class="btn btn-edit">✎ Edit</button><button class="btn btn-print">🖨 Print</button></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bottom-bar">
+    <div>Menampilkan 1 sampai 2 dari 2 data</div>
+    <div class="pagination"><button>&lt; Prev</button><button class="active">1</button><button>2</button><button>3</button><button>Next &gt;</button></div>
+  </div>
+</div>
+
+<div class="modal-wrap" id="columnModal">
+  <div class="modal">
+    <div class="modal-head"><span>Columns Setting</span><button class="close-x" onclick="closeColumnSettings()">×</button></div>
+    <div class="modal-body">
+      <div class="column-note">Select the columns to display in the Lead list. Detail data such as Address, Contact, Bank, and Attachment are not included because they may contain multiple rows.</div>
+      <div class="column-list" id="columnList"></div>
+    </div>
+    <div class="modal-actions"><button class="btn" onclick="closeColumnSettings()">Cancel</button><button class="btn btn-blue" onclick="applyColumnSettings()">Apply</button></div>
+  </div>
+</div>
+
+<script>
+const columns = [
+  {key:'bpCode',label:'Kode BP',defaultVisible:true},
+  {key:'bpName',label:'Nama BP',defaultVisible:true},
+  {key:'bpGroup',label:'Grup BP',defaultVisible:true},
+  {key:'industry',label:'Jenis Usaha',defaultVisible:true},
+  {key:'sales',label:'Sales',defaultVisible:true},
+  {key:'phone',label:'No. Telp',defaultVisible:true},
+  {key:'paymentTerm',label:'Termin Pembayaran',defaultVisible:true},
+  {key:'createDate',label:'Tanggal Pengajuan',defaultVisible:false},
+  {key:'ktp',label:'No. KTP',defaultVisible:false},
+  {key:'npwp',label:'No. NPWP',defaultVisible:false},
+  {key:'nib',label:'No. NIB',defaultVisible:false},
+  {key:'operatingLength',label:'Lama Beroperasi',defaultVisible:false},
+  {key:'purchasePotential',label:'Potensi Pembelian',defaultVisible:false},
+  {key:'uom',label:'Satuan',defaultVisible:false},
+  {key:'potentialPeriod',label:'Periode Potensi',defaultVisible:false},
+  {key:'transactionEstimate',label:'Perkiraan Nilai Transaksi',defaultVisible:false},
+  {key:'transactionPeriod',label:'Periode Nilai',defaultVisible:false},
+  {key:'creditLimit',label:'Credit Limit',defaultVisible:false},
+  {key:'priceList',label:'Price List',defaultVisible:false},
+  {key:'collateral',label:'Objek Jaminan',defaultVisible:false},
+  {key:'action',label:'Aksi',defaultVisible:true,locked:true}
+];
+let visibleColumns = new Set(columns.filter(c=>c.defaultVisible).map(c=>c.key));
+
+function openColumnSettings(){
+  document.getElementById('columnList').innerHTML = columns.map(c => `
+    <label class="column-item">
+      <input type="checkbox" data-column="${c.key}" ${visibleColumns.has(c.key)?'checked':''} ${c.locked?'disabled checked':''}>
+      <span>${c.label}</span>
+      <span class="default-tag">${c.locked?'Always Visible':(c.defaultVisible?'Default':'Hidden')}</span>
+    </label>`).join('');
+  document.getElementById('columnModal').classList.add('show');
+}
+function closeColumnSettings(){document.getElementById('columnModal').classList.remove('show')}
+function applyColumnSettings(){
+  columns.forEach(c=>{
+    if(c.locked){visibleColumns.add(c.key);return}
+    const cb=document.querySelector(`[data-column="${c.key}"]`);
+    if(cb && cb.checked) visibleColumns.add(c.key); else visibleColumns.delete(c.key);
+  });
+  document.querySelectorAll('[data-col]').forEach(el=>el.classList.toggle('col-hidden',!visibleColumns.has(el.dataset.col)));
+  closeColumnSettings();
+}
+document.getElementById('columnModal').addEventListener('click',function(e){if(e.target===this)closeColumnSettings()});
+</script>
+
+</body>
+</html>

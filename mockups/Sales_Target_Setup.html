@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Target Setup - SAP Business One Mockup</title>
+<style>
+:root{
+  --sap-blue:#294e72;
+  --sap-blue-dark:#1f3f5f;
+  --sap-border:#b7c1ca;
+  --sap-line:#cfd5da;
+  --sap-disabled:#e7edf1;
+  --sap-yellow:#f5b400;
+  --text:#1f2933;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-width:1180px;
+  min-height:760px;
+  font-family:Tahoma,"Segoe UI",Arial,sans-serif;
+  font-size:13px;
+  color:var(--text);
+  background:#d7dde2;
+}
+body{padding:14px}
+.sap-window{
+  width:100%;
+  min-height:760px;
+  background:#f7f8f9;
+  border:1px solid #6f8496;
+  box-shadow:0 3px 14px rgba(0,0,0,.22);
+  display:flex;
+  flex-direction:column;
+}
+.titlebar{
+  height:34px;
+  background:linear-gradient(#365f84,#294e72);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 11px 0 14px;
+  font-size:15px;
+  user-select:none;
+}
+.window-controls{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  font-size:18px;
+}
+.content{
+  padding:20px 24px 16px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.header-grid{
+  display:grid;
+  grid-template-columns:minmax(650px,1fr) 310px;
+  gap:42px;
+  align-items:start;
+}
+.form-grid{
+  display:grid;
+  grid-template-columns:150px minmax(260px,430px);
+  row-gap:8px;
+  align-items:center;
+}
+.right-form{
+  grid-template-columns:90px 190px;
+  justify-self:end;
+  width:310px;
+}
+label{white-space:nowrap}
+input,select,textarea,button{
+  font-family:inherit;
+  font-size:13px;
+}
+input,select,textarea{
+  border:1px solid var(--sap-border);
+  background:#fff;
+  color:#17212b;
+  min-height:25px;
+  padding:3px 7px;
+  outline:none;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#5d8fb8;
+  box-shadow:0 0 0 1px #b7d0e3 inset;
+}
+.disabled{
+  background:var(--sap-disabled)!important;
+  color:#334455;
+}
+.field-row{
+  display:flex;
+  gap:4px;
+  min-width:0;
+}
+.field-row>input,.field-row>select{
+  flex:1;
+  min-width:0;
+}
+.cfl{
+  width:31px;
+  min-width:31px;
+  height:25px;
+  padding:0;
+  border:1px solid #6e8799;
+  background:var(--sap-blue);
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+}
+.cfl:hover:not(:disabled){background:var(--sap-blue-dark)}
+.checkbox-row{
+  display:flex;
+  align-items:center;
+  min-height:25px;
+}
+.checkbox-row input{
+  min-height:auto;
+  width:15px;
+  height:15px;
+  margin:0 6px 0 0;
+}
+.main-panel{
+  border:1px solid #c5cbd0;
+  background:#fff;
+  flex:1;
+  min-height:385px;
+  display:flex;
+  flex-direction:column;
+}
+.panel-caption{
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 13px;
+  border-bottom:1px solid #aeb8c0;
+  background:#f5f7f8;
+  font-weight:600;
+  color:#263945;
+}
+.matrix-panel{
+  padding:12px 13px 12px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+.table-wrap{
+  border:1px solid #aeb8c0;
+  flex:1;
+  min-height:285px;
+  overflow:auto;
+  background:#fff;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+th,td{
+  border-right:1px solid var(--sap-line);
+  border-bottom:1px solid var(--sap-line);
+  height:27px;
+  padding:3px 6px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+th{
+  background:linear-gradient(#edf1f4,#dce4ea);
+  font-weight:600;
+  text-align:left;
+}
+td.rowno,th.rowno{
+  width:42px;
+  text-align:center;
+  background:#edf1f4;
+}
+.item-code{width:170px}
+.item-name{width:350px}
+td input{
+  border:0;
+  width:100%;
+  height:22px;
+  min-height:22px;
+  padding:1px 3px;
+  background:transparent;
+}
+td input:focus{
+  border:1px solid #5d8fb8;
+  box-shadow:none;
+  background:#fff;
+}
+.cell-cfl{
+  display:grid;
+  grid-template-columns:1fr 26px;
+  gap:2px;
+}
+.cell-cfl button{
+  height:22px;
+  padding:0;
+  border:1px solid #7f96a8;
+  background:#e6edf2;
+  cursor:pointer;
+}
+.cell-cfl button:hover{background:#d7e3ec}
+.readonly-cell{
+  background:var(--sap-disabled)!important;
+  color:#334455;
+}
+.doc-footer{
+  display:grid;
+  grid-template-columns:minmax(620px,1fr) 370px;
+  gap:34px;
+  align-items:start;
+}
+.remarks-footer{
+  display:grid;
+  grid-template-columns:140px minmax(420px,650px);
+  align-items:start;
+}
+textarea{
+  height:70px;
+  resize:none;
+}
+.info-box{
+  border:1px solid #c5cdd3;
+  background:#f4f7f9;
+  padding:9px 11px;
+  line-height:1.5;
+  min-height:70px;
+}
+.info-box strong{font-weight:600}
+.bottom-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.left-actions,.right-actions{
+  display:flex;
+  gap:9px;
+}
+.sap-btn{
+  min-width:96px;
+  height:31px;
+  padding:0 17px;
+  border:1px solid #778b9a;
+  background:linear-gradient(#3e6484,#294e72);
+  color:#fff;
+  cursor:pointer;
+  position:relative;
+}
+.sap-btn.primary:before{
+  content:"";
+  position:absolute;
+  left:-1px;
+  top:-1px;
+  bottom:-1px;
+  width:5px;
+  background:var(--sap-yellow);
+}
+.sap-btn:hover:not(:disabled){
+  background:linear-gradient(#496f8f,#244764);
+}
+.sap-btn.secondary{
+  background:linear-gradient(#657d91,#476176);
+}
+.sap-btn:disabled{
+  background:#c7cdd2;
+  border-color:#aeb5ba;
+  color:#70777c;
+  cursor:not-allowed;
+  opacity:.78;
+}
+.status-message{
+  min-height:18px;
+  color:#3b586f;
+}
+.status-message.success{color:#217044}
+.status-message.error{color:#ad2727}
+
+/* Choose From List */
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(20,32,42,.28);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:50;
+}
+.modal-backdrop.show{display:flex}
+.modal{
+  width:650px;
+  max-width:calc(100vw - 50px);
+  background:#f7f8f9;
+  border:1px solid #698096;
+  box-shadow:0 10px 30px rgba(0,0,0,.32);
+}
+.modal-title{
+  height:32px;
+  background:linear-gradient(#365f84,#294e72);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 11px 0 13px;
+  font-size:14px;
+}
+.modal-close{
+  border:0;
+  background:transparent;
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+}
+.modal-body{padding:16px}
+.search-row{
+  display:flex;
+  gap:8px;
+  margin-bottom:10px;
+}
+.search-row input{flex:1}
+.picker-wrap{
+  border:1px solid #aeb8c0;
+  max-height:300px;
+  overflow:auto;
+  background:#fff;
+}
+.picker-table tr{cursor:pointer}
+.picker-table tbody tr:hover{background:#dce9f2}
+.picker-table tbody tr.selected{background:#cfe2f1}
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  padding:12px 16px 16px;
+}
+</style>
+</head>
+<body>
+<div class="sap-window">
+  <div class="titlebar">
+    <span>Sales Target Setup</span>
+    <div class="window-controls"><span>─</span><span>□</span><span>×</span></div>
+  </div>
+
+  <div class="content">
+    <section class="header-grid">
+      <div class="form-grid">
+        <label>Setup Code</label>
+        <input id="setupCode" value="TGT-PAKAN">
+
+        <label>Setup Name</label>
+        <input id="setupName" value="Target Pakan">
+
+        <label>Target Assignment</label>
+        <select id="assignment">
+          <option selected>All</option>
+          <option>Sales Employee</option>
+        </select>
+
+        <label>Target UOM</label>
+        <input id="targetUom" value="TON">
+
+        <label>Conversion Factor</label>
+        <input id="conversionFactor" type="number" step="0.000001" value="0.001">
+      </div>
+
+      <div class="form-grid right-form">
+        <label>Active</label>
+        <div class="checkbox-row">
+          <input id="active" type="checkbox" checked>
+          <span>Yes</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="main-panel">
+      <div class="panel-caption">
+        <span>Item Group Mapping</span>
+        <span id="lineSummary">3 Lines</span>
+      </div>
+
+      <div class="matrix-panel">
+        <div class="table-wrap">
+          <table id="mappingTable">
+            <thead>
+              <tr>
+                <th class="rowno">#</th>
+                <th class="item-code">Item Group Code</th>
+                <th class="item-name">Item Group Name</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-footer">
+      <div class="remarks-footer">
+        <label>Remarks</label>
+        <textarea id="remarks">Target for finished feed products.</textarea>
+      </div>
+
+      <div class="info-box">
+        <strong>Target Quantity Conversion</strong><br>
+        Actual Quantity × Conversion Factor = Target Quantity.<br>
+        Example: 1,000 KG × 0.001 = 1 TON.
+      </div>
+    </section>
+
+    <div class="bottom-bar">
+      <div class="left-actions">
+        <button class="sap-btn primary" id="updateBtn">Update</button>
+        <button class="sap-btn secondary" id="cancelBtn">Cancel</button>
+      </div>
+      <div class="right-actions"></div>
+    </div>
+
+    <div id="message" class="status-message"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="pickerModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span>Choose Item Group</span>
+      <button class="modal-close" id="pickerClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="search-row">
+        <input id="pickerSearch" placeholder="Search Item Group...">
+      </div>
+      <div class="picker-wrap">
+        <table class="picker-table">
+          <thead>
+            <tr>
+              <th style="width:150px">Item Group Code</th>
+              <th>Item Group Name</th>
+            </tr>
+          </thead>
+          <tbody id="pickerBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="sap-btn primary" id="pickerSelect">Select</button>
+      <button class="sap-btn secondary" id="pickerCancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(()=>{
+const el=id=>document.getElementById(id);
+const tableBody=document.querySelector("#mappingTable tbody");
+
+const itemGroups=[
+  {code:"701",name:"FG Pakan Repro"},
+  {code:"702",name:"FG Pakan Jadi"},
+  {code:"703",name:"FG Pakan Concentrate"},
+  {code:"704",name:"FG Pakan Starter"},
+  {code:"705",name:"FG Pakan Finisher"},
+  {code:"706",name:"FG Pakan Layer"}
+];
+
+let rows=[
+  {code:"701",name:"FG Pakan Repro"},
+  {code:"702",name:"FG Pakan Jadi"},
+  {code:"703",name:"FG Pakan Concentrate"}
+];
+
+let pickerTarget=null;
+let pickerSelected=null;
+let filteredGroups=[...itemGroups];
+
+function esc(v){
+  return String(v??"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
+
+function msg(text,type=""){
+  el("message").textContent=text;
+  el("message").className="status-message"+(type?" "+type:"");
+}
+
+function render(){
+  tableBody.innerHTML="";
+
+  rows.forEach((r,i)=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td class="rowno">${i+1}</td>
+      <td>
+        <div class="cell-cfl">
+          <input value="${esc(r.code)}" readonly>
+          <button type="button" data-picker="${i}">...</button>
+        </div>
+      </td>
+      <td><input value="${esc(r.name)}" class="readonly-cell" readonly></td>
+    `;
+    tableBody.appendChild(tr);
+  });
+
+  const blankIndex=rows.length;
+  const tr=document.createElement("tr");
+  tr.innerHTML=`
+    <td class="rowno">${blankIndex+1}</td>
+    <td>
+      <div class="cell-cfl">
+        <input id="newCode" readonly>
+        <button type="button" data-picker="new">...</button>
+      </div>
+    </td>
+    <td><input id="newName" class="readonly-cell" readonly></td>
+  `;
+  tableBody.appendChild(tr);
+
+  for(let i=rows.length+1;i<10;i++){
+    const filler=document.createElement("tr");
+    filler.innerHTML=`<td class="rowno">${i+1}</td><td></td><td></td>`;
+    tableBody.appendChild(filler);
+  }
+
+  document.querySelectorAll("[data-picker]").forEach(btn=>{
+    btn.onclick=()=>openPicker(btn.dataset.picker);
+  });
+
+  el("lineSummary").textContent=`${rows.length} Line${rows.length===1?"":"s"}`;
+}
+
+function renderPicker(){
+  pickerBody.innerHTML=filteredGroups.map((x,i)=>`
+    <tr data-i="${i}">
+      <td>${esc(x.code)}</td>
+      <td>${esc(x.name)}</td>
+    </tr>
+  `).join("");
+
+  [...pickerBody.querySelectorAll("tr")].forEach((tr,i)=>{
+    tr.onclick=()=>{
+      [...pickerBody.querySelectorAll("tr")].forEach(x=>x.classList.remove("selected"));
+      tr.classList.add("selected");
+      pickerSelected=filteredGroups[i];
+    };
+    tr.ondblclick=()=>{
+      pickerSelected=filteredGroups[i];
+      selectPicker();
+    };
+  });
+}
+
+function openPicker(target){
+  pickerTarget=target;
+  pickerSelected=null;
+  filteredGroups=[...itemGroups];
+  pickerSearch.value="";
+  renderPicker();
+  pickerModal.classList.add("show");
+}
+
+function selectPicker(){
+  if(!pickerSelected) return;
+
+  const exists=rows.some((r,i)=>r.code===pickerSelected.code && String(i)!==pickerTarget);
+  if(exists){
+    msg("Item Group already mapped.","error");
+    pickerModal.classList.remove("show");
+    return;
+  }
+
+  if(pickerTarget==="new"){
+    rows.push({...pickerSelected});
+  }else{
+    rows[+pickerTarget]={...pickerSelected};
+  }
+
+  pickerModal.classList.remove("show");
+  render();
+  msg("");
+}
+
+pickerSearch.oninput=()=>{
+  const q=pickerSearch.value.trim().toLowerCase();
+  filteredGroups=!q ? [...itemGroups] : itemGroups.filter(x =>
+    x.code.toLowerCase().includes(q) || x.name.toLowerCase().includes(q)
+  );
+  pickerSelected=null;
+  renderPicker();
+};
+
+pickerSelect.onclick=selectPicker;
+pickerClose.onclick=pickerCancel.onclick=()=>pickerModal.classList.remove("show");
+
+updateBtn.onclick=()=>{
+  if(!setupCode.value.trim()){msg("Setup Code is required.","error");return}
+  if(!setupName.value.trim()){msg("Setup Name is required.","error");return}
+  if(!targetUom.value.trim()){msg("Target UOM is required.","error");return}
+  if(!(Number(conversionFactor.value)>0)){msg("Conversion Factor must be greater than 0.","error");return}
+  if(!rows.length){msg("At least one Item Group Mapping is required.","error");return}
+  msg("Sales Target Setup updated successfully.","success");
+};
+
+cancelBtn.onclick=()=>msg("");
+
+render();
+})();
+</script>
+</body>
+</html>
